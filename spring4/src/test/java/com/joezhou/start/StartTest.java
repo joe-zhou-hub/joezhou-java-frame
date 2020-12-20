@@ -10,49 +10,77 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
  */
 public class StartTest {
 
-    private ClassPathXmlApplicationContext classPathApp;
-    private FileSystemXmlApplicationContext fileSystemApp;
+    private ClassPathXmlApplicationContext app;
 
     @Test
-    public void start() {
+    public void classPathApp() {
         // "classpath:" Can be omitted
-        classPathApp = new ClassPathXmlApplicationContext("classpath:spring/start/app-start.xml");
-        Student student = (Student) classPathApp.getBean("student");
+        app = new ClassPathXmlApplicationContext("classpath:spring/start/app-classpath.xml");
+        Student student = (Student) app.getBean("student");
         student.setName("赵四");
         System.out.println(student.getName());
-        classPathApp.close();
+        app.close();
+    }
+
+    @Test
+    public void fileSystemApp() {
+        FileSystemXmlApplicationContext app;
+        app = new FileSystemXmlApplicationContext("app-file-system.xml");
+        Student studentE = (Student) app.getBean("studentE");
+        studentE.setName("studentE");
+        System.out.println(studentE.getName());
+        app.close();
     }
 
     @Test
     public void loadMultipleXmlByArray() {
-        classPathApp = new ClassPathXmlApplicationContext("spring/start/app-multiple-a.xml", "spring/start/app-multiple-b.xml");
-        Student studentA = (Student) classPathApp.getBean("studentA");
-        Student studentB = (Student) classPathApp.getBean("studentB");
+        app = new ClassPathXmlApplicationContext("spring/start/app-multiple-a.xml", "spring/start/app-multiple-b.xml");
+        Student studentA = (Student) app.getBean("studentA");
+        Student studentB = (Student) app.getBean("studentB");
         studentA.setName("studentA");
         System.out.println(studentA.getName());
         studentB.setName("studentB");
         System.out.println(studentB.getName());
-        classPathApp.close();
+        app.close();
     }
 
     @Test
     public void loadMultipleXmlByImport() {
-        classPathApp = new ClassPathXmlApplicationContext("spring/start/app-multiple-c.xml");
-        Student studentC = (Student) classPathApp.getBean("studentC");
-        Student studentD = (Student) classPathApp.getBean("studentD");
+        app = new ClassPathXmlApplicationContext("spring/start/app-multiple-c.xml");
+        Student studentC = (Student) app.getBean("studentC");
+        Student studentD = (Student) app.getBean("studentD");
         studentC.setName("studentC");
         System.out.println(studentC.getName());
         studentD.setName("studentD");
         System.out.println(studentD.getName());
-        classPathApp.close();
+        app.close();
     }
 
     @Test
-    public void fileSystem() {
-        fileSystemApp = new FileSystemXmlApplicationContext("app-file-system.xml");
-        Student studentE = (Student)fileSystemApp.getBean("studentE");
-        studentE.setName("studentE");
-        System.out.println(studentE.getName());
-        fileSystemApp.close();
+    public void getBeanById() {
+        app = new ClassPathXmlApplicationContext("spring/start/app-by-id.xml");
+        Student student = (Student) app.getBean("studentF");
+        student.setName("studentF");
+        System.out.println(student.getName());
+        app.close();
     }
+
+    @Test
+    public void getBeanByName() {
+        app = new ClassPathXmlApplicationContext("spring/start/app-by-name.xml");
+        Student student = (Student) app.getBean("admin");
+        student.setName("admin");
+        System.out.println(student.getName());
+        app.close();
+    }
+
+    @Test
+    public void getBeanByClass() {
+        app = new ClassPathXmlApplicationContext("spring/start/app-by-class.xml");
+        Student student = app.getBean(Student.class);
+        student.setName("student");
+        System.out.println(student.getName());
+        app.close();
+    }
+
 }
