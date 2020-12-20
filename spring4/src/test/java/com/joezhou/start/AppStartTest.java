@@ -11,10 +11,8 @@ public class AppStartTest {
 
     @Test
     public void start() {
-        // "classpath:" 可以省略不写。
-        ClassPathXmlApplicationContext app =
-                new ClassPathXmlApplicationContext("classpath:spring/start/app-start.xml");
-
+        // "classpath:" Can be omitted
+        ClassPathXmlApplicationContext app = new ClassPathXmlApplicationContext("classpath:spring/start/app-start.xml");
         Student student = (Student) app.getBean("student");
         student.setName("赵四");
         System.out.println(student.getName());
