@@ -32,4 +32,11 @@ public class IocTest {
         app.close();
     }
 
+    @Test
+    public void lazy() {
+        app = new ClassPathXmlApplicationContext("spring/ioc/lazy.xml");
+        app.getBean(User.class);
+        app.close();
+    }
+
 }
