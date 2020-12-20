@@ -1,6 +1,7 @@
 package com.joezhou.start;
 
 import com.joezhou.pojo.Student;
+import com.joezhou.pojo.User;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
@@ -80,6 +81,27 @@ public class StartTest {
         Student student = app.getBean(Student.class);
         student.setName("student");
         System.out.println(student.getName());
+        app.close();
+    }
+
+    @Test
+    public void buildBeanByConstructor() {
+        app = new ClassPathXmlApplicationContext("spring/start/app-by-constructor.xml");
+        app.getBean(User.class);
+        app.close();
+    }
+
+    @Test
+    public void buildBeanByStaticFactory() {
+        app = new ClassPathXmlApplicationContext("spring/start/app-by-static-factory.xml");
+        app.getBean(User.class);
+        app.close();
+    }
+
+    @Test
+    public void buildBeanByDynamicFactory() {
+        app = new ClassPathXmlApplicationContext("spring/start/app-by-dynamic-factory.xml");
+        app.getBean(User.class);
         app.close();
     }
 
