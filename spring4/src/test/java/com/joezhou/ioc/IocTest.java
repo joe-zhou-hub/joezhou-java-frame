@@ -39,4 +39,21 @@ public class IocTest {
         app.close();
     }
 
+    @Test
+    public void scope() {
+        app = new ClassPathXmlApplicationContext("spring/ioc/scope.xml");
+        User userA = app.getBean(User.class);
+        User userB = app.getBean(User.class);
+        System.out.println(userA.hashCode());
+        System.out.println(userB.hashCode());
+        app.close();
+    }
+
+    @Test
+    public void lifeCycle() {
+        app = new ClassPathXmlApplicationContext("spring/ioc/life-cycle.xml");
+        app.getBean(User.class);
+        app.close();
+    }
+
 }
