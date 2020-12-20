@@ -34,7 +34,7 @@ public class StartTest {
 
     @Test
     public void loadMultipleXmlByArray() {
-        app = new ClassPathXmlApplicationContext("spring/start/app-multiple-a.xml", "spring/start/app-multiple-b.xml");
+        app = new ClassPathXmlApplicationContext("spring/start/multiple-a.xml", "spring/start/multiple-b.xml");
         Student studentA = (Student) app.getBean("studentA");
         Student studentB = (Student) app.getBean("studentB");
         studentA.setName("studentA");
@@ -46,7 +46,7 @@ public class StartTest {
 
     @Test
     public void loadMultipleXmlByImport() {
-        app = new ClassPathXmlApplicationContext("spring/start/app-multiple-c.xml");
+        app = new ClassPathXmlApplicationContext("spring/start/multiple-c.xml");
         Student studentC = (Student) app.getBean("studentC");
         Student studentD = (Student) app.getBean("studentD");
         studentC.setName("studentC");
@@ -58,7 +58,7 @@ public class StartTest {
 
     @Test
     public void getBeanById() {
-        app = new ClassPathXmlApplicationContext("spring/start/app-by-id.xml");
+        app = new ClassPathXmlApplicationContext("spring/start/get-by-id.xml");
         Student student = (Student) app.getBean("studentF");
         student.setName("studentF");
         System.out.println(student.getName());
@@ -67,7 +67,7 @@ public class StartTest {
 
     @Test
     public void getBeanByName() {
-        app = new ClassPathXmlApplicationContext("spring/start/app-by-name.xml");
+        app = new ClassPathXmlApplicationContext("spring/start/get-by-name.xml");
         Student student = (Student) app.getBean("admin");
         student.setName("admin");
         System.out.println(student.getName());
@@ -76,7 +76,7 @@ public class StartTest {
 
     @Test
     public void getBeanByClass() {
-        app = new ClassPathXmlApplicationContext("spring/start/app-by-class.xml");
+        app = new ClassPathXmlApplicationContext("spring/start/get-by-class.xml");
         Student student = app.getBean(Student.class);
         student.setName("student");
         System.out.println(student.getName());
