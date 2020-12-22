@@ -2,6 +2,7 @@ package com.joezhou.di;
 
 import com.joezhou.pojo.Emp;
 import com.joezhou.service.CarService;
+import com.joezhou.service.DeptService;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -43,6 +44,12 @@ public class DiTest {
     public void beanInner() {
         app = new ClassPathXmlApplicationContext("spring/di/bean-inner.xml");
         app.getBean(CarService.class).info();
+    }
+
+    @Test
+    public void deptDao() {
+        app = new ClassPathXmlApplicationContext("spring/di/dept.xml");
+        app.getBean(DeptService.class).info();
     }
 
     @After

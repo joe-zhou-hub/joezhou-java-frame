@@ -37,6 +37,14 @@
             <version>${spring}</version>
         </dependency>
 
+        <!--spring-aop-->
+        <!--<dependency>
+            <groupId>org.springframework
+            </groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>${spring}</version>
+        </dependency>-->
+
         <!--spring-context-support-->
         <dependency>
             <groupId>org.springframework
