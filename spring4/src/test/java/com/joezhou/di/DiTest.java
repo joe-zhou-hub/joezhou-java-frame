@@ -2,6 +2,7 @@ package com.joezhou.di;
 
 import com.joezhou.pojo.Emp;
 import com.joezhou.service.CarService;
+import com.joezhou.service.CatService;
 import com.joezhou.service.DeptService;
 import org.junit.After;
 import org.junit.Test;
@@ -50,6 +51,19 @@ public class DiTest {
     public void deptDao() {
         app = new ClassPathXmlApplicationContext("spring/di/dept.xml");
         app.getBean(DeptService.class).info();
+    }
+
+    @Test
+    public void dogDao() {
+        app = new ClassPathXmlApplicationContext("spring/di/dog.xml");
+        app.getBean(CarService.class).info();
+        app.close();
+    }
+
+    @Test
+    public void catDao() {
+        app = new ClassPathXmlApplicationContext("spring/di/cat.xml");
+        app.getBean(CatService.class).info();
     }
 
     @After
