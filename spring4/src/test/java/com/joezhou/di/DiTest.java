@@ -4,6 +4,7 @@ import com.joezhou.pojo.Emp;
 import com.joezhou.service.CarService;
 import com.joezhou.service.CatService;
 import com.joezhou.service.DeptService;
+import com.joezhou.service.DogService;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -56,7 +57,7 @@ public class DiTest {
     @Test
     public void dogDao() {
         app = new ClassPathXmlApplicationContext("spring/di/dog.xml");
-        app.getBean(CarService.class).info();
+        app.getBean(DogService.class).info();
         app.close();
     }
 
