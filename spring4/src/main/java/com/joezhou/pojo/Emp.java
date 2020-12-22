@@ -21,16 +21,4 @@ public class Emp implements Serializable {
     private Set<String> userSet;
     private Map<String, Object> userMap;
     private Properties jdbc;
-
-    public Emp() {
-        System.out.println("Emp()...");
-    }
-
-    public Emp(int numA, int numB) {
-        System.out.println("Emp(int numA, int numB)..." + (numA + numB));
-    }
-
-    public Emp(double numA, double numB) {
-        System.out.println("Emp(double numA, double numB)..." + (numA + numB));
-    }
 }

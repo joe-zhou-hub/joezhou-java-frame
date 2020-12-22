@@ -1,7 +1,7 @@
 package com.joezhou.di;
 
 import com.joezhou.pojo.Emp;
-import com.joezhou.service.EmpService;
+import com.joezhou.service.CarService;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -16,8 +16,8 @@ public class DiTest {
     private ClassPathXmlApplicationContext app;
 
     @Test
-    public void constant() {
-        app = new ClassPathXmlApplicationContext("spring/di/constant.xml");
+    public void constantField() {
+        app = new ClassPathXmlApplicationContext("spring/di/constant-field.xml");
         Emp emp = app.getBean(Emp.class);
         System.out.println(emp.getName());
         System.out.println(emp.getAge());
@@ -34,17 +34,15 @@ public class DiTest {
     }
 
     @Test
-    public void empDaoByOuter() {
-        app = new ClassPathXmlApplicationContext("spring/di/emp-outer.xml");
-        app.getBean(EmpService.class).insert();
-        app.close();
+    public void beanOuter() {
+        app = new ClassPathXmlApplicationContext("spring/di/bean-outer.xml");
+        app.getBean(CarService.class).info();
     }
 
     @Test
-    public void empDaoByInner() {
-        app = new ClassPathXmlApplicationContext("spring/di/emp-inner.xml");
-        app.getBean(EmpService.class).insert();
-        app.close();
+    public void beanInner() {
+        app = new ClassPathXmlApplicationContext("spring/di/bean-inner.xml");
+        app.getBean(CarService.class).info();
     }
 
     @After

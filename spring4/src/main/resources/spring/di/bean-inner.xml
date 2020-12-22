@@ -4,13 +4,10 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="empDao" class="com.joezhou.dao.EmpDao"/>
-
-    <!--在实例化EmpService同时注入Dao-->
-    <bean class="com.joezhou.service.EmpService">
-
-        <!--使用ref来引用另一个<bean>-->
-        <property name="empDao" ref="empDao" />
+    <bean class="com.joezhou.service.CarService">
+        <property name="carDao">
+            <bean class="com.joezhou.dao.CarDao"/>
+        </property>
     </bean>
 
 </beans>

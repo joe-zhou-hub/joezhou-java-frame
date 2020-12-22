@@ -4,10 +4,12 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean class="com.joezhou.service.EmpService">
-        <property name="empDao">
-            <bean class="com.joezhou.dao.EmpDao"/>
-        </property>
+    <bean id="carDao" class="com.joezhou.dao.CarDao"/>
+
+    <bean class="com.joezhou.service.CarService">
+        <property name="carDao" ref="carDao" />
     </bean>
+
+
 
 </beans>
