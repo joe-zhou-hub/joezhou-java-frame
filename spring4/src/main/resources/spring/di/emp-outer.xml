@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="empDao" class="com.joezhou.dao.EmpDao"/>
+
+    <!--在实例化EmpService同时注入Dao-->
+    <bean class="com.joezhou.service.EmpService">
+
+        <!--使用ref来引用另一个<bean>-->
+        <property name="empDao" ref="empDao" />
+    </bean>
+
+</beans>
