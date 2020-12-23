@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.sql.DataSource;
 import java.sql.SQLException;
 
 /**
@@ -13,14 +14,14 @@ import java.sql.SQLException;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = DataSourceConfig.class)
-public class DataSourceServiceTest {
+public class DataSourceTest {
 
     @Autowired
-    private DataSourceService accountService;
+    private DataSource dataSource;
 
     @Test
     public void getConnection() throws SQLException {
-        System.out.println(accountService.getConnection());
+        System.out.println(dataSource.getConnection().isClosed());
     }
 
 }
