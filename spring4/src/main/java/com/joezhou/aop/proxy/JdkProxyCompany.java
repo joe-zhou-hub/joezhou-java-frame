@@ -21,12 +21,6 @@ public class JdkProxyCompany implements InvocationHandler {
         return methodReturn;
     }
 
-    /**
-     * 只要调用该方法，就能成功的为指定的客户聘请一个JDK代理
-     *
-     * @param customer 想要聘用代理的客户
-     * @return 对应客户的代理
-     */
     public Object hireProxy(Object customer) {
         this.customer = customer;
         return Proxy.newProxyInstance(
