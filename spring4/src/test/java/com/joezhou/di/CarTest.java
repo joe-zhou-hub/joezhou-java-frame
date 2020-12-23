@@ -1,6 +1,6 @@
 package com.joezhou.di;
 
-import com.joezhou.bean.CarService;
+import com.joezhou.di.bean.CarService;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;

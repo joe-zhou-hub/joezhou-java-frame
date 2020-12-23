@@ -1,4 +1,4 @@
-package com.joezhou.resource;
+package com.joezhou.di.resource;
 
 import javax.annotation.Resource;
 

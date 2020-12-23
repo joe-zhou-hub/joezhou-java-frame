@@ -4,6 +4,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean class="com.joezhou.pojo.Student"/>
+    <bean class="com.joezhou.start.pojo.Student"/>
 
 </beans>

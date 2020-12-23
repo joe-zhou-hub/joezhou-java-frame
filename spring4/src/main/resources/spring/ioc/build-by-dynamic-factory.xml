@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="userFactory" class="com.joezhou.factory.UserFactory"/>
+    <bean id="userFactory" class="com.joezhou.ioc.factory.UserFactory"/>
     <bean factory-bean="userFactory" factory-method="getUserByDynamicMethod"/>
 
 </beans>

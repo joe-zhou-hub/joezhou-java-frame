@@ -1,4 +1,4 @@
-package com.joezhou.bean;
+package com.joezhou.di.bean;
 
 /**
  * @author JoeZhou

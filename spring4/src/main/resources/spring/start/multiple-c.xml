@@ -5,6 +5,6 @@
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <import resource="classpath:spring/start/multiple-d.xml"/>
-    <bean id="studentC" class="com.joezhou.pojo.Student"/>
+    <bean id="studentC" class="com.joezhou.start.pojo.Student"/>
 
 </beans>

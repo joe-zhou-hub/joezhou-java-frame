@@ -4,9 +4,9 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean class="com.joezhou.bean.CarService">
+    <bean class="com.joezhou.di.bean.CarService">
         <property name="carDao">
-            <bean class="com.joezhou.bean.CarDao"/>
+            <bean class="com.joezhou.di.bean.CarDao"/>
         </property>
     </bean>
 

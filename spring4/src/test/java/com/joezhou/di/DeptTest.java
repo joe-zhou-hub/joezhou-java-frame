@@ -14,7 +14,7 @@ public class DeptTest {
 
     @Test
     public void info() {
-        app = new ClassPathXmlApplicationContext("spring/di/dept.xml");
+        app = new ClassPathXmlApplicationContext("spring/di/resource.xml");
         app.getBean(DeptService.class).info();
     }
 

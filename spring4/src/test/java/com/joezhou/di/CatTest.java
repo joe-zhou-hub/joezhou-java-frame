@@ -1,6 +1,6 @@
 package com.joezhou.di;
 
-import com.joezhou.component.CatService;
+import com.joezhou.di.component.CatService;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -14,7 +14,7 @@ public class CatTest {
 
     @Test
     public void info() {
-        app = new ClassPathXmlApplicationContext("spring/di/cat.xml");
+        app = new ClassPathXmlApplicationContext("spring/di/component.xml");
         /*((CatService)app.getBean("catService")).info();*/
         app.getBean(CatService.class).info();
     }

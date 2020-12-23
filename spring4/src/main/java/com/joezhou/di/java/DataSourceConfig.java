@@ -1,4 +1,4 @@
-package com.joezhou.java;
+package com.joezhou.di.java;
 
 import com.jolbox.bonecp.BoneCPDataSource;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +18,7 @@ import javax.sql.DataSource;
  */
 @Configuration
 @PropertySource("classpath:jdbc/db.properties")
-@ComponentScan("com.joezhou.java")
+@ComponentScan("com.joezhou.di.java")
 public class DataSourceConfig {
 
     @Value("${jdbc.url}")

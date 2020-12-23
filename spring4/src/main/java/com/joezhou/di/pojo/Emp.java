@@ -1,4 +1,4 @@
-package com.joezhou.pojo;
+package com.joezhou.di.pojo;
 
 import lombok.Data;
 

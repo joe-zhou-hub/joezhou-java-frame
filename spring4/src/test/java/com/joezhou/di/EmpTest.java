@@ -1,6 +1,6 @@
 package com.joezhou.di;
 
-import com.joezhou.pojo.Emp;
+import com.joezhou.di.pojo.Emp;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;

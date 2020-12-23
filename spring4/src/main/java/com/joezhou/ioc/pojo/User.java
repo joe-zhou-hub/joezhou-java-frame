@@ -1,4 +1,4 @@
-package com.joezhou.pojo;
+package com.joezhou.ioc.pojo;
 
 /**
  * @author JoeZhou

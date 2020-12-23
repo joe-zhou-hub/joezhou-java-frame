@@ -1,4 +1,4 @@
-package com.joezhou.test;
+package com.joezhou.di.component;
 
 import org.springframework.stereotype.Repository;
 
@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository;
  * @author JoeZhou
  */
 @Repository
-public class PigDao {
+public class CatDao {
     public void info() {
-        System.out.println("PigDao.info...");
+        System.out.println("CatDao.info...");
     }
 }

@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean class="com.joezhou.pojo.Emp">
+    <bean class="com.joezhou.di.pojo.Emp">
         <property name="name" value="赵四"/>
         <property name="age" value="56"/>
 

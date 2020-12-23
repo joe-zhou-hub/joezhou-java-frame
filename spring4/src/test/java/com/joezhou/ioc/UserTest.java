@@ -1,6 +1,6 @@
 package com.joezhou.ioc;
 
-import com.joezhou.pojo.User;
+import com.joezhou.start.pojo.User;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;

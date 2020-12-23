@@ -1,4 +1,4 @@
-package com.joezhou.component;
+package com.joezhou.di.component;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

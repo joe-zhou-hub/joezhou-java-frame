@@ -1,6 +1,6 @@
 package com.joezhou.di;
 
-import com.joezhou.autowired.DogService;
+import com.joezhou.di.autowired.DogService;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -14,7 +14,7 @@ public class DogTest {
 
     @Test
     public void info() {
-        app = new ClassPathXmlApplicationContext("spring/di/dog.xml");
+        app = new ClassPathXmlApplicationContext("spring/di/autowired.xml");
         app.getBean(DogService.class).info();
         app.close();
     }

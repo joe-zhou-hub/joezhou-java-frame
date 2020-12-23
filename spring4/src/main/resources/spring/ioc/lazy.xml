@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean lazy-init="false" class="com.joezhou.pojo.User"/>
+    <bean lazy-init="false" class="com.joezhou.start.pojo.User"/>
 
 
 </beans>

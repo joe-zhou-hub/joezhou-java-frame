@@ -1,6 +1,6 @@
-package com.joezhou.factory;
+package com.joezhou.ioc.factory;
 
-import com.joezhou.pojo.User;
+import com.joezhou.start.pojo.User;
 
 /**@author JoeZhou*/
 public class UserFactory {

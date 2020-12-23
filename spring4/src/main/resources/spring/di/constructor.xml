@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean class="com.joezhou.pojo.Manager">
+    <bean class="com.joezhou.di.pojo.Manager">
         <constructor-arg index="0" value="3" type="double"/>
         <constructor-arg index="1" value="4" type="double"/>
     </bean>

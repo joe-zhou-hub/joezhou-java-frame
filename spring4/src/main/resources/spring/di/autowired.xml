@@ -11,7 +11,7 @@
     <context:annotation-config/>
 
     <!--无需指定二者关系，@Autowired可以自动分析-->
-    <bean class="com.joezhou.autowired.DogDao"/>
-    <bean class="com.joezhou.autowired.DogService"/>
+    <bean class="com.joezhou.di.autowired.DogDao"/>
+    <bean class="com.joezhou.di.autowired.DogService"/>
 
 </beans>

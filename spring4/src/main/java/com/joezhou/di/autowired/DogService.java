@@ -1,4 +1,4 @@
-package com.joezhou.autowired;
+package com.joezhou.di.autowired;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
