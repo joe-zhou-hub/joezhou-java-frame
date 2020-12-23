@@ -1,5 +1,6 @@
-package com.joezhou.java;
+package com.joezhou.di;
 
+import com.joezhou.java.DataSourceConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

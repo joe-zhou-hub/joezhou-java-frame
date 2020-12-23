@@ -1,5 +1,6 @@
-package com.joezhou.test;
+package com.joezhou.di;
 
+import com.joezhou.test.PigDao;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author JoeZhou
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:spring/test/pig.xml")
-public class PigServiceTest {
+@ContextConfiguration("classpath:spring/di/pig.xml")
+public class PigTest {
 
     @Autowired
     private PigDao pigDao;

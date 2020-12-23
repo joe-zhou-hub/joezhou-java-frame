@@ -17,7 +17,7 @@
     <context:annotation-config/>
 
     <!--无需指定二者关系，@Resource可以自动分析-->
-    <bean class="com.joezhou.dao.DeptDao"/>
-    <bean class="com.joezhou.service.DeptService"/>
+    <bean class="com.joezhou.resource.DeptDao"/>
+    <bean class="com.joezhou.resource.DeptService"/>
 
 </beans>

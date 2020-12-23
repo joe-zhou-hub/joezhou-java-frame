@@ -1,6 +1,5 @@
-package com.joezhou.service;
+package com.joezhou.autowired;
 
-import com.joezhou.dao.DogDao;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

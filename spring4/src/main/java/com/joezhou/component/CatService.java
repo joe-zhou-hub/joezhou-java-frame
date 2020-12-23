@@ -1,6 +1,5 @@
-package com.joezhou.service;
+package com.joezhou.component;
 
-import com.joezhou.dao.CatDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

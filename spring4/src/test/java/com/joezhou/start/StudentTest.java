@@ -1,6 +1,7 @@
 package com.joezhou.start;
 
 import com.joezhou.pojo.Student;
+import org.junit.After;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
@@ -8,7 +9,7 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 /**
  * @author JoeZhou
  */
-public class StartTest {
+public class StudentTest {
 
     private ClassPathXmlApplicationContext app;
 
@@ -19,7 +20,6 @@ public class StartTest {
         Student student = (Student) app.getBean("student");
         student.setName("赵四");
         System.out.println(student.getName());
-        app.close();
     }
 
     @Test
@@ -29,7 +29,6 @@ public class StartTest {
         Student studentE = (Student) app.getBean("studentE");
         studentE.setName("studentE");
         System.out.println(studentE.getName());
-        app.close();
     }
 
     @Test
@@ -41,7 +40,6 @@ public class StartTest {
         System.out.println(studentA.getName());
         studentB.setName("studentB");
         System.out.println(studentB.getName());
-        app.close();
     }
 
     @Test
@@ -53,7 +51,6 @@ public class StartTest {
         System.out.println(studentC.getName());
         studentD.setName("studentD");
         System.out.println(studentD.getName());
-        app.close();
     }
 
     @Test
@@ -80,6 +77,11 @@ public class StartTest {
         Student student = app.getBean(Student.class);
         student.setName("student");
         System.out.println(student.getName());
+        app.close();
+    }
+
+    @After
+    public void after(){
         app.close();
     }
 }

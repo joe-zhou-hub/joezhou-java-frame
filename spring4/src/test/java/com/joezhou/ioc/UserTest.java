@@ -1,13 +1,14 @@
 package com.joezhou.ioc;
 
 import com.joezhou.pojo.User;
+import org.junit.After;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * @author JoeZhou
  */
-public class IocTest {
+public class UserTest {
 
     private ClassPathXmlApplicationContext app;
 
@@ -15,28 +16,24 @@ public class IocTest {
     public void buildByConstructor() {
         app = new ClassPathXmlApplicationContext("spring/ioc/build-by-constructor.xml");
         app.getBean(User.class);
-        app.close();
     }
 
     @Test
     public void buildByStaticFactory() {
         app = new ClassPathXmlApplicationContext("spring/ioc/build-by-static-factory.xml");
         app.getBean(User.class);
-        app.close();
     }
 
     @Test
     public void buildByDynamicFactory() {
         app = new ClassPathXmlApplicationContext("spring/ioc/build-by-dynamic-factory.xml");
         app.getBean(User.class);
-        app.close();
     }
 
     @Test
     public void lazy() {
         app = new ClassPathXmlApplicationContext("spring/ioc/lazy.xml");
         app.getBean(User.class);
-        app.close();
     }
 
     @Test
@@ -46,13 +43,16 @@ public class IocTest {
         User userB = app.getBean(User.class);
         System.out.println(userA.hashCode());
         System.out.println(userB.hashCode());
-        app.close();
     }
 
     @Test
     public void lifeCycle() {
         app = new ClassPathXmlApplicationContext("spring/ioc/life-cycle.xml");
         app.getBean(User.class);
+    }
+
+    @After
+    public void after() {
         app.close();
     }
 

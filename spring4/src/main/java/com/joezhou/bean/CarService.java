@@ -1,6 +1,5 @@
-package com.joezhou.service;
+package com.joezhou.bean;
 
-import com.joezhou.dao.CarDao;
 import lombok.Data;
 
 /**

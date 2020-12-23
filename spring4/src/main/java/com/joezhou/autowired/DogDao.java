@@ -1,4 +1,4 @@
-package com.joezhou.dao;
+package com.joezhou.autowired;
 
 /**
  * @author JoeZhou

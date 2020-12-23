@@ -1,6 +1,4 @@
-package com.joezhou.service;
-
-import com.joezhou.dao.DeptDao;
+package com.joezhou.resource;
 
 import javax.annotation.Resource;
 
