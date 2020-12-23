@@ -64,6 +64,7 @@ public class DiTest {
     @Test
     public void catDao() {
         app = new ClassPathXmlApplicationContext("spring/di/cat.xml");
+        /*((CatService)app.getBean("catService")).info();*/
         app.getBean(CatService.class).info();
     }
 
