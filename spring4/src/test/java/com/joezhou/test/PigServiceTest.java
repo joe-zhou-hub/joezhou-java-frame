@@ -1,4 +1,4 @@
-package com.joezhou.java;
+package com.joezhou.test;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,14 +10,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author JoeZhou
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = SpringConfig.class)
-public class AccountServiceTest {
+@ContextConfiguration("classpath:spring/test/pig.xml")
+public class PigServiceTest {
 
     @Autowired
-    private AccountService accountService;
+    private PigDao pigDao;
 
     @Test
-    public void select() {
-        System.out.println(accountService.select());
+    public void info() {
+        pigDao.info();
     }
 }
