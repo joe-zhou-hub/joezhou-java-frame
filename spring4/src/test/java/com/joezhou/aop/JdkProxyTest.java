@@ -17,7 +17,7 @@ public class JdkProxyTest {
         UserService zhaosi = new UserServiceImpl();
 
         // 为zhaosi聘用代理
-        // 代理必须被强转成客户类型，否则无法调用业务方法
+        // 代理必须被强转成客户类型（不能是实现类），否则无法调用业务方法
         UserService liuneng = (UserService) new JdkProxyCompany().hireProxy(zhaosi);
 
         // 让代理干活：代理开始执行工作清单invoke()中的代码
