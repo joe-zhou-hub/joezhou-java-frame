@@ -1,6 +1,6 @@
 package com.joezhou.di;
 
-import com.joezhou.resource.DeptService;
+import com.joezhou.di.resource.DeptService;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
