@@ -7,21 +7,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void insert() {
-        System.out.println("insert()...");
+        System.out.println("UserServiceImpl.insert()...");
     }
 
     @Override
     public void select() {
-        System.out.println("select()...");
+        System.out.println("UserServiceImpl.select()...");
     }
 
     @Override
     public void update() {
-        System.out.println("update()...");
+        System.out.println("UserServiceImpl.update()...");
     }
 
     @Override
     public void delete() {
-        System.out.println("delete()...");
+        System.out.println("UserServiceImpl.delete()...");
     }
 }

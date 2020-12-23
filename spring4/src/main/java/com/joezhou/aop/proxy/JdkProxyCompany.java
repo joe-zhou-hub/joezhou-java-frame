@@ -14,7 +14,7 @@ public class JdkProxyCompany implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args)
-        throws InvocationTargetException, IllegalAccessException {
+            throws InvocationTargetException, IllegalAccessException {
         System.out.println("鉴权...");
         Object methodReturn = method.invoke(customer, args);
         System.out.println("日志...");

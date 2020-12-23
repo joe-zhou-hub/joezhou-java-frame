@@ -24,7 +24,8 @@ public class CglibProxyCompany implements MethodInterceptor {
     public Object hireProxy(Object customer) {
         this.customer = customer;
 
-        // 创建一个Enhancer对象，设置父类和回调（调用哪个类的任务清单）然后创建代理
+        // cglib使用Enhancer对象创建代理
+        // 需要设置父类和回调（调用哪个类的任务清单）
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(customer.getClass());
         enhancer.setCallback(this);
