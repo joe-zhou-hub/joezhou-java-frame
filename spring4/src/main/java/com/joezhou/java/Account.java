@@ -1,4 +1,4 @@
-package com.joezhou.pojo;
+package com.joezhou.java;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
