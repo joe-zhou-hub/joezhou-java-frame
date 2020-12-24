@@ -35,4 +35,15 @@ public class CustomerService {
             throw new NullPointerException();
         }
     }
+
+    public List<Integer> insert(Map<String, Object> user) {
+        if (user == null) {
+            throw new NullPointerException();
+        }
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        return list;
+    }
 }

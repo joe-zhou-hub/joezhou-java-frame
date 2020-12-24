@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.HashMap;
+
 /**
  * @author JoeZhou
  */
@@ -25,5 +27,16 @@ public class CustomerTest {
     @Test
     public void AfterReturningAdvice() {
         System.out.println("test: " + customerService.select("zhaosi"));
+    }
+
+    @Test
+    public void AfterThrowingAdvice() {
+        customerService.update(null);
+    }
+
+    @Test
+    public void aroundAdvice() {
+        System.out.println(customerService.insert(new HashMap<String, Object>()));
+        System.out.println(customerService.insert(null));
     }
 }

@@ -12,6 +12,14 @@ public class JdkProxyCompany implements InvocationHandler {
 
     private Object customer;
 
+    /**
+     * 代理工作清单
+     *
+     * @param proxy  代理对象
+     * @param method 代理方法的Method对象
+     * @param args   代理方法的形参
+     * @return 代理方法的返回值，若是 `void`，就返回 `null`
+     */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args)
             throws InvocationTargetException, IllegalAccessException {
