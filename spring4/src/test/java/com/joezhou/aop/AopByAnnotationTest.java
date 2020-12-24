@@ -14,7 +14,7 @@ import java.util.HashMap;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:spring/aop/customer-annotation.xml")
-public class CustomerTest {
+public class AopByAnnotationTest {
 
     @Autowired
     private CustomerService customerService;
@@ -25,22 +25,19 @@ public class CustomerTest {
     }
 
     @Test
-    public void AfterReturningAdvice() {
+    public void afterReturningAdvice() {
         System.out.println("test: " + customerService.select("zhaosi"));
     }
 
     @Test
-    public void AfterThrowingAdvice() {
+    public void afterThrowingAdvice() {
         customerService.update(null);
     }
 
     @Test
     public void aroundAdvice() {
-        System.out.println(customerService.insert(new HashMap<String, Object>()));
-    }
-
-    @Test
-    public void aroundAdviceWithException() {
+        System.out.println(customerService.insert(new HashMap<>()));
+        System.out.println("------");
         System.out.println(customerService.insert(null));
     }
 }

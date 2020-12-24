@@ -14,16 +14,19 @@
     <aop:config>
 
         <!--设置切点：需要写在<aop:aspect>前-->
-        <aop:pointcut id="pc" expression="execution(public * com.joezhou.aop.aspect..*.*(..))"/>
+        <aop:pointcut id="deletePointCut" expression="execution(* com.joezhou.aop.aspect.CustomerService.delete(..)))"/>
+        <aop:pointcut id="selectPointCut" expression="execution(* com.joezhou.aop.aspect.CustomerService.select(..)))"/>
+        <aop:pointcut id="updatePointCut" expression="execution(* com.joezhou.aop.aspect.CustomerService.update(..)))"/>
+        <aop:pointcut id="insertPointCut" expression="execution(* com.joezhou.aop.aspect.CustomerService.insert(..)))"/>
 
         <!--指定切面类：ref关联切面类对应<bean>的id-->
         <!--切面类中设置各种通知-->
         <aop:aspect ref="customerAspectByXml">
-            <aop:before method="beforeAdvice" pointcut-ref="pc"/>
-            <aop:after method="afterAdvice" pointcut-ref="pc"/>
-            <aop:after-returning method="afterReturningAdvice" pointcut-ref="pc" returning="list"/>
-            <aop:after-throwing method="afterThrowingAdvice" pointcut-ref="pc" throwing="e"/>
-            <aop:around method="aroundAdvice" pointcut-ref="pc"/>
+            <aop:before method="beforeAdvice" pointcut-ref="deletePointCut"/>
+            <aop:after method="afterAdvice" pointcut-ref="deletePointCut"/>
+            <aop:after-returning method="afterReturningAdvice" pointcut-ref="selectPointCut" returning="list"/>
+            <aop:after-throwing method="afterThrowingAdvice" pointcut-ref="updatePointCut" throwing="e"/>
+            <aop:around method="aroundAdvice" pointcut-ref="insertPointCut"/>
         </aop:aspect>
     </aop:config>
 </beans>
