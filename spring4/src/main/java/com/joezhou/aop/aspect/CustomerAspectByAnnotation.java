@@ -15,19 +15,19 @@ import java.util.Map;
 @Component
 public class CustomerAspectByAnnotation {
 
-    @Pointcut("execution(* com.joezhou.aop.aspect.*.delete(..))")
+    @Pointcut("execution(* com.joezhou.aop.aspect.CustomerService.delete(..))")
     public void deletePointCut() {
     }
 
-    @Pointcut("execution(* com.joezhou.aop.aspect.*.select(..))")
+    @Pointcut("execution(* com.joezhou.aop.aspect.CustomerService.select(..))")
     public void selectPointCut() {
     }
 
-    @Pointcut("execution(* com.joezhou.aop.aspect.*.update(..))")
+    @Pointcut("execution(* com.joezhou.aop.aspect.CustomerService.update(..))")
     public void updatePointCut() {
     }
 
-    @Pointcut("execution(* com.joezhou.aop.aspect.*.insert(..))")
+    @Pointcut("execution(* com.joezhou.aop.aspect.CustomerService.insert(..))")
     public void insertPointCut() {
     }
 
@@ -62,8 +62,9 @@ public class CustomerAspectByAnnotation {
     @Around("insertPointCut()")
     public Object aroundAdvice(ProceedingJoinPoint pjp) {
         List<Integer> list = null;
+        System.out.println("aroundAdvice(): 环绕开始...");
         Object[] args = pjp.getArgs();
-        System.out.println("params: " + Arrays.toString(args));
+        System.out.println("\tparams: " + Arrays.toString(args));
         try {
             System.out.println("aroundAdvice(): 鉴权...");
             list = (List<Integer>) pjp.proceed(args);
@@ -72,14 +73,15 @@ public class CustomerAspectByAnnotation {
             System.out.println("\texception: " + e);
         } finally {
             System.out.println("aroundAdvice(): 打印日志...");
+            System.out.println("aroundAdvice(): 将原返回值 [1,2,3] 改为 [4,5,6]...");
             if (list != null) {
+                list.clear();
                 list.add(4);
                 list.add(5);
                 list.add(6);
             }
         }
         return list;
-
     }
 
 }

@@ -37,6 +37,10 @@ public class CustomerTest {
     @Test
     public void aroundAdvice() {
         System.out.println(customerService.insert(new HashMap<String, Object>()));
+    }
+
+    @Test
+    public void aroundAdviceWithException() {
         System.out.println(customerService.insert(null));
     }
 }
