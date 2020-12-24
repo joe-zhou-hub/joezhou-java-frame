@@ -21,4 +21,9 @@ public class CustomerTest {
     public void beforeAndAfterAdvice() {
         customerService.delete("zhaosi", 2);
     }
+
+    @Test
+    public void AfterReturningAdvice() {
+        System.out.println("test: " + customerService.select("zhaosi"));
+    }
 }
