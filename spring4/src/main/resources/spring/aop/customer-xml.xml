@@ -12,15 +12,10 @@
     <context:component-scan base-package="com.joezhou.aop.aspect"/>
 
     <aop:config>
-
-        <!--设置切点：需要写在<aop:aspect>前-->
         <aop:pointcut id="deletePointCut" expression="execution(* com.joezhou.aop.aspect.CustomerService.delete(..)))"/>
         <aop:pointcut id="selectPointCut" expression="execution(* com.joezhou.aop.aspect.CustomerService.select(..)))"/>
         <aop:pointcut id="updatePointCut" expression="execution(* com.joezhou.aop.aspect.CustomerService.update(..)))"/>
         <aop:pointcut id="insertPointCut" expression="execution(* com.joezhou.aop.aspect.CustomerService.insert(..)))"/>
-
-        <!--指定切面类：ref关联切面类对应<bean>的id-->
-        <!--切面类中设置各种通知-->
         <aop:aspect ref="customerAspectByXml">
             <aop:before method="beforeAdvice" pointcut-ref="deletePointCut"/>
             <aop:after method="afterAdvice" pointcut-ref="deletePointCut"/>
