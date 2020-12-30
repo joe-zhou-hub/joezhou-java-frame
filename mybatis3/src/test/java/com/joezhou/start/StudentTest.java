@@ -1,5 +1,6 @@
 package com.joezhou.start;
 
+import com.joezhou.util.MyBatisUtil;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -17,10 +18,20 @@ public class StudentTest {
     @Test
     public void start() throws IOException {
         SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(
-                Resources.getResourceAsStream("mybatis.xml"));
+                Resources.getResourceAsStream("mybatis-student.xml"));
         try (SqlSession session = sessionFactory.openSession()) {
             System.out.println(session.getConnection().isClosed());
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void myBatisUtil() {
+        SqlSessionFactory factory = MyBatisUtil.getFactory("mybatis-student.xml");
+        try (SqlSession session = factory.openSession()) {
+            System.out.println(session.getConnection().isClosed());
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
