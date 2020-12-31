@@ -4,7 +4,11 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
-    <environments default="development">
+
+    <properties resource="jdbc/db.properties"/>
+
+    <environments default="properties">
+
         <environment id="development">
             <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
@@ -14,6 +18,17 @@
                 <property name="password" value="mybatis"/>
             </dataSource>
         </environment>
+
+        <environment id="properties">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+
     </environments>
     <mappers>
         <mapper resource="mapper/student-mapper.xml"/>
