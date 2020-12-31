@@ -17,41 +17,6 @@
             <version>3.4.6</version>
         </dependency>
 
-        <!--ant-->
-        <dependency>
-            <groupId>org.apache.ant</groupId>
-            <artifactId>ant</artifactId>
-            <version>1.9.6</version>
-        </dependency>
-
-        <!--asm-->
-        <dependency>
-            <groupId>org.ow2.asm</groupId>
-            <artifactId>asm</artifactId>
-            <version>5.2</version>
-        </dependency>
-
-        <!--cglib-->
-        <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib</artifactId>
-            <version>3.2.5</version>
-        </dependency>
-
-        <!--commons-logging-->
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.2</version>
-        </dependency>
-
-        <!--ognl-->
-        <dependency>
-            <groupId>ognl</groupId>
-            <artifactId>ognl</artifactId>
-            <version>3.1.16</version>
-        </dependency>
-
         <!--log4j-core-->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -104,6 +69,49 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
+
+        <!--ant-->
+        <!--
+        <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant</artifactId>
+            <version>1.9.6</version>
+        </dependency>
+        -->
+
+        <!--asm-->
+        <!--
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>5.2</version>
+        </dependency>
+        -->
+
+        <!--cglib-->
+        <!--
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>3.2.5</version>
+        </dependency>-->
+
+        <!--commons-logging-->
+        <!--
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+        </dependency>
+        -->
+
+        <!--ognl-->
+        <!--
+        <dependency>
+            <groupId>ognl</groupId>
+            <artifactId>ognl</artifactId>
+            <version>3.1.16</version>
+        </dependency>-->
 
     </dependencies>
 
