@@ -29,6 +29,8 @@ public class StudentTest {
     @Test
     public void myBatisUtil() {
         SqlSessionFactory factory = MyBatisUtil.getFactory("mybatis-student.xml");
+        System.out.println(MyBatisUtil.getFactory("mybatis-student.xml").hashCode());
+        System.out.println(MyBatisUtil.getFactory("mybatis-student.xml").hashCode());
         try (SqlSession session = factory.openSession()) {
             System.out.println(session.getConnection().isClosed());
         } catch (Exception e) {
