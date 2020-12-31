@@ -5,8 +5,8 @@
 <mapper namespace="studentSpace">
 
     <insert id="insert" parameterType="com.joezhou.pojo.Student">
-        INSERT INTO `student` (`name`, `gender`, `age`, `info`)
-        VALUES (#{name}, #{gender}, #{age}, #{info})
+        INSERT INTO `student` (`id`, `name`, `gender`, `age`, `info`)
+        VALUES (#{id}, #{name}, #{gender}, #{age}, #{info})
     </insert>
 
 </mapper>
