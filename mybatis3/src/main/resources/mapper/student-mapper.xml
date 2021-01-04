@@ -19,13 +19,21 @@
     </insert>
 
     <select id="findById" resultType="com.joezhou.pojo.Student">
-        SELECT `id`, `name`, `gender`, `age`, `info` FROM `student`
+        SELECT `id`, `name`, `gender`, `age`, `info`
+        FROM `student`
         WHERE `id` = #{id}
     </select>
 
     <select id="findLikeName" resultType="com.joezhou.pojo.Student">
-        SELECT `id`, `name`, `gender`, `age`, `info` FROM `student`
-        WHERE `name` like "%"#{name}"%"
+        SELECT `id`, `name`, `gender`, `age`, `info`
+        FROM `student`
+        WHERE `name` like '%${value}%'
+    </select>
+
+    <select id="findLikeNameWithConcat" resultType="com.joezhou.pojo.Student">
+        SELECT `id`, `name`, `gender`, `age`, `info`
+        FROM `student`
+        WHERE `name` like concat('%', #{name}, '%')
     </select>
 
 </mapper>

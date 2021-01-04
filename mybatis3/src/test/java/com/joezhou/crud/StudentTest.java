@@ -11,10 +11,10 @@ import org.junit.Test;
  */
 public class StudentTest {
 
+    private SqlSessionFactory factory = MyBatisUtil.getFactory("mybatis-crud.xml");
+
     @Test
     public void insert() {
-        SqlSessionFactory factory = MyBatisUtil.getFactory("mybatis-crud.xml");
-
         Student zhaosi = new Student(null, "赵四", 1, 58, "亚洲舞王");
         Student liunneng = new Student(10, "刘能", 0, 19, "玉田花圃");
         SqlSession session = factory.openSession();
@@ -34,7 +34,6 @@ public class StudentTest {
 
     @Test
     public void insertWithSelectKey() {
-        SqlSessionFactory factory = MyBatisUtil.getFactory("mybatis-crud.xml");
         Student dajiao = new Student(null, "大脚", 0, 18, "大脚超市");
         SqlSession session = factory.openSession();
         try {
@@ -51,24 +50,35 @@ public class StudentTest {
 
     @Test
     public void selectOne() {
-        SqlSessionFactory factory = MyBatisUtil.getFactory("mybatis-crud.xml");
-        Student zhaosi = new Student();
-        zhaosi.setId(1);
         try (SqlSession session = factory.openSession();) {
-            Student resultA = session.selectOne("studentSpace.findById", 1);
-            Student resultB = session.selectOne("studentSpace.findById", zhaosi);
-            System.out.println(resultA);
-            System.out.println(resultB);
+            System.out.println((Student) session.selectOne(
+                    "studentSpace.findById", 1));
+            System.out.println((Student) session.selectOne(
+                    "studentSpace.findById", new Student(1, null, null, null, null)));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Test
-    public void selectList() {
-        SqlSessionFactory factory = MyBatisUtil.getFactory("mybatis-crud.xml");
+    public void findLikeName() {
         try (SqlSession session = factory.openSession()) {
-            System.out.println(session.selectList("studentSpace.findLikeName", "刘"));
+            System.out.println(session.selectList(
+                    "studentSpace.findLikeName", "刘"));
+            System.out.println(session.selectList(
+                    "studentSpace.findLikeName", "'or'"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void findLikeNameWithConcat() {
+        try (SqlSession session = factory.openSession()) {
+            System.out.println(session.selectList(
+                    "studentSpace.findLikeNameWithConcat", "刘"));
+            System.out.println(session.selectList(
+                    "studentSpace.findLikeNameWithConcat", "'or'"));
         } catch (Exception e) {
             e.printStackTrace();
         }
