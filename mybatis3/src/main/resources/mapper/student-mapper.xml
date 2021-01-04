@@ -4,13 +4,13 @@
 
 <mapper namespace="studentSpace">
 
-    <insert id="insert" parameterType="com.joezhou.pojo.Student" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="student" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO `student` (`id`, `name`, `gender`, `age`, `info`)
         VALUES (#{id}, #{name}, #{gender}, #{age}, #{info})
     </insert>
 
     <insert id="insertWithSelectKey">
-        <selectKey order="AFTER" keyProperty="id" resultType="java.lang.Integer">
+        <selectKey order="AFTER" keyProperty="id" resultType="int">
             SELECT last_insert_id()
         </selectKey>
 
@@ -18,19 +18,19 @@
         VALUES (#{id}, #{name}, #{gender}, #{age}, #{info})
     </insert>
 
-    <select id="findById" resultType="com.joezhou.pojo.Student">
+    <select id="findById" resultType="student">
         SELECT `id`, `name`, `gender`, `age`, `info`
         FROM `student`
         WHERE `id` = #{id}
     </select>
 
-    <select id="findLikeName" resultType="com.joezhou.pojo.Student">
+    <select id="findLikeName" resultType="student">
         SELECT `id`, `name`, `gender`, `age`, `info`
         FROM `student`
         WHERE `name` like '%${value}%'
     </select>
 
-    <select id="findLikeNameWithConcat" resultType="com.joezhou.pojo.Student">
+    <select id="findLikeNameWithConcat" resultType="student">
         SELECT `id`, `name`, `gender`, `age`, `info`
         FROM `student`
         WHERE `name` like concat('%', #{name}, '%')

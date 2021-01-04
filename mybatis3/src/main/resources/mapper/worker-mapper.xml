@@ -9,13 +9,13 @@
         VALUES (#{id}, #{name}, #{gender}, #{age}, #{info})
     </insert>
 
-    <select id="findById" resultType="com.joezhou.pojo.Worker">
+    <select id="findById" resultType="worker">
         SELECT `id`, `name`, `gender`, `age`, `info`
         FROM `worker`
         WHERE `id` = #{id}
     </select>
 
-    <select id="findLikeName" resultType="com.joezhou.pojo.Worker">
+    <select id="findLikeName" resultType="worker">
         SELECT `id`, `name`, `gender`, `age`, `info`
         FROM `worker`
         WHERE `name` like concat('%', #{name}, '%')
