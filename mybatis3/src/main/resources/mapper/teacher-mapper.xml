@@ -2,15 +2,6 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="teacherSpace">
-
-    <insert id="insertWithSelectKey">
-        <selectKey order="BEFORE" keyProperty="id" resultType="java.lang.String">
-            SELECT UUID()
-        </selectKey>
-
-        INSERT INTO `student` (`name`, `gender`, `age`, `info`)
-        VALUES (#{name}, #{gender}, #{age}, #{info})
-    </insert>
+<mapper namespace="com.joezhou.mapper.TeacherMapper">
 
 </mapper>

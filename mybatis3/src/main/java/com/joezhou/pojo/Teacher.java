@@ -13,7 +13,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Teacher implements Serializable {
-    private String id;
+    private Integer id;
     private String name;
     private Integer gender;
     private Integer age;

@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `student`
 
 CREATE TABLE IF NOT EXISTS `teacher`
 (
-    `id` VARCHAR(50) NOT NULL PRIMARY KEY,
+    `id`     INT(11) AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(50) NOT NULL COMMENT '教师姓名',
     `gender` TINYINT(1) NULL COMMENT '教师性别',
     `age` INT(3) NULL COMMENT '教师年龄',
