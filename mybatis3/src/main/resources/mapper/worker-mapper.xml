@@ -31,7 +31,9 @@
     </update>
 
     <delete id="deleteById">
-        DELETE FROM `worker` WHERE `id` = #{id}
+        DELETE
+        FROM `worker`
+        WHERE `id` = #{id}
     </delete>
 
 </mapper>

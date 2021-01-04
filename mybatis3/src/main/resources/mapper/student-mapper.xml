@@ -4,8 +4,10 @@
 
 <mapper namespace="studentSpace">
 
+    <cache eviction="LRU" readOnly="true" size="1024"/>
+
     <sql id="cols">`id`, `name`, `gender`, `age`, `info`</sql>
-    
+
     <insert id="insert" parameterType="student" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO `student` (<include refid="cols"/>)
         VALUES (#{id}, #{name}, #{gender}, #{age}, #{info})
