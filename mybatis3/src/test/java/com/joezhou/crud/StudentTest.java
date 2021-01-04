@@ -13,7 +13,7 @@ public class StudentTest {
 
     @Test
     public void insert() {
-        SqlSessionFactory factory = MyBatisUtil.getFactory("mybatis-student.xml");
+        SqlSessionFactory factory = MyBatisUtil.getFactory("mybatis-crud.xml");
 
         Student zhaosi = new Student(null, "赵四", 1, 58, "亚洲舞王");
         Student liunneng = new Student(10, "刘能", 0, 19, "玉田花圃");
@@ -34,8 +34,7 @@ public class StudentTest {
 
     @Test
     public void insertWithSelectKey() {
-        SqlSessionFactory factory = MyBatisUtil.getFactory("mybatis-student.xml");
-
+        SqlSessionFactory factory = MyBatisUtil.getFactory("mybatis-crud.xml");
         Student dajiao = new Student(null, "大脚", 0, 18, "大脚超市");
         SqlSession session = factory.openSession();
         try {

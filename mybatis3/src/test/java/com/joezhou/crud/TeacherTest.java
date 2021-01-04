@@ -12,13 +12,12 @@ import org.junit.Test;
 public class TeacherTest {
 
     @Test
-    public void insert() {
-        SqlSessionFactory factory = MyBatisUtil.getFactory("mybatis-teacher.xml");
-
+    public void insertWithSelectKey() {
+        SqlSessionFactory factory = MyBatisUtil.getFactory("mybatis-crud.xml");
         Teacher changgui = new Teacher(null, "长贵", 1, 88, "村长");
         SqlSession session = factory.openSession();
         try {
-            session.insert("teacherSpace.insert", changgui);
+            session.insert("teacherSpace.insertWithSelectKey", changgui);
             session.commit();
             System.out.println(changgui);
         } catch (Exception e) {

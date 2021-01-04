@@ -4,7 +4,7 @@
 
 <mapper namespace="teacherSpace">
 
-    <insert id="insert">
+    <insert id="insertWithSelectKey">
         <selectKey order="BEFORE" keyProperty="id" resultType="java.lang.String">
             SELECT UUID()
         </selectKey>
