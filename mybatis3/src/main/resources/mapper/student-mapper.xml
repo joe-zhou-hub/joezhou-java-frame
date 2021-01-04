@@ -4,7 +4,7 @@
 
 <mapper namespace="studentSpace">
 
-    <cache eviction="LRU" readOnly="true" size="1024"/>
+    <cache readOnly="true"/>
 
     <sql id="cols">`id`, `name`, `gender`, `age`, `info`</sql>
 
@@ -23,19 +23,22 @@
     </insert>
 
     <select id="findById" resultType="student">
-        SELECT <include refid="cols"/>
+        SELECT
+        <include refid="cols"/>
         FROM `student`
         WHERE `id` = #{id}
     </select>
 
     <select id="findLikeName" resultType="student">
-        SELECT <include refid="cols"/>
+        SELECT
+        <include refid="cols"/>
         FROM `student`
         WHERE `name` like '%${value}%'
     </select>
 
     <select id="findLikeNameWithConcat" resultType="student">
-        SELECT <include refid="cols"/>
+        SELECT
+        <include refid="cols"/>
         FROM `student`
         WHERE `name` like concat('%', #{name}, '%')
     </select>
@@ -50,7 +53,23 @@
     </update>
 
     <delete id="deleteById">
-        DELETE FROM `student` WHERE `id` = #{id}
+        DELETE
+        FROM `student`
+        WHERE `id` = #{id}
     </delete>
+
+    <resultMap id="findAllMap" type="student">
+        <id column="name" property="id" javaType="int" jdbcType="INT"/>
+        <result column="name" property="name" javaType="string" jdbcType="VARCHAR"/>
+        <result column="age" property="age" jdbcType="VARCHAR"/>
+        <result column="gender" property="gender"/>
+        <result column="info" property="info"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="findAllMap">
+        SELECT
+        <include refid="cols"/>
+        FROM `student`
+    </select>
 
 </mapper>
