@@ -7,3 +7,14 @@ CREATE TABLE IF NOT EXISTS `student`
     `info`   VARCHAR(500) NULL COMMENT '学生信息'
 )
     COMMENT '学生表';
+
+CREATE TABLE IF NOT EXISTS `teacher`
+(
+    `id` VARCHAR(50) NOT NULL PRIMARY KEY,
+    `name` VARCHAR(50) NOT NULL COMMENT '教师姓名',
+    `gender` TINYINT(1) NULL COMMENT '教师性别',
+    `age` INT(3) NULL COMMENT '教师年龄',
+    `info` VARCHAR(500) NULL COMMENT '教师信息'
+)
+    COMMENT '教师表';
+
