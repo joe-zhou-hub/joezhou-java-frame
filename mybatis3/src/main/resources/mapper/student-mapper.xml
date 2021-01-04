@@ -4,8 +4,10 @@
 
 <mapper namespace="studentSpace">
 
+    <sql id="cols">`id`, `name`, `gender`, `age`, `info`</sql>
+    
     <insert id="insert" parameterType="student" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO `student` (`id`, `name`, `gender`, `age`, `info`)
+        INSERT INTO `student` (<include refid="cols"/>)
         VALUES (#{id}, #{name}, #{gender}, #{age}, #{info})
     </insert>
 
@@ -14,24 +16,24 @@
             SELECT last_insert_id()
         </selectKey>
 
-        INSERT INTO `student` (`id`, `name`, `gender`, `age`, `info`)
+        INSERT INTO `student` (<include refid="cols"/>)
         VALUES (#{id}, #{name}, #{gender}, #{age}, #{info})
     </insert>
 
     <select id="findById" resultType="student">
-        SELECT `id`, `name`, `gender`, `age`, `info`
+        SELECT <include refid="cols"/>
         FROM `student`
         WHERE `id` = #{id}
     </select>
 
     <select id="findLikeName" resultType="student">
-        SELECT `id`, `name`, `gender`, `age`, `info`
+        SELECT <include refid="cols"/>
         FROM `student`
         WHERE `name` like '%${value}%'
     </select>
 
     <select id="findLikeNameWithConcat" resultType="student">
-        SELECT `id`, `name`, `gender`, `age`, `info`
+        SELECT <include refid="cols"/>
         FROM `student`
         WHERE `name` like concat('%', #{name}, '%')
     </select>
