@@ -2,9 +2,9 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="studentSpace">
+<mapper namespace="com.joezhou.mapper.WorkerMapper">
 
-    <insert id="insert" parameterType="com.joezhou.pojo.Worker" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO `worker` (`id`, `name`, `gender`, `age`, `info`)
         VALUES (#{id}, #{name}, #{gender}, #{age}, #{info})
     </insert>

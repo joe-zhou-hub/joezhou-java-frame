@@ -15,21 +15,14 @@ public class WorkerTest {
     private SqlSessionFactory factory = MyBatisUtil.getFactory("mybatis-crud.xml");
 
     @Test
-    public void retrieveById() {
-        try (SqlSession session = factory.openSession()) {
-            WorkerMapper workerMapper = session.getMapper(WorkerMapper.class);
-            System.out.println(workerMapper.findById(1));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
     public void insert() {
         SqlSession session = factory.openSession();
         WorkerMapper workerMapper = session.getMapper(WorkerMapper.class);
         try {
             workerMapper.insert(new Worker(null, "赵四", 1, 58, "亚洲舞王"));
+            workerMapper.insert(new Worker(null, "赵五", 1, 58, "亚洲舞王"));
+            workerMapper.insert(new Worker(null, "王四", 1, 58, "亚洲舞王"));
+            workerMapper.insert(new Worker(null, "王五", 1, 58, "亚洲舞王"));
             session.commit();
         } catch (Exception e) {
             session.rollback();
@@ -40,10 +33,20 @@ public class WorkerTest {
     }
 
     @Test
-    public void retrieveLikeName() {
+    public void findById() {
         try (SqlSession session = factory.openSession()) {
             WorkerMapper workerMapper = session.getMapper(WorkerMapper.class);
-            System.out.println(workerMapper.findLikeName("谢"));
+            System.out.println(workerMapper.findById(1));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void findLikeName() {
+        try (SqlSession session = factory.openSession()) {
+            WorkerMapper workerMapper = session.getMapper(WorkerMapper.class);
+            System.out.println(workerMapper.findLikeName("四"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -54,7 +57,7 @@ public class WorkerTest {
         SqlSession session = factory.openSession();
         WorkerMapper workerMapper = session.getMapper(WorkerMapper.class);
         try {
-            workerMapper.updateById(new Worker(null, "赵四", 1, 58, "亚洲舞王"));
+            workerMapper.updateById(new Worker(1, "刘能", 1, 58, "村副主任"));
             session.commit();
         } catch (Exception e) {
             session.rollback();
