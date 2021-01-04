@@ -57,9 +57,18 @@ public class StudentTest {
         try (SqlSession session = factory.openSession();) {
             Student resultA = session.selectOne("studentSpace.findById", 1);
             Student resultB = session.selectOne("studentSpace.findById", zhaosi);
-            session.commit();
             System.out.println(resultA);
             System.out.println(resultB);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void selectList() {
+        SqlSessionFactory factory = MyBatisUtil.getFactory("mybatis-crud.xml");
+        try (SqlSession session = factory.openSession()) {
+            System.out.println(session.selectList("studentSpace.findLikeName", "刘"));
         } catch (Exception e) {
             e.printStackTrace();
         }

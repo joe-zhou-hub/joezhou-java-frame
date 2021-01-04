@@ -23,4 +23,9 @@
         WHERE `id` = #{id}
     </select>
 
+    <select id="findLikeName" resultType="com.joezhou.pojo.Student">
+        SELECT `id`, `name`, `gender`, `age`, `info` FROM `student`
+        WHERE `name` like "%"#{name}"%"
+    </select>
+
 </mapper>
