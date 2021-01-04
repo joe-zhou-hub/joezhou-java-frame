@@ -24,6 +24,7 @@
     <mappers>
         <mapper resource="mapper/student-mapper.xml"/>
         <mapper resource="mapper/teacher-mapper.xml"/>
+        <mapper resource="mapper/worker-mapper.xml"/>
     </mappers>
 
 </configuration>

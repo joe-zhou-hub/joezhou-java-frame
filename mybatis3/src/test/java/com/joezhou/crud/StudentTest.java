@@ -49,7 +49,7 @@ public class StudentTest {
     }
 
     @Test
-    public void selectOne() {
+    public void findById() {
         try (SqlSession session = factory.openSession();) {
             System.out.println((Student) session.selectOne(
                     "studentSpace.findById", 1));
@@ -90,6 +90,20 @@ public class StudentTest {
         Student zhaosi = new Student(1, "谢广坤", 1, 60, "广坤山货");
         try {
             session.update("studentSpace.updateById", zhaosi);
+            session.commit();
+        } catch (Exception e) {
+            session.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
+
+    @Test
+    public void deleteById() {
+        SqlSession session = factory.openSession();
+        try {
+            session.delete("studentSpace.deleteById", 1);
             session.commit();
         } catch (Exception e) {
             session.rollback();

@@ -18,3 +18,13 @@ CREATE TABLE IF NOT EXISTS `teacher`
 )
     COMMENT '教师表';
 
+CREATE TABLE IF NOT EXISTS `worker`
+(
+    `id`     INT(11) AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(50) NOT NULL COMMENT '工人姓名',
+    `gender` TINYINT(1) NULL COMMENT '工人性别',
+    `age` INT(3) NULL COMMENT '工人年龄',
+    `info` VARCHAR(500) NULL COMMENT '工人信息'
+)
+    COMMENT '工人表';
+

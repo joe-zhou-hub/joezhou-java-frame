@@ -1,0 +1,37 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="studentSpace">
+
+    <insert id="insert" parameterType="com.joezhou.pojo.Worker" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `worker` (`id`, `name`, `gender`, `age`, `info`)
+        VALUES (#{id}, #{name}, #{gender}, #{age}, #{info})
+    </insert>
+
+    <select id="findById" resultType="com.joezhou.pojo.Worker">
+        SELECT `id`, `name`, `gender`, `age`, `info`
+        FROM `worker`
+        WHERE `id` = #{id}
+    </select>
+
+    <select id="findLikeName" resultType="com.joezhou.pojo.Worker">
+        SELECT `id`, `name`, `gender`, `age`, `info`
+        FROM `worker`
+        WHERE `name` like concat('%', #{name}, '%')
+    </select>
+
+    <update id="updateById">
+        UPDATE `worker`
+        SET `name`   = #{name},
+            `age`    = #{age},
+            `gender` = #{gender},
+            `info`   = #{info}
+        WHERE `id` = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM `worker` WHERE `id` = #{id}
+    </delete>
+
+</mapper>

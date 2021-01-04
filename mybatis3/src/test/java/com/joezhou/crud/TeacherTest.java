@@ -10,10 +10,10 @@ import org.junit.Test;
  * @author JoeZhou
  */
 public class TeacherTest {
+    private SqlSessionFactory factory = MyBatisUtil.getFactory("mybatis-crud.xml");
 
     @Test
     public void insertWithSelectKey() {
-        SqlSessionFactory factory = MyBatisUtil.getFactory("mybatis-crud.xml");
         Teacher changgui = new Teacher(null, "长贵", 1, 88, "村长");
         SqlSession session = factory.openSession();
         try {
