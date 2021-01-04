@@ -83,4 +83,19 @@ public class StudentTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void updateById() {
+        SqlSession session = factory.openSession();
+        Student zhaosi = new Student(1, "谢广坤", 1, 60, "广坤山货");
+        try {
+            session.update("studentSpace.updateById", zhaosi);
+            session.commit();
+        } catch (Exception e) {
+            session.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
 }

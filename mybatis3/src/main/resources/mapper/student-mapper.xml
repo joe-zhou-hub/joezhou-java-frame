@@ -36,4 +36,13 @@
         WHERE `name` like concat('%', #{name}, '%')
     </select>
 
+    <update id="updateById">
+        UPDATE `student`
+        SET `name`   = #{name},
+            `age`    = #{age},
+            `gender` = #{gender},
+            `info`   = #{info}
+        WHERE `id` = #{id}
+    </update>
+
 </mapper>
