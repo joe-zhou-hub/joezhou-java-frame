@@ -48,4 +48,20 @@ public class StudentTest {
             session.close();
         }
     }
+
+    @Test
+    public void selectOne() {
+        SqlSessionFactory factory = MyBatisUtil.getFactory("mybatis-crud.xml");
+        Student zhaosi = new Student();
+        zhaosi.setId(1);
+        try (SqlSession session = factory.openSession();) {
+            Student resultA = session.selectOne("studentSpace.findById", 1);
+            Student resultB = session.selectOne("studentSpace.findById", zhaosi);
+            session.commit();
+            System.out.println(resultA);
+            System.out.println(resultB);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

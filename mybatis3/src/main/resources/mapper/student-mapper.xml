@@ -18,4 +18,9 @@
         VALUES (#{id}, #{name}, #{gender}, #{age}, #{info})
     </insert>
 
+    <select id="findById" resultType="com.joezhou.pojo.Student">
+        SELECT `id`, `name`, `gender`, `age`, `info` FROM `student`
+        WHERE `id` = #{id}
+    </select>
+
 </mapper>
