@@ -50,4 +50,17 @@ public class UserTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void findLikeNameAndGenderByTrim() {
+        try (SqlSession session = factory.openSession()) {
+            UserMapper userMapper = session.getMapper(UserMapper.class);
+            System.out.println(userMapper.findLikeNameAndGenderByTrim(new User(null, null, null, null, null)));
+            System.out.println(userMapper.findLikeNameAndGenderByTrim(new User(null, null, 1, null, null)));
+            System.out.println(userMapper.findLikeNameAndGenderByTrim(new User(null, "王", null, null, null)));
+            System.out.println(userMapper.findLikeNameAndGenderByTrim(new User(null, "王", 1, null, null)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

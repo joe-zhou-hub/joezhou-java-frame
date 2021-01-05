@@ -33,4 +33,16 @@
         </where>
     </select>
 
+    <select id="findLikeNameAndGenderByTrim" resultType="user">
+        SELECT `id`, `name`, `gender`, `age`, `info` FROM `user`
+        <trim prefix="WHERE" prefixOverrides="AND |OR ">
+            <if test='name != null'>
+                AND `name` like concat('%', #{name}, '%')
+            </if>
+            <if test='gender != null'>
+                AND `gender` = #{gender}
+            </if>
+        </trim>
+    </select>
+
 </mapper>
