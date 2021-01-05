@@ -142,11 +142,11 @@
     <select id="findByPojoParam" resultType="user">
         SELECT `id`, `name`, `gender`, `age`, `info` FROM `user`
         <where>
-            <if test='_parameter.param1 != null'>
-                <if test='_parameter.param1.name != null'>
+            <if test='_parameter.get("param1") != null'>
+                <if test='_parameter.get("param1").name != null'>
                     AND `name` like concat('%', #{param1.name}, '%')
                 </if>
-                <if test='_parameter.param2.gender != null'>
+                <if test='_parameter.get("param2").gender != null'>
                     AND `gender` = #{param2.gender}
                 </if>
             </if>
