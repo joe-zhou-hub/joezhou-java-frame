@@ -7,6 +7,11 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author JoeZhou
  */
@@ -72,6 +77,48 @@ public class UserTest {
             System.out.println(userMapper.findLikeNameAndGenderByChoose(new User(1, "王", null, null, null)));
             System.out.println(userMapper.findLikeNameAndGenderByChoose(new User(1, null, 1, null, null)));
             System.out.println(userMapper.findLikeNameAndGenderByChoose(new User(1, null, null, null, null)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void findWithArrayByForEach() {
+        int[] ids = {3, 4, 6};
+        try (SqlSession session = factory.openSession()) {
+            UserMapper userMapper = session.getMapper(UserMapper.class);
+            System.out.println(userMapper.findWithArrayByForEach(ids));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void findWithListByForEach() {
+        List<Integer> ids = new ArrayList<>();
+        ids.add(3);
+        ids.add(4);
+        ids.add(6);
+        try (SqlSession session = factory.openSession()) {
+            UserMapper userMapper = session.getMapper(UserMapper.class);
+            System.out.println(userMapper.findWithListByForEach(ids));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void findWithMapByForEach() {
+        List<Integer> ids = new ArrayList<>();
+        ids.add(3);
+        ids.add(4);
+        ids.add(6);
+
+        Map<String, Object> map = new HashMap<>(1);
+        map.put("ids", ids);
+        try (SqlSession session = factory.openSession()) {
+            UserMapper userMapper = session.getMapper(UserMapper.class);
+            System.out.println(userMapper.findWithMapByForEach(map));
         } catch (Exception e) {
             e.printStackTrace();
         }

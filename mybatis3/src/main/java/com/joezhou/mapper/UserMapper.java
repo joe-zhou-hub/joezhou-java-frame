@@ -3,6 +3,7 @@ package com.joezhou.mapper;
 import com.joezhou.pojo.User;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author JoeZhou
@@ -62,5 +63,30 @@ public interface UserMapper {
      * @return 满足条件的用户
      */
     List<User> findLikeNameAndGenderByChoose(User user);
+
+    /**
+     * 找到编号为3和4和6的用户
+     *
+     * @param ids 编号数组
+     * @return 满足条件的用户
+     */
+    List<User> findWithArrayByForEach(int[] ids);
+
+    /**
+     * 找到编号为3和4和6的用户
+     *
+     * @param ids 编号列表
+     * @return 满足条件的用户
+     */
+    List<User> findWithListByForEach(List<Integer> ids);
+
+    /**
+     * 找到编号为3和4和6的用户
+     *
+     * @param userMap 用户信息集合
+     * @return 满足条件的用户
+     */
+    List<User> findWithMapByForEach(Map<String, Object> userMap);
+
 
 }

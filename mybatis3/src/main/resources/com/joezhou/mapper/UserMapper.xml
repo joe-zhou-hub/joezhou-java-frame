@@ -62,5 +62,31 @@
         </where>
     </select>
 
+    <select id="findWithArrayByForEach" resultType="user">
+        SELECT `id`, `name`, `gender`, `age`, `info` FROM `user`
+        <where>
+            <foreach collection="array" item="e" open="id in (" close=")" separator=",">
+                ${e}
+            </foreach>
+        </where>
+    </select>
+
+    <select id="findWithListByForEach" resultType="user">
+        SELECT `id`, `name`, `gender`, `age`, `info` FROM `user`
+        <where>
+            <foreach collection="list" item="e" open="id in (" close=")" separator=",">
+                ${e}
+            </foreach>
+        </where>
+    </select>
+
+    <select id="findWithMapByForEach" resultType="user">
+        SELECT `id`, `name`, `gender`, `age`, `info` FROM `user`
+        <where>
+            <foreach collection="ids" item="e" open="id in (" close=")" separator=",">
+                ${e}
+            </foreach>
+        </where>
+    </select>
 
 </mapper>
