@@ -11,4 +11,14 @@
           AND `gender` = #{gender}
     </select>
 
+    <select id="findLikeNameAndGenderByIf" resultType="user">
+        SELECT `id`, `name`, `gender`, `age`, `info` FROM `user` WHERE
+        <if test='name != null'>
+            `name` like concat('%', #{name}, '%')
+        </if>
+        <if test='gender != null'>
+            `gender` = #{gender}
+        </if>
+    </select>
+
 </mapper>
