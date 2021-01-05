@@ -142,4 +142,46 @@ public class UserTest {
             session.close();
         }
     }
+
+    @Test
+    public void findByNameAndGender() {
+        try (SqlSession session = factory.openSession()) {
+            UserMapper userMapper = session.getMapper(UserMapper.class);
+            System.out.println(userMapper.findByNameAndGender("王", 1));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void findBySingleParam() {
+        try (SqlSession session = factory.openSession()) {
+            UserMapper userMapper = session.getMapper(UserMapper.class);
+            System.out.println(userMapper.findBySingleParam("王"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void findByMultipleParam() {
+        try (SqlSession session = factory.openSession()) {
+            UserMapper userMapper = session.getMapper(UserMapper.class);
+            System.out.println(userMapper.findByMultipleParam("王", 0));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void findByPojoParam() {
+        User userA = new User(null, "王", null, null, null);
+        User userB = new User(null, null, 0, null, null);
+        try (SqlSession session = factory.openSession()) {
+            UserMapper userMapper = session.getMapper(UserMapper.class);
+            System.out.println(userMapper.findByPojoParam(userA, userB));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

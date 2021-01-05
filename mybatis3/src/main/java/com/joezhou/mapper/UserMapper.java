@@ -1,6 +1,7 @@
 package com.joezhou.mapper;
 
 import com.joezhou.pojo.User;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -94,4 +95,38 @@ public interface UserMapper {
      */
     void updateByTrim(User user);
 
+    /**
+     * 根据姓名模糊以及性别精准查询用户信息
+     *
+     * @param name   用户姓名
+     * @param gender 用户性别
+     * @return 满足条件的用户
+     */
+    List<User> findByNameAndGender(@Param("aa") String name, @Param("bb") int gender);
+
+    /**
+     * 根据姓名模糊查询用户信息
+     *
+     * @param name 姓名
+     * @return 符合条件的用户信息
+     */
+    List<User> findBySingleParam(String name);
+
+    /**
+     * 根据姓名模糊和性别精准查询用户信息
+     *
+     * @param name   姓名
+     * @param gender 性别
+     * @return 符合条件的学生信息
+     */
+    List<User> findByMultipleParam(String name, int gender);
+
+    /**
+     * 根据姓名模糊和性别精准查询用户信息
+     *
+     * @param userA 用户实体
+     * @param userB 用户实体
+     * @return 符合条件的学生信息
+     */
+    List<User> findByPojoParam(User userA,User userB);
 }
