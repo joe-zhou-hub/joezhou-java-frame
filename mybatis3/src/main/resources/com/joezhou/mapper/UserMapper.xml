@@ -89,4 +89,28 @@
         </where>
     </select>
 
+    <update id="updateByIdBySet">
+        UPDATE `user`
+        <set>
+            <if test='name != null'>`name` = #{name},</if>
+            <if test='age != null'>`age` = #{age},</if>
+            <if test='gender != null'>`gender` = #{gender},</if>
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+    <update id="updateByIdByTrim">
+        UPDATE `user`
+        <trim prefix="SET" prefixOverrides=",">
+            <if test='name != null'>`name` = #{name},</if>
+            <if test='age != null'>`age` = #{age},</if>
+            <if test='gender != null'>`gender` = #{gender},</if>
+            <where>
+                id = #{id}
+            </where>
+        </trim>
+    </update>
+
 </mapper>

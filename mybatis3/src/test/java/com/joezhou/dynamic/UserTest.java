@@ -123,4 +123,18 @@ public class UserTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void updateByIdBySet() {
+        User user = new User(1, "赵四", null, null, null);
+
+        Map<String, Object> map = new HashMap<>(1);
+        map.put("ids", ids);
+        try (SqlSession session = factory.openSession()) {
+            UserMapper userMapper = session.getMapper(UserMapper.class);
+            System.out.println(userMapper.findWithMapByForEach(map));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

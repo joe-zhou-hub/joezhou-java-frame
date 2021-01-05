@@ -88,5 +88,18 @@ public interface UserMapper {
      */
     List<User> findWithMapByForEach(Map<String, Object> userMap);
 
+    /**
+     * 根据主键修改用户信息
+     *
+     * @param user 用户实体
+     */
+    void updateByIdBySet(User user);
+
+    /**
+     * 根据主键修改用户信息
+     *
+     * @param user 用户实体
+     */
+    void updateByIdByTrim(User user);
 
 }
