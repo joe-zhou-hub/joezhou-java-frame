@@ -38,3 +38,13 @@ CREATE TABLE IF NOT EXISTS `leader`
 )
     COMMENT '领导表';
 
+CREATE TABLE IF NOT EXISTS `user`
+(
+    `id`     INT(11) AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(50) NOT NULL COMMENT '用户姓名',
+    `gender` TINYINT(1) NULL COMMENT '用户性别',
+    `age` INT(3) NULL COMMENT '用户年龄',
+    `info` VARCHAR(500) NULL COMMENT '用户信息'
+)
+    COMMENT '用户表';
+
