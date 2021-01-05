@@ -110,7 +110,7 @@ public interface UserMapper {
      * @param name 姓名
      * @return 符合条件的用户信息
      */
-    List<User> findBySingleParam(String name);
+    List<User> findBySingleParam(@Param("aa") String name);
 
     /**
      * 根据姓名模糊和性别精准查询用户信息
@@ -119,7 +119,7 @@ public interface UserMapper {
      * @param gender 性别
      * @return 符合条件的学生信息
      */
-    List<User> findByMultipleParam(String name, int gender);
+    List<User> findByMultipleParam(@Param("aa") String name, @Param("bb") int gender);
 
     /**
      * 根据姓名模糊和性别精准查询用户信息
@@ -128,5 +128,5 @@ public interface UserMapper {
      * @param userB 用户实体
      * @return 符合条件的学生信息
      */
-    List<User> findByPojoParam(User userA,User userB);
+    List<User> findByMultiplePojoParam(@Param("aa") User userA, @Param("bb") User userB);
 }

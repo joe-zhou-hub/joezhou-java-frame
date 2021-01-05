@@ -179,7 +179,7 @@ public class UserTest {
         User userB = new User(null, null, 0, null, null);
         try (SqlSession session = factory.openSession()) {
             UserMapper userMapper = session.getMapper(UserMapper.class);
-            System.out.println(userMapper.findByPojoParam(userA, userB));
+            System.out.println(userMapper.findByMultiplePojoParam(userA, userB));
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -127,14 +127,14 @@
         </where>
     </select>
 
-    <select id="findByMultipleParam" resultType="user">
+    <select id="findByMultiplePojoParam" resultType="user">
         SELECT `id`, `name`, `gender`, `age`, `info` FROM `user`
         <where>
             <if test='_parameter.get("param1") != null'>
-                AND `name` like concat('%', #{param1}, '%')
+                AND `name` like concat('%', #{param1.name}, '%')
             </if>
             <if test='_parameter.get("param2") != null'>
-                AND `gender` = #{param2}
+                AND `gender` = #{param2.gender}
             </if>
         </where>
     </select>
