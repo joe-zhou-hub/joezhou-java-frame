@@ -59,7 +59,7 @@
     </delete>
 
     <resultMap id="findAllMap" type="student">
-        <id column="name" property="id" javaType="int" jdbcType="INT"/>
+        <id column="id" property="id" javaType="int" jdbcType="INTEGER"/>
         <result column="name" property="name" javaType="string" jdbcType="VARCHAR"/>
         <result column="age" property="age" jdbcType="VARCHAR"/>
         <result column="gender" property="gender"/>

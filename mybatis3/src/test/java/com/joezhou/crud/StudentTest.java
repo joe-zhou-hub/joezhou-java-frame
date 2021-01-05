@@ -112,4 +112,13 @@ public class StudentTest {
             session.close();
         }
     }
+
+    @Test
+    public void findAll() {
+        try (SqlSession session = factory.openSession()) {
+            System.out.println(session.selectList("studentSpace.findAll"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
