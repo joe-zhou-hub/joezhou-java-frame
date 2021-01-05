@@ -4,14 +4,7 @@
 
 <mapper namespace="com.joezhou.mapper.UserMapper">
 
-    <select id="findLikeNameAndGender" resultType="user">
-        SELECT `id`, `name`, `gender`, `age`, `info`
-        FROM `user`
-        WHERE `name` like concat('%', #{name}, '%')
-          AND `gender` = #{gender}
-    </select>
-
-    <select id="findLikeNameAndGenderByIf" resultType="user">
+    <select id="findByIf" resultType="user">
         SELECT `id`, `name`, `gender`, `age`, `info` FROM `user` WHERE
         <if test='name != null'>
             `name` like concat('%', #{name}, '%')
@@ -21,7 +14,7 @@
         </if>
     </select>
 
-    <select id="findLikeNameAndGenderByWhere" resultType="user">
+    <select id="findByWhere" resultType="user">
         SELECT `id`, `name`, `gender`, `age`, `info` FROM `user`
         <where>
             <if test='name != null'>
@@ -33,7 +26,7 @@
         </where>
     </select>
 
-    <select id="findLikeNameAndGenderByTrim" resultType="user">
+    <select id="findByTrim" resultType="user">
         SELECT `id`, `name`, `gender`, `age`, `info` FROM `user`
         <trim prefix="WHERE" prefixOverrides="AND|OR">
             <if test='name != null'>
@@ -45,7 +38,7 @@
         </trim>
     </select>
 
-    <select id="findLikeNameAndGenderByChoose" resultType="user">
+    <select id="findByChoose" resultType="user">
         SELECT `id`, `name`, `gender`, `age`, `info` FROM `user`
         <where>
             <choose>
@@ -62,7 +55,7 @@
         </where>
     </select>
 
-    <select id="findWithArrayByForEach" resultType="user">
+    <select id="findWithArray" resultType="user">
         SELECT `id`, `name`, `gender`, `age`, `info` FROM `user`
         <where>
             <foreach collection="array" item="e" open="id in (" close=")" separator=",">
@@ -71,7 +64,7 @@
         </where>
     </select>
 
-    <select id="findWithListByForEach" resultType="user">
+    <select id="findWithList" resultType="user">
         SELECT `id`, `name`, `gender`, `age`, `info` FROM `user`
         <where>
             <foreach collection="list" item="e" open="id in (" close=")" separator=",">
@@ -80,7 +73,7 @@
         </where>
     </select>
 
-    <select id="findWithMapByForEach" resultType="user">
+    <select id="findWithMap" resultType="user">
         SELECT `id`, `name`, `gender`, `age`, `info` FROM `user`
         <where>
             <foreach collection="ids" item="e" open="id in (" close=")" separator=",">
@@ -89,7 +82,7 @@
         </where>
     </select>
 
-    <update id="updateByIdBySet">
+    <update id="updateBySet">
         UPDATE `user`
         <set>
             <if test='name != null'>`name` = #{name},</if>
@@ -101,16 +94,16 @@
         </where>
     </update>
 
-    <update id="updateByIdByTrim">
+    <update id="updateByTrim">
         UPDATE `user`
-        <trim prefix="SET" prefixOverrides=",">
+        <trim prefix="SET" suffixOverrides=",">
             <if test='name != null'>`name` = #{name},</if>
             <if test='age != null'>`age` = #{age},</if>
             <if test='gender != null'>`gender` = #{gender},</if>
-            <where>
-                id = #{id}
-            </where>
         </trim>
+        <where>
+            id = #{id}
+        </where>
     </update>
 
 </mapper>
