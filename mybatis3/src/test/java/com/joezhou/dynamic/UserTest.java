@@ -63,4 +63,17 @@ public class UserTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void findLikeNameAndGenderByChoose() {
+        try (SqlSession session = factory.openSession()) {
+            UserMapper userMapper = session.getMapper(UserMapper.class);
+            System.out.println(userMapper.findLikeNameAndGenderByChoose(new User(1, "王", 1, null, null)));
+            System.out.println(userMapper.findLikeNameAndGenderByChoose(new User(1, "王", null, null, null)));
+            System.out.println(userMapper.findLikeNameAndGenderByChoose(new User(1, null, 1, null, null)));
+            System.out.println(userMapper.findLikeNameAndGenderByChoose(new User(1, null, null, null, null)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

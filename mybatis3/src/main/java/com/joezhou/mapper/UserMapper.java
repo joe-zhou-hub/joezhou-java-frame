@@ -51,4 +51,16 @@ public interface UserMapper {
      */
     List<User> findLikeNameAndGenderByTrim(User user);
 
+    /**
+     * 根据姓名模糊以及性别精准查询用户信息
+     * id不为null时
+     * 若姓名不为null，按姓名模糊查询
+     * 若姓名为null，但性别不为null，则按性别精准查询
+     * 若姓名和性别都为null，则按照id精准查询
+     *
+     * @param user 用户实体
+     * @return 满足条件的用户
+     */
+    List<User> findLikeNameAndGenderByChoose(User user);
+
 }
