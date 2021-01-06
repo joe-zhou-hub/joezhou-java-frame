@@ -30,7 +30,7 @@
     </resultMap>
 
     <resultMap id="dept-emp-select" type="dept">
-        <collection property="emps" ofType="emp" column="deptno" jdbcType="INTEGER"
+        <collection  property="emps" ofType="emp" column="deptno" jdbcType="INTEGER"
                      select="com.joezhou.mapper.EmpMapper.findByDeptno"/>
     </resultMap>
 
@@ -53,4 +53,5 @@
         SELECT d.`deptno`, d.`dname`, d.`loc`
         FROM `dept` d
     </select>
+
 </mapper>
