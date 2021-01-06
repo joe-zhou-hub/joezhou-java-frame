@@ -5,4 +5,12 @@
 <mapper namespace="com.joezhou.mapper.DeptMapper">
     <cache readOnly="true"/>
 
+    <select id="findByDeptNo" resultType="dept">
+        SELECT `deptno`, `dname`, `loc` FROM `dept`
+        <where>
+            <if test='_parameter != null'>
+                `deptno` = #{param1}
+            </if>
+        </where>
+    </select>
 </mapper>

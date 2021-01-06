@@ -26,4 +26,28 @@ public class EmpTest {
         }
     }
 
+    @Test
+    public void findWithDeptBySelect() {
+        try (SqlSession session = factory.openSession()) {
+            EmpMapper empMapper = session.getMapper(EmpMapper.class);
+            for (Emp emp : empMapper.findWithDeptBySelect()) {
+                System.out.printf("%s 在 %s 部门\n", emp.getEname(), emp.getDeptno().getDname());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void findWithDeptByAnnotation() {
+        try (SqlSession session = factory.openSession()) {
+            EmpMapper empMapper = session.getMapper(EmpMapper.class);
+            for (Emp emp : empMapper.findWithDeptByAnnotation()) {
+                System.out.printf("%s 在 %s 部门\n", emp.getEname(), emp.getDeptno().getDname());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

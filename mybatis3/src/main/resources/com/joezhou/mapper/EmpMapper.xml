@@ -13,11 +13,16 @@
         <result column="comm" property="comm"/>
         <result column="mgr" property="mgr"/>
         <result column="hiredate" property="hiredate"/>
-        <association javaType="dept" property="deptno" column="deptno">
+        <association javaType="dept" property="deptno" column="deptno" jdbcType="INTEGER">
             <id column="deptno" property="deptno"/>
             <result column="dname" property="dname"/>
             <result column="loc" property="loc"/>
         </association>
+    </resultMap>
+
+    <resultMap id="emp-dept-select" type="emp">
+        <association javaType="dept" property="deptno" column="deptno" jdbcType="INTEGER"
+                     select="com.joezhou.mapper.DeptMapper.findByDeptNo"/>
     </resultMap>
 
     <select id="findWithDeptByJoin" resultMap="emp-dept-join">
@@ -33,6 +38,18 @@
                d.`loc`
         FROM `emp` e
                  JOIN `dept` d ON e.`deptno` = d.`deptno`
+    </select>
+
+    <select id="findWithDeptBySelect" resultMap="emp-dept-select">
+        SELECT e.`empno`,
+               e.`ename`,
+               e.`job`,
+               e.`mgr`,
+               e.`hiredate`,
+               e.`sal`,
+               e.`comm`,
+               e.`deptno`
+        FROM `emp` e
     </select>
 
 </mapper>
