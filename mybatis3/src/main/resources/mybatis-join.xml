@@ -7,12 +7,10 @@
 
     <properties resource="jdbc/db.properties"/>
 
-    <!--
     <settings>
         <setting name="lazyLoadingEnabled" value="true"/>
         <setting name="aggressiveLazyLoading" value="false"/>
     </settings>
-    -->
 
     <typeAliases>
         <package name="com.joezhou.pojo"/>

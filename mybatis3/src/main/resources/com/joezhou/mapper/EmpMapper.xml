@@ -22,7 +22,7 @@
 
     <resultMap id="emp-dept-select" type="emp">
         <association javaType="dept" property="deptno" column="deptno" jdbcType="INTEGER"
-                     select="com.joezhou.mapper.DeptMapper.findByDeptNo"/>
+                     select="com.joezhou.mapper.DeptMapper.findByDeptno"/>
     </resultMap>
 
     <select id="findWithDeptByJoin" resultMap="emp-dept-join">
@@ -52,7 +52,7 @@
         FROM `emp` e
     </select>
 
-    <select id="findByDeptno" resultType="emp">
+<!--    <select id="findByDeptno" resultType="emp">
         SELECT e.`empno`, e.`ename`, e.`job`, e.`mgr`, e.`hiredate`, e.`sal`, e.`comm`, e.`deptno`
         FROM `emp` e
         <where>
@@ -60,6 +60,6 @@
                 `deptno` = #{param1}
             </if>
         </where>
-    </select>
+    </select>-->
 
 </mapper>
