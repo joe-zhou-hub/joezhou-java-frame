@@ -59,6 +59,20 @@
             <version>${spring}</version>
         </dependency>
 
+        <!--spring-aspects-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>${spring}</version>
+        </dependency>
+
+        <!--bonecp-spring-->
+        <dependency>
+            <groupId>com.jolbox</groupId>
+            <artifactId>bonecp-spring</artifactId>
+            <version>0.8.0.RELEASE</version>
+        </dependency>
+
         <!--lombok-->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -75,26 +89,12 @@
             <scope>test</scope>
         </dependency>
 
-        <!--bonecp-spring-->
-        <dependency>
-            <groupId>com.jolbox</groupId>
-            <artifactId>bonecp-spring</artifactId>
-            <version>0.8.0.RELEASE</version>
-        </dependency>
-
         <!--mysql-connector-java-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.15</version>
             <scope>runtime</scope>
-        </dependency>
-
-        <!--spring-aspects-->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aspects</artifactId>
-            <version>${spring}</version>
         </dependency>
 
     </dependencies>
