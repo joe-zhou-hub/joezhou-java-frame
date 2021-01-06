@@ -20,11 +20,6 @@
         </association>
     </resultMap>
 
-    <resultMap id="emp-dept-select" type="emp">
-        <association javaType="dept" property="deptno" column="deptno" jdbcType="INTEGER"
-                     select="com.joezhou.mapper.DeptMapper.findByDeptno"/>
-    </resultMap>
-
     <select id="findWithDeptByJoin" resultMap="emp-dept-join">
         SELECT e.`empno`,
                e.`ename`,
@@ -39,6 +34,11 @@
         FROM `emp` e
                  JOIN `dept` d ON e.`deptno` = d.`deptno`
     </select>
+
+    <resultMap id="emp-dept-select" type="emp">
+        <association javaType="dept" property="deptno" column="deptno" jdbcType="INTEGER"
+                     select="com.joezhou.mapper.DeptMapper.findByDeptno"/>
+    </resultMap>
 
     <select id="findWithDeptBySelect" resultMap="emp-dept-select">
         SELECT e.`empno`,

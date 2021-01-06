@@ -1,6 +1,10 @@
 package com.joezhou.mapper;
 
 import com.joezhou.pojo.Dept;
+import org.apache.ibatis.annotations.Many;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -8,31 +12,31 @@ import java.util.List;
  * @author JoeZhou
  */
 public interface DeptMapper {
-    /**
-     * 通过主键查询部门信息
-     * @param deptno 主键
-     * @return 返回对应主键的部门信息
-     */
-    Dept findByDeptno(int deptno);
 
     /**
      * 查询所有部门，同时查出部门所有员工信息
      *
      * @return 所有部门及其员工信息
      */
-    List<Dept>  findWithEmpsByJoin();
+    List<Dept> findWithEmpsByJoin();
 
     /**
      * 查询所有部门，同时查出部门所有员工信息
      *
      * @return 所有部门及其员工信息
      */
-    List<Dept>  findWithEmpsBySelect();
+    List<Dept> findWithEmpsBySelect();
 
     /**
      * 查询所有部门，同时查出部门所有员工信息
      *
      * @return 所有部门及其员工信息
      */
-    List<Dept>  findWithEmpsByMany();
+    @Select("SELECT `deptno`, `dname`, `loc` FROM `dept`")
+    @Results(id = "dept-emp-many", value = {
+            @Result(column = "deptno", property = "emps",
+                    many = @Many(select = "com.joezhou.mapper.EmpMapper.findByDeptno")
+            )
+    })
+    List<Dept> findWithEmpsByMany();
 }

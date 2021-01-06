@@ -1,13 +1,14 @@
 package com.joezhou.join;
 
 import com.joezhou.mapper.DeptMapper;
-import com.joezhou.mapper.EmpMapper;
 import com.joezhou.pojo.Dept;
 import com.joezhou.pojo.Emp;
 import com.joezhou.util.MyBatisUtil;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.Test;
+
+import java.util.List;
 
 /**
  * @author JoeZhou
@@ -39,7 +40,7 @@ public class DeptTest {
                 for (Emp emp : dept.getEmps()) {
                     System.out.print(emp.getEname() + " ");
                 }
-                System.out.printf("在 %s 部门\n", dept.getDname());
+                System.out.println("在" + dept.getDname() + "部门");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -49,9 +50,12 @@ public class DeptTest {
     @Test
     public void findWithDeptByMany() {
         try (SqlSession session = factory.openSession()) {
-            EmpMapper empMapper = session.getMapper(EmpMapper.class);
-            for (Emp emp : empMapper.findWithDeptByOne()) {
-                System.out.printf("%s 在 %s 部门\n", emp.getEname(), emp.getDeptno().getDname());
+            DeptMapper deptMapper = session.getMapper(DeptMapper.class);
+            for (Dept dept : deptMapper.findWithEmpsByMany()) {
+                for (Emp emp : dept.getEmps()) {
+                    System.out.print(emp.getEname() + " ");
+                }
+                System.out.println("在" + dept.getDname() + "部门");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -62,12 +66,11 @@ public class DeptTest {
     public void findWithEmpsByLazy() {
         try (SqlSession session = factory.openSession()) {
             DeptMapper deptMapper = session.getMapper(DeptMapper.class);
-            for (Dept dept : deptMapper.findWithEmpsBySelect()) {
-                for (Emp emp : dept.getEmps()) {
-                    System.out.print(emp.getEname() + " ");
-                }
-                System.out.printf("在 %s 部门\n", dept.getDname());
-            }
+            // debug here
+            List<Dept> depts = deptMapper.findWithEmpsBySelect();
+            System.out.println(depts.get(0).getDname());
+            System.out.println(depts.get(0).getLoc());
+            System.out.println(depts.get(0).getEmps().get(0).getEname());
         } catch (Exception e) {
             e.printStackTrace();
         }
