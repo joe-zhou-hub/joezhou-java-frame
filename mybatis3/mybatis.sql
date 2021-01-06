@@ -95,3 +95,15 @@ VALUES (7369, 'SMITH', 'CLERK', 7902, '1980-12-17', 800, null, 20),
        (7934, 'MILLER', 'CLERK', 7782, '1982-01-23', 1300, null, 10);
 COMMIT;
 
+CREATE TABLE IF NOT EXISTS `dog`
+(
+    `id`     INT(11) AUTO_INCREMENT PRIMARY KEY,
+    `name`   VARCHAR(50)  NOT NULL COMMENT '小狗姓名',
+    `gender` TINYINT(1)   NULL COMMENT '小狗性别',
+    `age`    INT(3)       NULL COMMENT '小狗年龄',
+    `info`   VARCHAR(500) NULL COMMENT '小狗信息'
+)
+    COMMENT '小狗表';
+
+
+
