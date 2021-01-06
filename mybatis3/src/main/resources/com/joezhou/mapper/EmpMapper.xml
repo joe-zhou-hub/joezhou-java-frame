@@ -52,7 +52,7 @@
         FROM `emp` e
     </select>
 
-    <select id="findByDeptNo" resultType="emp">
+    <select id="findByDeptno" resultType="emp">
         SELECT e.`empno`, e.`ename`, e.`job`, e.`mgr`, e.`hiredate`, e.`sal`, e.`comm`, e.`deptno`
         FROM `emp` e
         <where>

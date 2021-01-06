@@ -7,6 +7,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.Test;
 
+import java.util.List;
+
 /**
  * @author JoeZhou
  */
@@ -45,6 +47,20 @@ public class EmpTest {
             for (Emp emp : empMapper.findWithDeptByOne()) {
                 System.out.printf("%s 在 %s 部门\n", emp.getEname(), emp.getDeptno().getDname());
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void findWithDeptByLazy() {
+        try (SqlSession session = factory.openSession()) {
+            EmpMapper empMapper = session.getMapper(EmpMapper.class);
+            // debug here
+            List<Emp> emps = empMapper.findWithDeptBySelect();
+            System.out.println(emps.get(0).getEname());
+            System.out.println(emps.get(0).getSal());
+            System.out.println(emps.get(0).getDeptno().getDname());
         } catch (Exception e) {
             e.printStackTrace();
         }

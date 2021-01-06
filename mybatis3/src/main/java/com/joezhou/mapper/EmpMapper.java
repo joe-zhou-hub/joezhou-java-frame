@@ -39,7 +39,7 @@ public interface EmpMapper {
             // empno可以不用配置
             @Result(column = "empno", property = "empno", jdbcType = JdbcType.INTEGER, id = true),
             @Result(column = "deptno", property = "deptno", javaType = Dept.class,
-                    one = @One(select = "com.joezhou.mapper.DeptMapper.findByDeptNo")
+                    one = @One(select = "com.joezhou.mapper.DeptMapper.findByDeptno")
             )
     })
     List<Emp> findWithDeptByOne();
