@@ -47,7 +47,7 @@ public class DeptTest {
     }
 
     @Test
-    public void findWithDeptByOne() {
+    public void findWithDeptByMany() {
         try (SqlSession session = factory.openSession()) {
             EmpMapper empMapper = session.getMapper(EmpMapper.class);
             for (Emp emp : empMapper.findWithDeptByOne()) {
@@ -58,4 +58,18 @@ public class DeptTest {
         }
     }
 
+    @Test
+    public void findWithEmpsByLazy() {
+        try (SqlSession session = factory.openSession()) {
+            DeptMapper deptMapper = session.getMapper(DeptMapper.class);
+            for (Dept dept : deptMapper.findWithEmpsBySelect()) {
+                for (Emp emp : dept.getEmps()) {
+                    System.out.print(emp.getEname() + " ");
+                }
+                System.out.printf("在 %s 部门\n", dept.getDname());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

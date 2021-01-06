@@ -29,6 +29,11 @@
         </collection>
     </resultMap>
 
+    <resultMap id="dept-emp-select" type="dept">
+        <collection property="emps" ofType="emp" column="deptno" jdbcType="INTEGER"
+                     select="com.joezhou.mapper.EmpMapper.findByDeptno"/>
+    </resultMap>
+
     <select id="findWithEmpsByJoin" resultMap="dept-emp-join">
         SELECT e.`empno`,
                e.`ename`,
@@ -44,8 +49,8 @@
                  JOIN `emp` e ON e.`deptno` = d.`deptno`
     </select>
 
-    <!--<select id="findWithEmpsBySelect" resultMap="dept-emp-select">
+    <select id="findWithEmpsBySelect" resultMap="dept-emp-select">
         SELECT d.`deptno`, d.`dname`, d.`loc`
         FROM `dept` d
-    </select>-->
+    </select>
 </mapper>
