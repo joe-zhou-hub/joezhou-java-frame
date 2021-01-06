@@ -1,0 +1,33 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.joezhou.mapper.EmpMapper">
+    <cache readOnly="true"/>
+
+    <resultMap id="emp-dept" type="emp">
+
+        <!--需要配置主键id和全部的字段result，否则实体类中对应的值为null-->
+        <id column="empno" property="empno"/>
+        <result column="ename" property="ename"/>
+        <result column="job" property="job"/>
+        <result column="sal" property="sal"/>
+        <result column="comm" property="comm"/>
+        <result column="mgr" property="mgr"/>
+        <result column="hiredate" property="hiredate"/>
+
+        <!--deptno属性使用association来配置，其中javaType不能省略-->
+        <association javaType="dept" property="deptno" column="deptno">
+            <id column="deptno" property="deptno"/>
+            <result column="dname" property="dname"/>
+            <result column="loc" property="loc"/>
+        </association>
+    </resultMap>
+
+    <select id="findWithDept" resultMap="emp-dept">
+        SELECT `empno`, `ename`, `job`, `mgr`, `hiredate`, `sal`, `comm`, d.`deptno`, d.`dname`, d.`loc`
+        FROM `emp` e
+                 JOIN `dept` d ON e.`deptno` = d.`deptno`
+    </select>
+
+</mapper>
