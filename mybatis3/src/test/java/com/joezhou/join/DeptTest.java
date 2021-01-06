@@ -1,6 +1,8 @@
 package com.joezhou.join;
 
+import com.joezhou.mapper.DeptMapper;
 import com.joezhou.mapper.EmpMapper;
+import com.joezhou.pojo.Dept;
 import com.joezhou.pojo.Emp;
 import com.joezhou.util.MyBatisUtil;
 import org.apache.ibatis.session.SqlSession;
@@ -10,16 +12,19 @@ import org.junit.Test;
 /**
  * @author JoeZhou
  */
-public class EmpTest {
+public class DeptTest {
 
     private SqlSessionFactory factory = MyBatisUtil.getFactory("mybatis-join.xml");
 
     @Test
-    public void findWithDeptByJoin() {
+    public void findWithEmpsByJoin() {
         try (SqlSession session = factory.openSession()) {
-            EmpMapper empMapper = session.getMapper(EmpMapper.class);
-            for (Emp emp : empMapper.findWithDeptByJoin()) {
-                System.out.printf("%s 在 %s 部门\n", emp.getEname(), emp.getDeptno().getDname());
+            DeptMapper deptMapper = session.getMapper(DeptMapper.class);
+            for (Dept dept : deptMapper.findWithEmpsByJoin()) {
+                for (Emp emp : dept.getEmps()) {
+                    System.out.print(emp.getEname() + " ");
+                }
+                System.out.printf("在 %s 部门\n", dept.getDname());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -27,11 +32,14 @@ public class EmpTest {
     }
 
     @Test
-    public void findWithDeptBySelect() {
+    public void findWithEmpsBySelect() {
         try (SqlSession session = factory.openSession()) {
-            EmpMapper empMapper = session.getMapper(EmpMapper.class);
-            for (Emp emp : empMapper.findWithDeptBySelect()) {
-                System.out.printf("%s 在 %s 部门\n", emp.getEname(), emp.getDeptno().getDname());
+            DeptMapper deptMapper = session.getMapper(DeptMapper.class);
+            for (Dept dept : deptMapper.findWithEmpsBySelect()) {
+                for (Emp emp : dept.getEmps()) {
+                    System.out.print(emp.getEname() + " ");
+                }
+                System.out.printf("在 %s 部门\n", dept.getDname());
             }
         } catch (Exception e) {
             e.printStackTrace();

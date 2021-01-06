@@ -35,13 +35,13 @@ public interface EmpMapper {
      * @return 所有员工及其部门信息
      */
     @Select("SELECT `empno`, `ename`, `job`, `mgr`, `hiredate`, `sal`, `comm`, `deptno` FROM `emp`")
-    @Results(id = "emp-dept-annotation", value = {
+    @Results(id = "emp-dept-one", value = {
             // empno可以不用配置
             @Result(column = "empno", property = "empno", jdbcType = JdbcType.INTEGER, id = true),
             @Result(column = "deptno", property = "deptno", javaType = Dept.class,
                     one = @One(select = "com.joezhou.mapper.DeptMapper.findByDeptNo")
             )
     })
-    List<Emp> findWithDeptByAnnotation();
+    List<Emp> findWithDeptByOne();
 
 }

@@ -13,4 +13,44 @@
             </if>
         </where>
     </select>
+
+    <resultMap id="dept-emp-join" type="dept">
+        <id property="deptno" column="deptno"/>
+        <result property="dname" column="dname"/>
+        <result property="loc" column="loc"/>
+        <collection property="emps" ofType="emp">
+            <id property="empno" column="empno"/>
+            <result property="ename" column="ename"/>
+            <result property="job" column="job"/>
+            <result property="sal" column="sal"/>
+            <result property="comm" column="comm"/>
+            <result property="mgr" column="mgr"/>
+            <result property="hiredate" column="hiredate"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="dept-emp-select" type="dept">
+        <collection property="emps" ofType="emp" column="deptno" jdbcType="INTEGER"
+                    select="com.joezhou.mapper.EmpMapper.findByDeptNo"/>
+    </resultMap>
+
+    <select id="findWithEmpsByJoin" resultMap="dept-emp-join">
+        SELECT e.`empno`,
+               e.`ename`,
+               e.`job`,
+               e.`mgr`,
+               e.`hiredate`,
+               e.`sal`,
+               e.`comm`,
+               d.`deptno`,
+               d.`dname`,
+               d.`loc`
+        FROM `dept` d
+                 JOIN `emp` e ON e.`deptno` = d.`deptno`
+    </select>
+
+    <select id="findWithEmpsBySelect" resultMap="dept-emp-select">
+        SELECT d.`deptno`, d.`dname`, d.`loc`
+        FROM `dept` d
+    </select>
 </mapper>

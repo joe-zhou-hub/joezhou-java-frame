@@ -52,4 +52,14 @@
         FROM `emp` e
     </select>
 
+    <select id="findByDeptNo" resultType="emp">
+        SELECT e.`empno`, e.`ename`, e.`job`, e.`mgr`, e.`hiredate`, e.`sal`, e.`comm`, e.`deptno`
+        FROM `emp` e
+        <where>
+            <if test='_parameter != null'>
+                `deptno` = #{param1}
+            </if>
+        </where>
+    </select>
+
 </mapper>
