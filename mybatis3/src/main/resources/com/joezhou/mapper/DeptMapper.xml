@@ -18,7 +18,7 @@
         <id property="deptno" column="deptno"/>
         <result property="dname" column="dname"/>
         <result property="loc" column="loc"/>
-        <collection property="emps" ofType="emp">
+        <collection ofType="emp" property="emps" column="deptno" jdbcType="INTEGER">
             <id property="empno" column="empno"/>
             <result property="ename" column="ename"/>
             <result property="job" column="job"/>
@@ -46,7 +46,7 @@
                d.`dname`,
                d.`loc`
         FROM `dept` d
-                 JOIN `emp` e ON e.`deptno` = d.`deptno`
+                 LEFT JOIN `emp` e ON e.`deptno` = d.`deptno`
     </select>
 
     <select id="findWithEmpsBySelect" resultMap="dept-emp-select">

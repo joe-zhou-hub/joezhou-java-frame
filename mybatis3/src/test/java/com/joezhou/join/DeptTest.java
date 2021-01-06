@@ -24,7 +24,7 @@ public class DeptTest {
                 for (Emp emp : dept.getEmps()) {
                     System.out.print(emp.getEname() + " ");
                 }
-                System.out.printf("在 %s 部门\n", dept.getDname());
+                System.out.println("在" + dept.getDname() + "部门");
             }
         } catch (Exception e) {
             e.printStackTrace();
