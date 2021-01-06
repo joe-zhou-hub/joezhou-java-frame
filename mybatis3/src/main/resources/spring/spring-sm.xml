@@ -15,7 +15,7 @@
         <property name="password" value="${jdbc.password}"/>
     </bean>
 
-    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <bean id="factory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="configLocation" value="mybatis-sm.xml"/>
         <property name="dataSource" ref="dataSource"/>
         <property name="mapperLocations">
@@ -26,6 +26,6 @@
     </bean>
 
     <bean class="com.joezhou.dao.impl.DogDaoImpl">
-        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="sqlSessionFactory" ref="factory"/>
     </bean>
 </beans>

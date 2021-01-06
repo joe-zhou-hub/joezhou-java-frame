@@ -20,6 +20,6 @@ public class DogTest {
 
     @Test
     public void insert() {
-        dogDao.insert(new Dog(1, "旺财", 1, 5, "哈士奇"));
+        dogDao.insert(new Dog(2, "旺财", 1, 5, "哈士奇"));
     }
 }
