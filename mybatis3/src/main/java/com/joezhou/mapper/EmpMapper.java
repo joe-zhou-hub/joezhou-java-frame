@@ -14,6 +14,6 @@ public interface EmpMapper {
      *
      * @return 所有员工及其部门信息
      */
-    List<Emp> findWithDept();
+    List<Emp> findWithDeptByJoin();
 
 }

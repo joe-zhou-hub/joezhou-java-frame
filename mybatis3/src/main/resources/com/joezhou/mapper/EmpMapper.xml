@@ -5,9 +5,7 @@
 <mapper namespace="com.joezhou.mapper.EmpMapper">
     <cache readOnly="true"/>
 
-    <resultMap id="emp-dept" type="emp">
-
-        <!--需要配置主键id和全部的字段result，否则实体类中对应的值为null-->
+    <resultMap id="emp-dept-join" type="emp">
         <id column="empno" property="empno"/>
         <result column="ename" property="ename"/>
         <result column="job" property="job"/>
@@ -15,8 +13,6 @@
         <result column="comm" property="comm"/>
         <result column="mgr" property="mgr"/>
         <result column="hiredate" property="hiredate"/>
-
-        <!--deptno属性使用association来配置，其中javaType不能省略-->
         <association javaType="dept" property="deptno" column="deptno">
             <id column="deptno" property="deptno"/>
             <result column="dname" property="dname"/>
@@ -24,8 +20,17 @@
         </association>
     </resultMap>
 
-    <select id="findWithDept" resultMap="emp-dept">
-        SELECT `empno`, `ename`, `job`, `mgr`, `hiredate`, `sal`, `comm`, d.`deptno`, d.`dname`, d.`loc`
+    <select id="findWithDeptByJoin" resultMap="emp-dept-join">
+        SELECT e.`empno`,
+               e.`ename`,
+               e.`job`,
+               e.`mgr`,
+               e.`hiredate`,
+               e.`sal`,
+               e.`comm`,
+               d.`deptno`,
+               d.`dname`,
+               d.`loc`
         FROM `emp` e
                  JOIN `dept` d ON e.`deptno` = d.`deptno`
     </select>
