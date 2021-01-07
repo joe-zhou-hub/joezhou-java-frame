@@ -2,59 +2,24 @@
 <!DOCTYPE generatorConfiguration
         PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
-<!--
-- `<context id="" targetRuntime="">`：
-    - `id`：唯一标识符，命名随意。
-    - `targetRuntime`：指定运行环境，建议 `mybatis3`
-- `<plugin type="">`：
-    - `SerializablePlugin`：让所有生成的POJO实现序列化接口
-    - `ToStringPlugin`：让所有生成的POJO重写 `toString()`
-    - `MapperConfigPlugin`：帮你创建一个mybatis核心配置文件：
-        - `<property name="fileName" value=""/>`：mybatis核心配置文件的名字
-        - `<property name="targetPackage" value=""/>`：mybatis核心配置文件的包路径
-        - `<property name="targetProject" value=""/>`：mybatis核心配置文件根目录
-- `<commentGenerator>`：配置代码注释：
-    - `suppressAllComments`：为 `true` 表示镇压代码注释，反之生成代码注释。
-- `<jdbcConnection>`：配置数据源：
-    - `driverClass/connectionURL/userId/password`
-    - `useUnicode`：数据源是否使用unicode编码，建议值 `true`
-    - `characterEncoding`：指定数据源编码实现，建议值 `utf-8`
-    - `serverTimezone`：指定数据源时区，建议值 `UTC`
-    - `nullCatalogMeansCurrent`：`true`：只生成你指定的数据库中的某个表，建议<br/>`false`：扫描并生成所有数据库中的同名表
-- `<javaTypeResolver>`：
-    - `forceBigDecimals`：`decimal` 和 `numberic` 类型的解析方式，`true`：解析为 `java.math.BigDecimal`，`false`：解析为 `java.lang.Integer`，默认
-- `<javaModelGenerator>`：
-    - `targetPackage`：指定生成POJO类的包路径
-    - `targetProject`：指定生成POJO类的根目录，可以使用 `\`
-    - `enableSubPackages`：是否让 `schema` 作为包名后缀，建议 `false`
-    - `trimStrings`：从数据库返回的值是否会被清理前后空格，建议值 `true`
-- `<sqlMapGenerator>`：
-    - `targetPackage`：指定生成Mapper配置文件的包路径
-    - `targetProject`：指定生成Mapper配置文件的根目录
-    - `enableSubPackages`：是否让 `schema` 作为包名后缀，建议为 `false`
-- `<javaClientGenerator>`：
-    - `type`：接口类型，固定值为 `XMLMAPPER`
-    - `targetPackage`：指定生成Mapper接口类的包路径
-    - `targetProject`：指定生成Mapper接口类的根目录
-    - `enableSubPackages`：是否让 `schema` 作为包名后缀，建议为 `false`
-- `<table>`：
-    - `schema`：填写数据库帐号名
-    - `tableName`：想要生成的表名
-- `<columnOverride>`：
-    - `javaType`：想把表中的指定的列转成指定的java数据类型，如 `java.lang.Integer`
-    - `column`：指定数据库列，如 `user_age`
--->
+
 <generatorConfiguration>
+
+    <!--targetRuntime 用于指定运行环境-->
     <context id="joezhou" targetRuntime="MyBatis3">
 
+        <!--为生成的实体类实现Serializable接口以及重写toString()-->
         <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
         <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
+
+        <!--配置mybatis主配文件-->
         <plugin type="org.mybatis.generator.plugins.MapperConfigPlugin">
             <property name="fileName" value="mybatis.xml"/>
             <property name="targetPackage" value="mybatis"/>
             <property name="targetProject" value=".\src\main\resources"/>
         </plugin>
 
+        <!--镇压代码注释-->
         <commentGenerator>
             <property name="suppressAllComments" value="true"/>
         </commentGenerator>
@@ -66,27 +31,41 @@
             <property name="useUnicode" value="true"/>
             <property name="characterEncoding" value="utf-8"/>
             <property name="serverTimezone" value="UTC"/>
+
+            <!--true表示仅生成指定数据库中的指定表，false表示生成所有数据库中的同名表-->
             <property name="nullCatalogMeansCurrent" value="true"/>
         </jdbcConnection>
 
         <javaTypeResolver>
+            <!--true表示将decimal和numberic类型解析为java.math.BigDecimal-->
+            <!--false表示将decimal和numberic类型解析为 `java.math.Integer，默认-->
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
 
+        <!--实体类配置-->
         <javaModelGenerator targetProject=".\src\main\java" targetPackage="com.joezhou.pojo">
+
+            <!--不生成 "schema" 子包-->
             <property name="enableSubPackages" value="false"/>
+
+            <!--清理从数据库返回的值的前后空格-->
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
+        <!--SQL配置文件配置-->
         <sqlMapGenerator targetProject=".\src\main\resources" targetPackage="com.joezhou.mapper">
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
 
+        <!--Mapper接口配置-->
         <javaClientGenerator type="XMLMAPPER" targetProject=".\src\main\java" targetPackage="com.joezhou.mapper">
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
 
+        <!--数据库表配置-->
         <table schema="mybatis" tableName="dept">
+
+            <!--将数据库字段id映射为java.lang.Integer类型-->
             <columnOverride column="id" javaType="java.lang.Integer"/>
         </table>
 
