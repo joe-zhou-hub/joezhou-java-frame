@@ -105,5 +105,15 @@ CREATE TABLE IF NOT EXISTS `dog`
 )
     COMMENT '小狗表';
 
+CREATE TABLE IF NOT EXISTS `cat`
+(
+    `id`     INT(11) AUTO_INCREMENT PRIMARY KEY,
+    `name`   VARCHAR(50)  NOT NULL COMMENT '小猫姓名',
+    `gender` TINYINT(1)   NULL COMMENT '小猫性别',
+    `age`    INT(3)       NULL COMMENT '小猫年龄',
+    `info`   VARCHAR(500) NULL COMMENT '小猫信息'
+)
+    COMMENT '小猫表';
+
 
 
