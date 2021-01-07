@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<!--
+- `<context id="" targetRuntime="">`：
+    - `id`：唯一标识符，命名随意。
+    - `targetRuntime`：指定运行环境，建议 `mybatis3`
+- `<plugin type="">`：
+    - `SerializablePlugin`：让所有生成的POJO实现序列化接口
+    - `ToStringPlugin`：让所有生成的POJO重写 `toString()`
+    - `MapperConfigPlugin`：帮你创建一个mybatis核心配置文件：
+        - `<property name="fileName" value=""/>`：mybatis核心配置文件的名字
+        - `<property name="targetPackage" value=""/>`：mybatis核心配置文件的包路径
+        - `<property name="targetProject" value=""/>`：mybatis核心配置文件根目录
+- `<commentGenerator>`：配置代码注释：
+    - `suppressAllComments`：为 `true` 表示镇压代码注释，反之生成代码注释。
+- `<jdbcConnection>`：配置数据源：
+    - `driverClass/connectionURL/userId/password`
+    - `useUnicode`：数据源是否使用unicode编码，建议值 `true`
+    - `characterEncoding`：指定数据源编码实现，建议值 `utf-8`
+    - `serverTimezone`：指定数据源时区，建议值 `UTC`
+    - `nullCatalogMeansCurrent`：`true`：只生成你指定的数据库中的某个表，建议<br/>`false`：扫描并生成所有数据库中的同名表
+- `<javaTypeResolver>`：
+    - `forceBigDecimals`：`decimal` 和 `numberic` 类型的解析方式，`true`：解析为 `java.math.BigDecimal`，`false`：解析为 `java.lang.Integer`，默认
+- `<javaModelGenerator>`：
+    - `targetPackage`：指定生成POJO类的包路径
+    - `targetProject`：指定生成POJO类的根目录，可以使用 `\`
+    - `enableSubPackages`：是否让 `schema` 作为包名后缀，建议 `false`
+    - `trimStrings`：从数据库返回的值是否会被清理前后空格，建议值 `true`
+- `<sqlMapGenerator>`：
+    - `targetPackage`：指定生成Mapper配置文件的包路径
+    - `targetProject`：指定生成Mapper配置文件的根目录
+    - `enableSubPackages`：是否让 `schema` 作为包名后缀，建议为 `false`
+- `<javaClientGenerator>`：
+    - `type`：接口类型，固定值为 `XMLMAPPER`
+    - `targetPackage`：指定生成Mapper接口类的包路径
+    - `targetProject`：指定生成Mapper接口类的根目录
+    - `enableSubPackages`：是否让 `schema` 作为包名后缀，建议为 `false`
+- `<table>`：
+    - `schema`：填写数据库帐号名
+    - `tableName`：想要生成的表名
+- `<columnOverride>`：
+    - `javaType`：想把表中的指定的列转成指定的java数据类型，如 `java.lang.Integer`
+    - `column`：指定数据库列，如 `user_age`
+-->
+<generatorConfiguration>
+    <context id="joezhou" targetRuntime="MyBatis3">
+
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
+        <plugin type="org.mybatis.generator.plugins.MapperConfigPlugin">
+            <property name="fileName" value="mybatis.xml"/>
+            <property name="targetPackage" value="mybatis"/>
+            <property name="targetProject" value=".\src\main\resources"/>
+        </plugin>
+
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        userId="mybatis"
+                        password="mybatis"
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/mybatis">
+            <property name="useUnicode" value="true"/>
+            <property name="characterEncoding" value="utf-8"/>
+            <property name="serverTimezone" value="UTC"/>
+            <property name="nullCatalogMeansCurrent" value="true"/>
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetProject=".\src\main\java" targetPackage="com.joezhou.pojo">
+            <property name="enableSubPackages" value="false"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetProject=".\src\main\resources" targetPackage="com.joezhou.mapper">
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetProject=".\src\main\java" targetPackage="com.joezhou.mapper">
+            <property name="enableSubPackages" value="false"/>
+        </javaClientGenerator>
+
+        <table schema="mybatis" tableName="dept">
+            <columnOverride column="id" javaType="java.lang.Integer"/>
+        </table>
+
+    </context>
+</generatorConfiguration>
