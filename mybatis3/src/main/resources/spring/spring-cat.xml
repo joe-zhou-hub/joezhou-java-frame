@@ -8,16 +8,16 @@
 
     <context:property-placeholder location="classpath:jdbc/db.properties"/>
 
-    <bean id="catDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+    <bean id="cat-data-source" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="${jdbc.driver}"/>
         <property name="url" value="${jdbc.url}"/>
         <property name="username" value="${jdbc.username}"/>
         <property name="password" value="${jdbc.password}"/>
     </bean>
 
-    <bean id="catFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <bean id="cat-session-factory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="configLocation" value="mybatis-sm.xml"/>
-        <property name="dataSource" ref="catDataSource"/>
+        <property name="dataSource" ref="cat-data-source"/>
         <property name="mapperLocations">
             <array>
                 <value>com/joezhou/mapper/CatMapper.xml</value>
@@ -25,15 +25,16 @@
         </property>
     </bean>
 
-    <!--单独配置Mapper接口-->
-    <bean id="catMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="com.joezhou.mapper.CatMapper"/>
-        <property name="sqlSessionFactory" ref="catFactory"/>
-    </bean>
-
-    <!--
+    <!--包扫描Mapper接口-->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.joezhou.mapper"/>
+    </bean>
+
+    <!--单配Mapper接口-->
+    <!--
+    <bean id="catMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.joezhou.mapper.CatMapper"/>
+        <property name="sqlSessionFactory" ref="cat-session-factory"/>
     </bean>
     -->
 

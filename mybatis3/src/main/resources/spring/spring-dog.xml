@@ -8,16 +8,16 @@
 
     <context:property-placeholder location="classpath:jdbc/db.properties"/>
 
-    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+    <bean id="dog-data-source" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="${jdbc.driver}"/>
         <property name="url" value="${jdbc.url}"/>
         <property name="username" value="${jdbc.username}"/>
         <property name="password" value="${jdbc.password}"/>
     </bean>
 
-    <bean id="factory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <bean id="dog-session-factory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="configLocation" value="mybatis-sm.xml"/>
-        <property name="dataSource" ref="dataSource"/>
+        <property name="dataSource" ref="dog-data-source"/>
         <property name="mapperLocations">
             <array>
                 <value>com/joezhou/mapper/DogMapper.xml</value>
@@ -26,6 +26,6 @@
     </bean>
 
     <bean class="com.joezhou.dao.impl.DogDaoImpl">
-        <property name="sqlSessionFactory" ref="factory"/>
+        <property name="sqlSessionFactory" ref="dog-session-factory"/>
     </bean>
 </beans>
