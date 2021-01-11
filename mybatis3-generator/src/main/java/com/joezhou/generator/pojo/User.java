@@ -1,16 +1,13 @@
-package com.joezhou.pojo;
+package com.joezhou.generator.pojo;
 
 import java.io.Serializable;
 
-/**
- * @author JoeZhou
- */
 public class User implements Serializable {
     private Integer id;
 
     private String name;
 
-    private Boolean gender;
+    private Integer gender;
 
     private Integer age;
 
@@ -34,11 +31,11 @@ public class User implements Serializable {
         this.name = name == null ? null : name.trim();
     }
 
-    public Boolean getGender() {
+    public Integer getGender() {
         return gender;
     }
 
-    public void setGender(Boolean gender) {
+    public void setGender(Integer gender) {
         this.gender = gender;
     }
 
@@ -57,5 +54,4 @@ public class User implements Serializable {
     public void setInfo(String info) {
         this.info = info == null ? null : info.trim();
     }
-
 }

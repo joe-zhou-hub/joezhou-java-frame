@@ -1,7 +1,7 @@
-package com.joezhou.mapper;
+package com.joezhou.generator.mapper;
 
-import com.joezhou.pojo.User;
-import com.joezhou.pojo.UserExample;
+import com.joezhou.generator.pojo.User;
+import com.joezhou.generator.pojo.UserExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
