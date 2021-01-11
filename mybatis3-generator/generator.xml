@@ -6,7 +6,7 @@
 <generatorConfiguration>
 
     <!--targetRuntime 用于指定运行环境-->
-    <context id="joezhou" targetRuntime="MyBatis3">
+    <context id="joezhou" targetRuntime="mybatis3">
 
         <!--为生成的实体类实现Serializable接口以及重写toString()-->
         <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
@@ -24,10 +24,11 @@
             <property name="suppressAllComments" value="true"/>
         </commentGenerator>
 
+        <!--tinyInt1IsBit=false: 长度为1的tinyint不认为是bit，即不映射为boolean类型-->
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
                         userId="mybatis"
                         password="mybatis"
-                        connectionURL="jdbc:mysql://127.0.0.1:3306/mybatis">
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/mybatis?tinyInt1IsBit=false">
             <property name="useUnicode" value="true"/>
             <property name="characterEncoding" value="utf-8"/>
             <property name="serverTimezone" value="UTC"/>
@@ -63,9 +64,8 @@
         </javaClientGenerator>
 
         <!--数据库表配置-->
+        <!--即使数据库id字段有符号也映射为java.lang.Integer类型-->
         <table schema="mybatis" tableName="cat">
-
-            <!--将数据库字段id映射为java.lang.Integer类型-->
             <columnOverride column="id" javaType="java.lang.Integer"/>
         </table>
         <table schema="mybatis" tableName="dept">
@@ -73,31 +73,24 @@
         </table>
         <table schema="mybatis" tableName="dog">
             <columnOverride column="id" javaType="java.lang.Integer"/>
-            <columnOverride column="gender" javaType="java.lang.Integer"/>
         </table>
         <table schema="mybatis" tableName="emp">
             <columnOverride column="id" javaType="java.lang.Integer"/>
-            <columnOverride column="gender" javaType="java.lang.Integer"/>
         </table>
         <table schema="mybatis" tableName="leader">
             <columnOverride column="id" javaType="java.lang.Integer"/>
-            <columnOverride column="gender" javaType="java.lang.Integer"/>
         </table>
         <table schema="mybatis" tableName="student">
             <columnOverride column="id" javaType="java.lang.Integer"/>
-            <columnOverride column="gender" javaType="java.lang.Integer"/>
         </table>
         <table schema="mybatis" tableName="teacher">
             <columnOverride column="id" javaType="java.lang.Integer"/>
-            <columnOverride column="gender" javaType="java.lang.Integer"/>
         </table>
         <table schema="mybatis" tableName="user">
             <columnOverride column="id" javaType="java.lang.Integer"/>
-            <columnOverride column="gender" javaType="java.lang.Integer"/>
         </table>
         <table schema="mybatis" tableName="worker">
             <columnOverride column="id" javaType="java.lang.Integer"/>
-            <columnOverride column="gender" javaType="java.lang.Integer"/>
         </table>
 
     </context>
