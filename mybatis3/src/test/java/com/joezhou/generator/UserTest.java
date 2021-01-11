@@ -8,9 +8,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author JoeZhou
  */
@@ -121,102 +118,73 @@ public class UserTest {
     }
 
     /**
-     *
+     * select id, name, gender, age, info from user where id = ?
      */
     @Test
     public void selectByPrimaryKey() {
-        SqlSession session = factory.openSession();
-        UserMapper userMapper = session.getMapper(UserMapper.class);
-        System.out.println(userMapper.selectByPrimaryKey(7));
-        session.close();
+        try (SqlSession session = factory.openSession()) {
+            System.out.println(session.getMapper(UserMapper.class).selectByPrimaryKey(7));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
-     * 按条件查询：查询姓赵的男性
+     * select id, name, gender, age, info from user where name like '赵%' and gender = 1
+     * select id, name, gender, age, info from user
      */
     @Test
     public void selectByExample() {
-        SqlSession session = factory.openSession();
-        UserMapper userMapper = session.getMapper(UserMapper.class);
-        UserExample example = new UserExample();
-        UserExample.Criteria criteria = example.createCriteria();
-        criteria.andNameLike("赵%");
-        criteria.andGenderEqualTo(1);
-        System.out.println(userMapper.selectByExample(example));
-        session.close();
+        try (SqlSession session = factory.openSession()) {
+            UserExample example = new UserExample();
+            example.createCriteria().andNameLike("赵%").andGenderEqualTo(1);
+            System.out.println(session.getMapper(UserMapper.class).selectByExample(example));
+            System.out.println(session.getMapper(UserMapper.class).selectByExample(new UserExample()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
-     *
-     */
-    @Test
-    public void select() {
-        SqlSession session = factory.openSession();
-        UserMapper userMapper = session.getMapper(UserMapper.class);
-        System.out.println(userMapper.selectByExample(new UserExample()));
-        session.close();
-    }
-
-    /**
-     * 查询id大于等于2的人数有多少
+     * select count(*) from user where id >= 2
      */
     @Test
     public void countByExample() {
-        SqlSession session = factory.openSession();
-        UserMapper userMapper = session.getMapper(UserMapper.class);
-        UserExample example = new UserExample();
-        example.createCriteria()
-                .andIdGreaterThanOrEqualTo(2);
-        int count = userMapper.countByExample(example);
-        System.out.println(count);
-        session.close();
+        try (SqlSession session = factory.openSession()) {
+            UserExample example = new UserExample();
+            example.createCriteria().andIdGreaterThanOrEqualTo(2);
+            System.out.println(session.getMapper(UserMapper.class).countByExample(example));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
-     *
+     * select id, name, gender, age, info from user order by age desc
      */
     @Test
     public void setOrderByClause() {
-        SqlSession session = factory.openSession();
-        UserMapper userMapper = session.getMapper(UserMapper.class);
-        UserExample example = new UserExample();
-        example.setOrderByClause("age desc");
-        List<User> users = userMapper.selectByExample(example);
-        System.out.println(users);
-        session.close();
+        try (SqlSession session = factory.openSession()) {
+            UserExample example = new UserExample();
+            example.setOrderByClause("age desc");
+            System.out.println(session.getMapper(UserMapper.class).selectByExample(example));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
-     *
+     * select distinct id, name, gender, age, info from user
      */
     @Test
     public void setDistinct() {
-        SqlSession session = factory.openSession();
-        UserMapper userMapper = session.getMapper(UserMapper.class);
-        UserExample example = new UserExample();
-        example.setDistinct(false);
-        List<User> users = userMapper.selectByExample(example);
-        System.out.println(users);
-        session.close();
-    }
-
-    /**
-     * 找到年龄为null，或者年龄是10,20,30岁的用户
-     */
-    @Test
-    public void selectByOr() {
-        SqlSession session = factory.openSession();
-        UserMapper userMapper = session.getMapper(UserMapper.class);
-        List<Integer> ages = new ArrayList<>();
-        ages.add(10);
-        ages.add(20);
-        ages.add(30);
-        UserExample example = new UserExample();
-        example.or().andAgeIsNull();
-        example.or().andAgeIn(ages);
-        List<User> users = userMapper.selectByExample(example);
-        System.out.println(users);
-        session.close();
+        try (SqlSession session = factory.openSession()) {
+            UserExample example = new UserExample();
+            example.setDistinct(true);
+            System.out.println(session.getMapper(UserMapper.class).selectByExample(example));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
