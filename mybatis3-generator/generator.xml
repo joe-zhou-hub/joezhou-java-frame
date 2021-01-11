@@ -8,9 +8,11 @@
     <!--targetRuntime 用于指定运行环境-->
     <context id="joezhou" targetRuntime="mybatis3">
 
-        <!--为生成的实体类实现Serializable接口以及重写toString()-->
+        <!--为生成的实体类实现Serializable接口-->
         <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
-        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
+
+        <!--为生成的实体类重写toString()-->
+        <!--<plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>-->
 
         <!--配置mybatis主配文件-->
         <plugin type="org.mybatis.generator.plugins.MapperConfigPlugin">

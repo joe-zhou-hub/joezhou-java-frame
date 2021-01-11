@@ -1,7 +1,9 @@
 package com.joezhou.pojo;
 
 import java.io.Serializable;
-
+/**
+ * @author JoeZhou
+ */
 public class Dept implements Serializable {
     private Integer deptno;
 
@@ -35,17 +37,4 @@ public class Dept implements Serializable {
         this.loc = loc == null ? null : loc.trim();
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", deptno=").append(deptno);
-        sb.append(", dname=").append(dname);
-        sb.append(", loc=").append(loc);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
-    }
 }

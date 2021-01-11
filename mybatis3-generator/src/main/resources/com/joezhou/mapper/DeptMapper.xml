@@ -67,6 +67,7 @@
   <sql id="Base_Column_List" >
     deptno, dname, loc
   </sql>
+
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.joezhou.pojo.DeptExample" >
     select
     <if test="distinct" >

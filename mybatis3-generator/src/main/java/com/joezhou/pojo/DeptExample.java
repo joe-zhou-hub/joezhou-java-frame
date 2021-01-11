@@ -2,7 +2,9 @@ package com.joezhou.pojo;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * @author JoeZhou
+ */
 public class DeptExample {
     protected String orderByClause;
 

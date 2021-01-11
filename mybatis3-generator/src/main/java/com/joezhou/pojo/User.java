@@ -2,6 +2,9 @@ package com.joezhou.pojo;
 
 import java.io.Serializable;
 
+/**
+ * @author JoeZhou
+ */
 public class User implements Serializable {
     private Integer id;
 
@@ -55,19 +58,4 @@ public class User implements Serializable {
         this.info = info == null ? null : info.trim();
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", name=").append(name);
-        sb.append(", gender=").append(gender);
-        sb.append(", age=").append(age);
-        sb.append(", info=").append(info);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
-    }
 }

@@ -3,6 +3,9 @@ package com.joezhou.pojo;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * @author JoeZhou
+ */
 public class Emp implements Serializable {
     private Integer empno;
 
@@ -86,22 +89,4 @@ public class Emp implements Serializable {
         this.deptno = deptno;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", empno=").append(empno);
-        sb.append(", ename=").append(ename);
-        sb.append(", job=").append(job);
-        sb.append(", mgr=").append(mgr);
-        sb.append(", hiredate=").append(hiredate);
-        sb.append(", sal=").append(sal);
-        sb.append(", comm=").append(comm);
-        sb.append(", deptno=").append(deptno);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
-    }
 }
