@@ -20,15 +20,22 @@ public class UserTest {
 
     @Test
     public void insert() {
-        User user = new User();
-        user.setName("赵四3");
-        user.setAge(53);
+        User liuneng = new User();
+        liuneng.setName("刘能");
+        liuneng.setAge(50);
+
+        User dajiao = new User();
+        dajiao.setName("大脚");
+        dajiao.setAge(18);
+
         SqlSession session = factory.openSession();
         try {
             UserMapper userMapper = session.getMapper(UserMapper.class);
-            userMapper.insert(user);
+            userMapper.insert(liuneng);
+            userMapper.insertSelective(dajiao);
             session.commit();
-            System.out.println("user-id:" + user.getId());
+            System.out.println("liuneng-id:" + liuneng.getId());
+            System.out.println("dajiao-id:" + dajiao.getId());
         } catch (Exception e) {
             session.rollback();
             e.printStackTrace();
@@ -38,56 +45,54 @@ public class UserTest {
     }
 
     @Test
-    public void insertSelective() {
-        User user = new User();
-        user.setName("赵四4");
-        user.setAge(54);
+    public void updateByPrimaryKey() {
+        User liuneng = new User();
+        liuneng.setId(10);
+        liuneng.setName("刘能2");
+
+        User dajiao = new User();
+        dajiao.setId(11);
+        dajiao.setName("大脚2");
+
         SqlSession session = factory.openSession();
         try {
             UserMapper userMapper = session.getMapper(UserMapper.class);
-            userMapper.insertSelective(user);
+            userMapper.updateByPrimaryKey(liuneng);
+            userMapper.updateByPrimaryKeySelective(dajiao);
             session.commit();
-            System.out.println("user-id:" + user.getId());
         } catch (Exception e) {
             session.rollback();
             e.printStackTrace();
         } finally {
             session.close();
         }
-    }
-
-    @Test
-    public void updateByPrimaryKey(){
-        SqlSession session = factory.openSession();
-        UserMapper userMapper = session.getMapper(UserMapper.class);
-        User user = new User();
-        user.setId(1);
-        user.setName("赵四儿");
-        user.setGender(2);
-        userMapper.updateByPrimaryKey(user);
-    }
-
-    @Test
-    public void updateByPrimaryKeySelective() {
-        SqlSession session = factory.openSession();
-        UserMapper userMapper = session.getMapper(UserMapper.class);
-        User user = new User();
-        user.setId(1);
-        user.setName("赵四");
-        userMapper.updateByPrimaryKeySelective(user);
     }
 
     @Test
     public void updateByExample() {
+
+        User liuneng = new User();
+        liuneng.setGender(1);
+
+        User dajiao = new User();
+        dajiao.setName("大脚2");
+
         SqlSession session = factory.openSession();
-        UserMapper userMapper = session.getMapper(UserMapper.class);
-        UserExample example = new UserExample();
-        example.createCriteria()
-                .andNameEqualTo("赵四");
-        User user = new User();
-        user.setName("赵老四");
-        user.setAge(88);
-        userMapper.updateByExampleSelective(user, example);
+        try {
+            UserMapper userMapper = session.getMapper(UserMapper.class);
+            UserExample exampleA = new UserExample();
+            exampleA.createCriteria()
+                    .andNameLike("赵%")
+                    .andGenderNotEqualTo(0);
+            userMapper.updateByExampleSelective(liuneng, exampleA);
+            //userMapper.updateByPrimaryKeySelective(dajiao);
+            session.commit();
+        } catch (Exception e) {
+            session.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
     }
 
     @Test
@@ -103,11 +108,18 @@ public class UserTest {
     }
 
     @Test
-    public void deleteByPrimaryKey(){
+    public void deleteByPrimaryKey() {
         SqlSession session = factory.openSession();
-        UserMapper userMapper = session.getMapper(UserMapper.class);
-        int id = 1;
-        userMapper.deleteByPrimaryKey(id);
+        try {
+            UserMapper userMapper = session.getMapper(UserMapper.class);
+            userMapper.deleteByPrimaryKey(10);
+            session.commit();
+        } catch (Exception e) {
+            session.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
     }
 
     @Test
@@ -120,9 +132,8 @@ public class UserTest {
         userMapper.deleteByExample(example);
     }
 
-
     @Test
-    public void selectByPrimaryKey(){
+    public void selectByPrimaryKey() {
         SqlSession session = factory.openSession();
         UserMapper userMapper = session.getMapper(UserMapper.class);
         System.out.println(userMapper.selectByPrimaryKey(7));
@@ -150,7 +161,9 @@ public class UserTest {
         session.close();
     }
 
-    /**查询id大于等于2的人数有多少*/
+    /**
+     * 查询id大于等于2的人数有多少
+     */
     @Test
     public void countByExample() {
         SqlSession session = factory.openSession();
@@ -187,7 +200,7 @@ public class UserTest {
 
     /*找到年龄为null，或者年龄是10,20,30岁的用户*/
     @Test
-    public void selectByOr(){
+    public void selectByOr() {
         SqlSession session = factory.openSession();
         UserMapper userMapper = session.getMapper(UserMapper.class);
         List<Integer> ages = new ArrayList<>();
