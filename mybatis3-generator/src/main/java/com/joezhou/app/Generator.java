@@ -16,11 +16,11 @@ public class Generator {
     public static void main(String[] args) throws Exception {
         List<String> warnings = new ArrayList<>();
         ConfigurationParser parser = new ConfigurationParser(warnings);
-        File generatorConfigPath = new File("generator.xml");
+        File generatorConfigPath = new File("mybatis3-generator/generator.xml");
         Configuration config = parser.parseConfiguration(generatorConfigPath);
         DefaultShellCallback callback = new DefaultShellCallback(true);
         MyBatisGenerator generator = new MyBatisGenerator(config, callback, warnings);
         generator.generate(null);
-        System.out.println("生成结束！");
+        System.out.println("generate over...");
     }
 }

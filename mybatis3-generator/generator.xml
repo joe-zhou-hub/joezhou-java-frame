@@ -16,7 +16,7 @@
         <plugin type="org.mybatis.generator.plugins.MapperConfigPlugin">
             <property name="fileName" value="mybatis.xml"/>
             <property name="targetPackage" value="mybatis"/>
-            <property name="targetProject" value=".\src\main\resources"/>
+            <property name="targetProject" value="mybatis3-generator\src\main\resources"/>
         </plugin>
 
         <!--镇压代码注释-->
@@ -38,12 +38,12 @@
 
         <javaTypeResolver>
             <!--true表示将decimal和numberic类型解析为java.math.BigDecimal-->
-            <!--false表示将decimal和numberic类型解析为 `java.math.Integer，默认-->
+            <!--false表示将decimal和numberic类型解析为java.math.Integer，默认-->
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
 
         <!--实体类配置-->
-        <javaModelGenerator targetProject=".\src\main\java" targetPackage="com.joezhou.pojo">
+        <javaModelGenerator targetProject="mybatis3-generator\src\main\java" targetPackage="com.joezhou.pojo">
 
             <!--不生成 "schema" 子包-->
             <property name="enableSubPackages" value="false"/>
@@ -53,21 +53,53 @@
         </javaModelGenerator>
 
         <!--SQL配置文件配置-->
-        <sqlMapGenerator targetProject=".\src\main\resources" targetPackage="com.joezhou.mapper">
+        <sqlMapGenerator targetProject="mybatis3-generator\src\main\resources" targetPackage="com.joezhou.mapper">
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
 
         <!--Mapper接口配置-->
-        <javaClientGenerator type="XMLMAPPER" targetProject=".\src\main\java" targetPackage="com.joezhou.mapper">
+        <javaClientGenerator type="XMLMAPPER" targetProject="mybatis3-generator\src\main\java" targetPackage="com.joezhou.mapper">
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
 
         <!--数据库表配置-->
-        <table schema="mybatis" tableName="dept">
+        <table schema="mybatis" tableName="cat">
 
             <!--将数据库字段id映射为java.lang.Integer类型-->
             <columnOverride column="id" javaType="java.lang.Integer"/>
         </table>
+        <table schema="mybatis" tableName="dept">
+            <columnOverride column="id" javaType="java.lang.Integer"/>
+        </table>
+        <table schema="mybatis" tableName="dog">
+            <columnOverride column="id" javaType="java.lang.Integer"/>
+            <columnOverride column="gender" javaType="java.lang.Integer"/>
+        </table>
+        <table schema="mybatis" tableName="emp">
+            <columnOverride column="id" javaType="java.lang.Integer"/>
+            <columnOverride column="gender" javaType="java.lang.Integer"/>
+        </table>
+        <table schema="mybatis" tableName="leader">
+            <columnOverride column="id" javaType="java.lang.Integer"/>
+            <columnOverride column="gender" javaType="java.lang.Integer"/>
+        </table>
+        <table schema="mybatis" tableName="student">
+            <columnOverride column="id" javaType="java.lang.Integer"/>
+            <columnOverride column="gender" javaType="java.lang.Integer"/>
+        </table>
+        <table schema="mybatis" tableName="teacher">
+            <columnOverride column="id" javaType="java.lang.Integer"/>
+            <columnOverride column="gender" javaType="java.lang.Integer"/>
+        </table>
+        <table schema="mybatis" tableName="user">
+            <columnOverride column="id" javaType="java.lang.Integer"/>
+            <columnOverride column="gender" javaType="java.lang.Integer"/>
+        </table>
+        <table schema="mybatis" tableName="worker">
+            <columnOverride column="id" javaType="java.lang.Integer"/>
+            <columnOverride column="gender" javaType="java.lang.Integer"/>
+        </table>
 
     </context>
+
 </generatorConfiguration>
