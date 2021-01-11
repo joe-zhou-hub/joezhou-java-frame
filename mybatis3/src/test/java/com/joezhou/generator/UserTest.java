@@ -18,24 +18,22 @@ public class UserTest {
 
     private SqlSessionFactory factory = MyBatisUtil.getFactory("mybatis-generator.xml");
 
+    /**
+     * insert into user (id, name, age, gender, info) values (?, ?, ?, ?, ?)
+     * insert into user (name, age) values (?, ?)
+     */
     @Test
     public void insert() {
-        User liuneng = new User();
-        liuneng.setName("刘能");
-        liuneng.setAge(50);
-
-        User dajiao = new User();
-        dajiao.setName("大脚");
-        dajiao.setAge(18);
-
+        User liuneng = new User(null, "刘能", null, 58, null);
+        User dajiao = new User(null, "大脚", null, 18, null);
         SqlSession session = factory.openSession();
         try {
             UserMapper userMapper = session.getMapper(UserMapper.class);
             userMapper.insert(liuneng);
             userMapper.insertSelective(dajiao);
             session.commit();
-            System.out.println("liuneng-id:" + liuneng.getId());
-            System.out.println("dajiao-id:" + dajiao.getId());
+            System.out.println(liuneng);
+            System.out.println(dajiao);
         } catch (Exception e) {
             session.rollback();
             e.printStackTrace();
@@ -44,21 +42,17 @@ public class UserTest {
         }
     }
 
+    /**
+     * update user set id = ?, name = ?, gender = ?, age = ?, info = ? where id = ?
+     * update user set name = ? where id = ?
+     */
     @Test
     public void updateByPrimaryKey() {
-        User liuneng = new User();
-        liuneng.setId(10);
-        liuneng.setName("刘能2");
-
-        User dajiao = new User();
-        dajiao.setId(11);
-        dajiao.setName("大脚2");
-
         SqlSession session = factory.openSession();
         try {
             UserMapper userMapper = session.getMapper(UserMapper.class);
-            userMapper.updateByPrimaryKey(liuneng);
-            userMapper.updateByPrimaryKeySelective(dajiao);
+            userMapper.updateByPrimaryKey(new User(12, "刘能2", null, null, null));
+            userMapper.updateByPrimaryKeySelective(new User(13, "大脚2", null, null, null));
             session.commit();
         } catch (Exception e) {
             session.rollback();
@@ -68,24 +62,17 @@ public class UserTest {
         }
     }
 
+    /**
+     * update user set gender = 1 where name like '赵%' and gender <> 1
+     */
     @Test
     public void updateByExample() {
-
-        User liuneng = new User();
-        liuneng.setGender(1);
-
-        User dajiao = new User();
-        dajiao.setName("大脚2");
-
         SqlSession session = factory.openSession();
         try {
-            UserMapper userMapper = session.getMapper(UserMapper.class);
-            UserExample exampleA = new UserExample();
-            exampleA.createCriteria()
-                    .andNameLike("赵%")
-                    .andGenderNotEqualTo(0);
-            userMapper.updateByExampleSelective(liuneng, exampleA);
-            //userMapper.updateByPrimaryKeySelective(dajiao);
+            UserExample example = new UserExample();
+            example.createCriteria().andNameLike("赵%").andGenderNotEqualTo(1);
+            session.getMapper(UserMapper.class).updateByExampleSelective(
+                    new User(null, null, 1, null, null), example);
             session.commit();
         } catch (Exception e) {
             session.rollback();
@@ -95,24 +82,14 @@ public class UserTest {
         }
     }
 
-    @Test
-    public void updateByExampleSelective() {
-        SqlSession session = factory.openSession();
-        UserMapper userMapper = session.getMapper(UserMapper.class);
-        UserExample example = new UserExample();
-        example.createCriteria()
-                .andNameEqualTo("赵老四");
-        User user = new User();
-        user.setName("赵国强");
-        userMapper.updateByExampleSelective(user, example);
-    }
-
+    /**
+     * delete from user where id = ?
+     */
     @Test
     public void deleteByPrimaryKey() {
         SqlSession session = factory.openSession();
         try {
-            UserMapper userMapper = session.getMapper(UserMapper.class);
-            userMapper.deleteByPrimaryKey(10);
+            session.getMapper(UserMapper.class).deleteByPrimaryKey(11);
             session.commit();
         } catch (Exception e) {
             session.rollback();
@@ -122,16 +99,30 @@ public class UserTest {
         }
     }
 
+    /**
+     * delete from user where age is null or age not between 1 and 150
+     */
     @Test
     public void deleteByExample() {
         SqlSession session = factory.openSession();
-        UserMapper userMapper = session.getMapper(UserMapper.class);
-        UserExample example = new UserExample();
-        example.or().andAgeIsNull();
-        example.or().andAgeBetween(18, 40);
-        userMapper.deleteByExample(example);
+        try {
+            UserExample example = new UserExample();
+            example.or().andAgeIsNull();
+            example.or().andAgeNotBetween(1, 150);
+            // if(example != null)
+            session.getMapper(UserMapper.class).deleteByExample(example);
+            session.commit();
+        } catch (Exception e) {
+            session.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
     }
 
+    /**
+     *
+     */
     @Test
     public void selectByPrimaryKey() {
         SqlSession session = factory.openSession();
@@ -140,7 +131,9 @@ public class UserTest {
         session.close();
     }
 
-    /*按条件查询：查询姓赵的男性*/
+    /**
+     * 按条件查询：查询姓赵的男性
+     */
     @Test
     public void selectByExample() {
         SqlSession session = factory.openSession();
@@ -153,6 +146,9 @@ public class UserTest {
         session.close();
     }
 
+    /**
+     *
+     */
     @Test
     public void select() {
         SqlSession session = factory.openSession();
@@ -176,6 +172,9 @@ public class UserTest {
         session.close();
     }
 
+    /**
+     *
+     */
     @Test
     public void setOrderByClause() {
         SqlSession session = factory.openSession();
@@ -187,6 +186,9 @@ public class UserTest {
         session.close();
     }
 
+    /**
+     *
+     */
     @Test
     public void setDistinct() {
         SqlSession session = factory.openSession();
@@ -198,7 +200,9 @@ public class UserTest {
         session.close();
     }
 
-    /*找到年龄为null，或者年龄是10,20,30岁的用户*/
+    /**
+     * 找到年龄为null，或者年龄是10,20,30岁的用户
+     */
     @Test
     public void selectByOr() {
         SqlSession session = factory.openSession();
