@@ -65,31 +65,13 @@
 
         <!--数据库表配置-->
         <!--即使数据库id字段有符号也映射为java.lang.Integer类型-->
-        <table schema="mybatis" tableName="cat">
-            <columnOverride column="id" javaType="java.lang.Integer"/>
-        </table>
         <table schema="mybatis" tableName="dept">
-            <columnOverride column="id" javaType="java.lang.Integer"/>
-        </table>
-        <table schema="mybatis" tableName="dog">
             <columnOverride column="id" javaType="java.lang.Integer"/>
         </table>
         <table schema="mybatis" tableName="emp">
             <columnOverride column="id" javaType="java.lang.Integer"/>
         </table>
-        <table schema="mybatis" tableName="leader">
-            <columnOverride column="id" javaType="java.lang.Integer"/>
-        </table>
-        <table schema="mybatis" tableName="student">
-            <columnOverride column="id" javaType="java.lang.Integer"/>
-        </table>
-        <table schema="mybatis" tableName="teacher">
-            <columnOverride column="id" javaType="java.lang.Integer"/>
-        </table>
         <table schema="mybatis" tableName="user">
-            <columnOverride column="id" javaType="java.lang.Integer"/>
-        </table>
-        <table schema="mybatis" tableName="worker">
             <columnOverride column="id" javaType="java.lang.Integer"/>
         </table>
 
