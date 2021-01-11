@@ -2,9 +2,8 @@ package com.joezhou.mapper;
 
 import com.joezhou.pojo.Dept;
 import com.joezhou.pojo.DeptExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface DeptMapper {
     int countByExample(DeptExample example);
