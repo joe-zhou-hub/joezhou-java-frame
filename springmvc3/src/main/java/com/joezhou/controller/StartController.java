@@ -6,11 +6,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 /**
  * @author JoeZhou
  */
-
 @Controller
 public class StartController {
 
-    @RequestMapping("/api/start/start.action")
+    @RequestMapping("/api/start/start")
     public String start() {
         System.out.println("start()...");
         return "success";
