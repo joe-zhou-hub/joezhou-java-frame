@@ -4,9 +4,9 @@
     <title>Title</title>
 </head>
 <body>
-    <%=request.getAttribute("key-mv")%>
-    <%=request.getAttribute("key-model")%>
-    <%=request.getAttribute("key-model-map")%>
-    <%=request.getAttribute("key-map")%>
+<p><%=request.getAttribute("key-mv")%>
+<p><%=request.getAttribute("key-model")%>
+<p><%=request.getAttribute("key-model-map")%>
+<p><%=request.getAttribute("key-map")%>
 </body>
 </html>
