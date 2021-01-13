@@ -16,8 +16,7 @@ import java.util.Map;
 public class ScopeController {
 
     @RequestMapping("request-scope")
-    public ModelAndView requestScope(
-            ModelAndView mv, Model model, ModelMap modelMap, Map<String, Object> map) {
+    public ModelAndView requestScope(ModelAndView mv, Model model, ModelMap modelMap, Map<String, Object> map) {
         mv.addObject("key-mv", "value-mv");
         model.addAttribute("key-model", "value-model");
         modelMap.addAttribute("key-model-map", "value-model-map");
