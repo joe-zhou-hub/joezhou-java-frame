@@ -19,4 +19,20 @@
         <url-pattern>*.do</url-pattern>
     </servlet-mapping>
 
+    <!--当拦截规则为/时，配置允许访问静态资源-->
+    <!--
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.html</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.js</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.css</url-pattern>
+    </servlet-mapping>
+    -->
+
 </web-app>
