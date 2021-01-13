@@ -36,16 +36,15 @@ public class ParamController {
     @RequestMapping("request-param")
     public String requestParam(
             @RequestParam("username") String name,
-            Integer age, Boolean gender,
+            Integer age, Boolean gender,Integer[] ids,
             User userA, User userB,
-            Integer[] ids,
             UserVo userVoA, UserVo userVoB) {
         System.out.println("name: " + name);
         System.out.println("age: " + age);
         System.out.println("gender: " + gender);
+        System.out.println("ids: " + Arrays.toString(ids));
         System.out.println("userA: " + userA);
         System.out.println("userB: " + userB);
-        System.out.println("ids: " + Arrays.toString(ids));
         System.out.println("userVoA: " + userVoA);
         System.out.println("userVoB: " + userVoB);
         return "success";
