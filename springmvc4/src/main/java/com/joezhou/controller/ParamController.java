@@ -1,6 +1,7 @@
 package com.joezhou.controller;
 
 import com.joezhou.pojo.User;
+import com.joezhou.vo.UserVo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,13 +38,16 @@ public class ParamController {
             @RequestParam("username") String name,
             Integer age, Boolean gender,
             User userA, User userB,
-            Integer[] ids) {
+            Integer[] ids,
+            UserVo userVoA, UserVo userVoB) {
         System.out.println("name: " + name);
         System.out.println("age: " + age);
         System.out.println("gender: " + gender);
         System.out.println("userA: " + userA);
         System.out.println("userB: " + userB);
         System.out.println("ids: " + Arrays.toString(ids));
+        System.out.println("userVoA: " + userVoA);
+        System.out.println("userVoB: " + userVoB);
         return "success";
     }
 }

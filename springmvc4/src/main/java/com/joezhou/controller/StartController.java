@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class StartController {
 
-    @RequestMapping("/api/start/start")
+    @RequestMapping("/api/start")
     public String start() {
         System.out.println("start()...");
         return "success";
