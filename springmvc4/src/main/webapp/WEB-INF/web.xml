@@ -20,7 +20,7 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
-    <!--当拦截规则为/时，配置允许访问静态资源-->
+    <!--放行静态资源请求-->
     <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>*.html</url-pattern>
