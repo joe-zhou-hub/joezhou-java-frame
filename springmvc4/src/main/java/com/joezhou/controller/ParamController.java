@@ -10,29 +10,27 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class ParamController {
 
-    @RequestMapping("request-header")
-    public String requestHeader(@RequestHeader("host") String host) {
-        System.out.println(host);
+    @RequestMapping("cookie")
+    public String cookieValue(@CookieValue(value = "name", required = false, defaultValue = "admin") String cookieName) {
+        System.out.println("name: " + cookieName);
         return "success";
     }
 
-    @RequestMapping("cookie")
-    public String cookieValue(@CookieValue("name") String value) {
-        System.out.println(value);
+    @RequestMapping("request-header")
+    public String requestHeader(@RequestHeader(value = "host") String requestHeaderHost) {
+        System.out.println("host: " + requestHeaderHost);
         return "success";
     }
 
     @RequestMapping("rest/{id}/{age}")
-    public String pathVariable(@PathVariable("id") Integer a, @PathVariable("age") Integer b) {
-        System.out.println(a);
-        System.out.println(b);
+    public String pathVariable(@PathVariable("id") int restA, @PathVariable("age") int restB) {
+        System.out.println("id: " + restA);
+        System.out.println("age: " + restB);
         return "success";
     }
 
     @RequestMapping("kv")
-    public String requestParam(
-            @RequestParam("user-name") String name,
-            @RequestParam(value = "user-age", required = false, defaultValue = "18") int age) {
+    public String requestParam(@RequestParam("user-name") String name, @RequestParam("user-age") int age) {
         System.out.println("name: " + name);
         System.out.println("age: " + age);
         return "success";
