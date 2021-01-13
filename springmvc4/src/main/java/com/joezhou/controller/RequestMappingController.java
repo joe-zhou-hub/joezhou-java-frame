@@ -11,45 +11,28 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class RequestMappingController {
 
-    @RequestMapping({"test-a", "test-b", "test-c"})
-    public String test() {
-        System.out.println("test()...");
+    @RequestMapping({"value-a", "value-b"})
+    public String value() {
+        System.out.println("value()...");
         return "success";
     }
 
-    @RequestMapping("/?/one")
-    public String one() {
-        System.out.println("one...");
+    @RequestMapping("/**/user-*/?")
+    public String valueMatch() {
+        System.out.println("valueMatch()...");
         return "success";
     }
 
-    @RequestMapping("/*/two")
-    public String two() {
-        System.out.println("two...");
+    @RequestMapping(value = "/method", method = RequestMethod.GET)
+    public String method() {
+        System.out.println("method()...");
         return "success";
     }
 
-    @RequestMapping("/**/three")
-    public String three() {
-        System.out.println("three...");
-        return "success";
-    }
 
-    @RequestMapping(value = "/get", method = RequestMethod.GET)
-    public String get() {
-        System.out.println("get...");
-        return "success";
-    }
-
-    @RequestMapping(value = "/post", method = RequestMethod.POST)
-    public String post() {
-        System.out.println("post...");
-        return "success";
-    }
-
-    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-    public String delete() {
-        System.out.println("delete...");
+    @RequestMapping(value = "/params", params = {"!name", "age=18", "gender!=1"})
+    public String params() {
+        System.out.println("params()...");
         return "success";
     }
 
