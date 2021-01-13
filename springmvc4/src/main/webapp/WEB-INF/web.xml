@@ -5,6 +5,7 @@
 <web-app>
     <display-name>Archetype Created Web Application</display-name>
 
+    <!--DispatcherServlet-->
     <servlet>
         <servlet-name>dispatcherServlet</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>

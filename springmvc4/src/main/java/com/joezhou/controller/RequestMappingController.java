@@ -29,7 +29,6 @@ public class RequestMappingController {
         return "success";
     }
 
-
     @RequestMapping(value = "/params", params = {"!name", "age=18", "gender!=1"})
     public String params() {
         System.out.println("params()...");
