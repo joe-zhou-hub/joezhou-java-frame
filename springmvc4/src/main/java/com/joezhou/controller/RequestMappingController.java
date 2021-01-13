@@ -2,6 +2,7 @@ package com.joezhou.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * @author JoeZhou
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class RequestMappingController {
 
-    @RequestMapping({"test1", "test2", "test3"})
+    @RequestMapping({"test-a", "test-b", "test-c"})
     public String test() {
         System.out.println("test()...");
         return "success";
@@ -34,5 +35,22 @@ public class RequestMappingController {
         return "success";
     }
 
+    @RequestMapping(value = "/get", method = RequestMethod.GET)
+    public String get() {
+        System.out.println("get...");
+        return "success";
+    }
+
+    @RequestMapping(value = "/post", method = RequestMethod.POST)
+    public String post() {
+        System.out.println("post...");
+        return "success";
+    }
+
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+    public String delete() {
+        System.out.println("delete...");
+        return "success";
+    }
 
 }
