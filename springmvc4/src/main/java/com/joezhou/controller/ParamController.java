@@ -1,7 +1,10 @@
 package com.joezhou.controller;
 
+import com.joezhou.pojo.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
 
 /**
  * @author JoeZhou
@@ -10,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class ParamController {
 
-    @RequestMapping("cookie")
+    @RequestMapping("cookie-value")
     public String cookieValue(@CookieValue(value = "name", required = false, defaultValue = "admin") String cookieName) {
         System.out.println("name: " + cookieName);
         return "success";
@@ -22,17 +25,25 @@ public class ParamController {
         return "success";
     }
 
-    @RequestMapping("rest/{id}/{age}")
-    public String pathVariable(@PathVariable("id") int restA, @PathVariable("age") int restB) {
+    @RequestMapping("path-variable/{id}/{age}")
+    public String pathVariable(@PathVariable("id") Integer restA, @PathVariable("age") Integer restB) {
         System.out.println("id: " + restA);
         System.out.println("age: " + restB);
         return "success";
     }
 
-    @RequestMapping("kv")
-    public String requestParam(@RequestParam("user-name") String name, @RequestParam("user-age") int age) {
+    @RequestMapping("request-param")
+    public String requestParam(
+            @RequestParam("username") String name,
+            Integer age, Boolean gender,
+            User userA, User userB,
+            Integer[] ids) {
         System.out.println("name: " + name);
         System.out.println("age: " + age);
+        System.out.println("gender: " + gender);
+        System.out.println("userA: " + userA);
+        System.out.println("userB: " + userB);
+        System.out.println("ids: " + Arrays.toString(ids));
         return "success";
     }
 }
