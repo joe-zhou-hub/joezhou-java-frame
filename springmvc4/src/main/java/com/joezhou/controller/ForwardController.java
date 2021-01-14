@@ -63,6 +63,7 @@ public class ForwardController {
     @ResponseBody
     @RequestMapping("response-body-json")
     public JsonData responseBodyJson() {
+        System.out.println("responseBodyJson()...");
         List<Student> students = new ArrayList<>();
         students.add(new Student(1, "赵四", new Date(1_111_111_111L)));
         students.add(new Student(2, "刘能", new Date(9_999_999_999L)));
@@ -73,6 +74,7 @@ public class ForwardController {
     @ResponseBody
     @RequestMapping(value = "response-body-string", produces = "text/html;charset=utf-8")
     public String responseBodyString() {
+        System.out.println("responseBodyString()...");
         return "中文";
     }
 
