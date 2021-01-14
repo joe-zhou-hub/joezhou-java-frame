@@ -20,7 +20,7 @@ import java.util.Date;
 public class Student implements Serializable {
 
     @JsonIgnore
-    private Long serializableId = 1L;
+    private static final long serialVersionUID = 1L;
 
     @JsonProperty("primary-key")
     private Integer id;
