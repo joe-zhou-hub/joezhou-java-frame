@@ -15,9 +15,9 @@ public class ConverterController {
 
     @ResponseBody
     @RequestMapping("string-to-date")
-    public String stringToDate(Date date) {
-        System.out.println("stringToDate()...");
+    public String stringToDate(Date date, String name) {
         System.out.println(date);
+        System.out.println(name);
         return "ok";
     }
 

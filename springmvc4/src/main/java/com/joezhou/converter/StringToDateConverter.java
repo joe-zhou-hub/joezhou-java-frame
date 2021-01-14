@@ -10,10 +10,10 @@ import java.util.Date;
  * @author JoeZhou
  */
 public class StringToDateConverter implements Converter<String, Date> {
-    
+
     @Override
     public Date convert(String source) {
-        System.out.println("convert()...");
+        System.out.println("convert()..." + source);
         Date date = null;
         try {
             date = new SimpleDateFormat("yyyy-MM-dd").parse(source);

@@ -9,7 +9,7 @@
     <bean id="converter-list" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
         <property name="converters">
             <set>
-                <value>com.joezhou.converter.StringToDateConverter</value>
+                <bean class="com.joezhou.converter.StringToDateConverter"/>
             </set>
         </property>
     </bean>
