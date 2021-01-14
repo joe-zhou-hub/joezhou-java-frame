@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -28,6 +29,7 @@ public class Student implements Serializable {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String name;
 
+    @DateTimeFormat(pattern="MM-dd yyyy")
     @JsonFormat(pattern="yyyy-MM-dd hh:mm:ss", locale="zh", timezone="UTC")
     private Date birthday;
 }

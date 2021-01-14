@@ -4,6 +4,11 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+    <mvc:annotation-driven />
+    <bean class="org.springframework.format.support.FormattingConversionServiceFactoryBean"/>
+
+    <!--配置自定义转换器类-->
+    <!--
     <mvc:annotation-driven conversion-service="converter-list"/>
 
     <bean id="converter-list" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
@@ -13,7 +18,9 @@
             </set>
         </property>
     </bean>
+    -->
 
+    <!--配置@ResponseBody直接返回字符串的编码-->
     <!--
     <mvc:annotation-driven>
         <mvc:message-converters>
