@@ -65,9 +65,18 @@ public class ForwardController {
     public JsonData responseBodyJson() {
         System.out.println("responseBodyJson()...");
         List<Student> students = new ArrayList<>();
-        students.add(new Student(1, "赵四", new Date(1_111_111_111L)));
-        students.add(new Student(2, "刘能", new Date(9_999_999_999L)));
-        students.add(new Student(3, "大脚", null));
+
+        Student zhaosi = new Student();
+        zhaosi.setId(1);
+        zhaosi.setName("赵四");
+        zhaosi.setBirthday(new Date(1_111_111_111L));
+
+        Student liuneng = new Student();
+        liuneng.setId(2);
+        liuneng.setBirthday(new Date(9_999_999_999L));
+
+        students.add(zhaosi);
+        students.add(liuneng);
         return new JsonData(students);
     }
 
