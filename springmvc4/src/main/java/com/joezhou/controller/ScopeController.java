@@ -1,8 +1,10 @@
 package com.joezhou.controller;
 
+import com.joezhou.pojo.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
@@ -36,6 +38,19 @@ public class ScopeController {
         mv.addObject("info", "管理员");
         mv.setViewName("forward:/view/success.jsp");
         return mv;
+    }
+
+    @RequestMapping("model-attribute")
+    public String modelAttribute(User user, Map<String, Object> map) {
+        System.out.println("modelAttribute(): " + user);
+        System.out.println("map: " + map.get("key"));
+        return "success";
+    }
+
+    @ModelAttribute
+    public void before(User user, Map<String, Object> map) {
+        System.out.println("before(): " + user);
+        map.put("key", "before()");
     }
 
 }
