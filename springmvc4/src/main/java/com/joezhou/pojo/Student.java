@@ -17,12 +17,13 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Student implements Serializable {
+
     @JsonIgnore
     private Integer id;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String name;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonFormat(pattern="yyyy-MM-dd hh:mm:ss", locale="zh", timezone="UTC")
     private Date birthday;
 }

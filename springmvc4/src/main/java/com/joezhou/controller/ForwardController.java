@@ -1,6 +1,7 @@
 package com.joezhou.controller;
 
 import com.joezhou.pojo.Student;
+import com.joezhou.util.JsonData;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -10,7 +11,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author JoeZhou
@@ -59,12 +62,12 @@ public class ForwardController {
 
     @ResponseBody
     @RequestMapping("response-body-json")
-    public List<Student> responseBodyJson() {
+    public JsonData responseBodyJson() {
         List<Student> students = new ArrayList<>();
-        students.add(new Student(1, "赵四", new Date(1000000)));
-        students.add(new Student(2, "刘能", new Date(2000000)));
+        students.add(new Student(1, "赵四", new Date(1_111_111_111L)));
+        students.add(new Student(2, "刘能", new Date(9_999_999_999L)));
         students.add(new Student(3, "大脚", null));
-        return students;
+        return new JsonData(students);
     }
 
     @ResponseBody
