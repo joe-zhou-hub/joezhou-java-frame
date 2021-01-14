@@ -10,9 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author JoeZhou
@@ -59,23 +57,21 @@ public class ForwardController {
         return modelAndView;
     }
 
+
     @ResponseBody
-    @RequestMapping("jackson")
-    public List<Student> jackson() {
-        System.out.println("jackson()...");
-
+    @RequestMapping("response-body-json")
+    public List<Student> responseBodyJson() {
         List<Student> students = new ArrayList<>();
-        Student student01 = new Student();
-        student01.setId(1);
-        student01.setName("赵桑");
-        student01.setBirthday(new Date());
-        Student student02 = new Student();
-        student02.setId(2);
-        student02.setBirthday(new Date());
-
-        students.add(student01);
-        students.add(student02);
+        students.add(new Student(1, "赵四", new Date(1000000)));
+        students.add(new Student(2, "刘能", new Date(2000000)));
+        students.add(new Student(3, "大脚", new Date(3000000)));
         return students;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "response-body-string", produces = "text/html;charset=utf-8")
+    public String responseBodyString() {
+        return "中文";
     }
 
 }
