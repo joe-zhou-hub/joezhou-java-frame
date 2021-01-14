@@ -12,27 +12,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class RequestMappingController {
 
     @RequestMapping({"value-a", "value-b"})
-    public String value() {
+    public void value() {
         System.out.println("value()...");
-        return "success";
     }
 
     @RequestMapping("/**/user-*/?")
-    public String valueMatch() {
+    public void valueMatch() {
         System.out.println("valueMatch()...");
-        return "success";
     }
 
     @RequestMapping(value = "/method", method = RequestMethod.GET)
-    public String method() {
+    public void method() {
         System.out.println("method()...");
-        return "success";
     }
 
     @RequestMapping(value = "/params", params = {"!name", "age=18", "gender!=1"})
-    public String params() {
+    public void params() {
         System.out.println("params()...");
-        return "success";
     }
 
 }

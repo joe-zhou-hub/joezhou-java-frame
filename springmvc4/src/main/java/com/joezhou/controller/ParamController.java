@@ -5,6 +5,7 @@ import com.joezhou.vo.UserVo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
 /**
@@ -14,31 +15,33 @@ import java.util.Arrays;
 @Controller
 public class ParamController {
 
+    @RequestMapping("http-servlet-request")
+    public void httpServletRequest(HttpServletRequest req) {
+        System.out.println("name:" + req.getParameter("name"));
+    }
+
     @RequestMapping("cookie-value")
-    public String cookieValue(
+    public void cookieValue(
             @CookieValue(value = "name", required = false, defaultValue = "admin") String cookieName) {
         System.out.println("name: " + cookieName);
-        return "success";
     }
 
     @RequestMapping("request-header")
-    public String requestHeader(
+    public void requestHeader(
             @RequestHeader(value = "host") String requestHeaderHost) {
         System.out.println("host: " + requestHeaderHost);
-        return "success";
     }
 
     @RequestMapping("path-variable/{id}/{age}")
-    public String pathVariable(
+    public void pathVariable(
             @PathVariable("id") Integer restA,
             @PathVariable("age") Integer restB) {
         System.out.println("id: " + restA);
         System.out.println("age: " + restB);
-        return "success";
     }
 
     @RequestMapping("request-param")
-    public String requestParam(
+    public void requestParam(
             @RequestParam("username") String name,
             Integer age, Boolean gender, Integer[] ids,
             User userA, User userB,
@@ -51,6 +54,5 @@ public class ParamController {
         System.out.println("userB: " + userB);
         System.out.println("userVoA: " + userVoA);
         System.out.println("userVoB: " + userVoB);
-        return "success";
     }
 }

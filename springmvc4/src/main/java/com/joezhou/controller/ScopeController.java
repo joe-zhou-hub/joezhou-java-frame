@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 /**
@@ -20,7 +22,11 @@ import java.util.Map;
 public class ScopeController {
 
     @RequestMapping("request-scope")
-    public ModelAndView requestScope(ModelAndView mv, Model model, ModelMap modelMap, Map<String, Object> map) {
+    public ModelAndView requestScope(
+            HttpServletRequest req, ModelAndView mv, Model model,
+            ModelMap modelMap, Map<String, Object> map) {
+
+        req.setAttribute("key-request", "value-request");
         mv.addObject("key-mv", "value-mv");
         model.addAttribute("key-model", "value-model");
         modelMap.addAttribute("key-model-map", "value-model-map");
@@ -31,7 +37,8 @@ public class ScopeController {
     }
 
     @RequestMapping("session-scope")
-    public ModelAndView sessionScope(ModelAndView mv) {
+    public ModelAndView sessionScope(HttpSession session, ModelAndView mv) {
+        session.setAttribute("id", "9527");
         mv.addObject("name", "admin");
         mv.addObject("gender", 1);
         mv.addObject("age", 18);
@@ -41,10 +48,9 @@ public class ScopeController {
     }
 
     @RequestMapping("model-attribute")
-    public String modelAttribute(User user, Map<String, Object> map) {
+    public void modelAttribute(User user, Map<String, Object> map) {
         System.out.println("modelAttribute(): " + user);
         System.out.println("map: " + map.get("key"));
-        return "success";
     }
 
     @ModelAttribute
