@@ -32,7 +32,7 @@ public class ScopeController {
         modelMap.addAttribute("key-model-map", "value-model-map");
         map.put("key-map", "value-map");
         // forward:避免拼接前后缀
-        mv.setViewName("forward:/view/success.jsp");
+        mv.setViewName("forward:/view/request-value.jsp");
         return mv;
     }
 
@@ -43,7 +43,7 @@ public class ScopeController {
         mv.addObject("gender", 1);
         mv.addObject("age", 18);
         mv.addObject("info", "管理员");
-        mv.setViewName("forward:/view/success.jsp");
+        mv.setViewName("forward:/view/session-value.jsp");
         return mv;
     }
 
