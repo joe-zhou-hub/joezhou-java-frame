@@ -57,14 +57,13 @@ public class ForwardController {
         return modelAndView;
     }
 
-
     @ResponseBody
     @RequestMapping("response-body-json")
     public List<Student> responseBodyJson() {
         List<Student> students = new ArrayList<>();
         students.add(new Student(1, "赵四", new Date(1000000)));
         students.add(new Student(2, "刘能", new Date(2000000)));
-        students.add(new Student(3, "大脚", new Date(3000000)));
+        students.add(new Student(3, "大脚", null));
         return students;
     }
 
