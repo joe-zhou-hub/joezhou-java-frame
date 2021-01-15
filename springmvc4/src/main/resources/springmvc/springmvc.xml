@@ -57,6 +57,16 @@
         </mvc:interceptor>
     </mvc:interceptors>
 
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionAttribute" value="ex" />
+        <property name="exceptionMappings">
+            <props>
+                <prop key="java.lang.ArithmeticException">error</prop>
+                <prop key="java.lang.NullPointerException">error</prop>
+            </props>
+        </property>
+    </bean>
+
     <context:component-scan base-package="com.joezhou.controller"/>
     <context:component-scan base-package="com.joezhou.util"/>
 

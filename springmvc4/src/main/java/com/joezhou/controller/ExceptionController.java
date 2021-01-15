@@ -39,15 +39,15 @@ public class ExceptionController {
     }
 
     @RequestMapping("response-status")
-    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "页面走丢了！")
-    public String responseStatus() {
+    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "ExceptionController: 页面走丢了！")
+    public void responseStatus() {
         System.out.println("responseStatus()...");
-        return "error";
     }
 
     @ResponseBody
     @RequestMapping("my-not-found-exception-test")
     public String myNotFoundExceptionTest(Integer num) throws MyNotFoundException {
+        System.out.println("myNotFoundExceptionTest()...");
         if(num == 0){
             throw new MyNotFoundException();
         }

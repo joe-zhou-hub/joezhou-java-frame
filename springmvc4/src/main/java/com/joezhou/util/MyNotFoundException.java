@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * @author JoeZhou
  */
 @Component
-@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "页面走丢了！")
+@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "MyNotFoundException: 页面走丢了！")
 public class MyNotFoundException extends Exception {
 }
