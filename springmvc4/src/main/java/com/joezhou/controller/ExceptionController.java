@@ -19,9 +19,12 @@ public class ExceptionController {
     @RequestMapping("exception-handler-test")
     public String exceptionHandlerTest(Integer num) {
         System.out.println("test()...");
-        System.out.println(1 / num);
-        int[] arr = {1, 2};
-        System.out.println(arr[num]);
+        if (num == 0) {
+            throw new ArithmeticException();
+        }
+        if (num == 1) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
         return "success";
     }
 
