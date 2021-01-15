@@ -48,8 +48,18 @@ public class ExceptionController {
     @RequestMapping("my-not-found-exception-test")
     public String myNotFoundExceptionTest(Integer num) throws MyNotFoundException {
         System.out.println("myNotFoundExceptionTest()...");
-        if(num == 0){
+        if (num == 0) {
             throw new MyNotFoundException();
+        }
+        return "success";
+    }
+
+    @ResponseBody
+    @RequestMapping("xml-exception-test")
+    public String xmlExceptionTest(Integer num) {
+        System.out.println("xmlExceptionTest()...");
+        if (num == 0) {
+            throw new NullPointerException();
         }
         return "success";
     }

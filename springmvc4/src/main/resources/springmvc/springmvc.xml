@@ -61,8 +61,7 @@
         <property name="exceptionAttribute" value="ex" />
         <property name="exceptionMappings">
             <props>
-                <prop key="java.lang.ArithmeticException">error</prop>
-                <prop key="java.lang.NullPointerException">error</prop>
+                <prop key="java.lang.NullPointerException">forward:/view/error.jsp</prop>
             </props>
         </property>
     </bean>
