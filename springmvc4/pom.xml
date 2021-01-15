@@ -75,6 +75,13 @@
       </exclusions>
     </dependency>
 
+    <!--hibernate-validator-->
+    <dependency>
+      <groupId>org.hibernate.validator</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <version>6.0.13.Final</version>
+    </dependency>
+
   </dependencies>
 
 </project>
