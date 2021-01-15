@@ -66,6 +66,11 @@
         </property>
     </bean>
 
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames" value="i18n"/>
+        <property name="defaultEncoding" value="utf-8"/>
+    </bean>
+
     <context:component-scan base-package="com.joezhou.controller"/>
     <context:component-scan base-package="com.joezhou.util"/>
 
