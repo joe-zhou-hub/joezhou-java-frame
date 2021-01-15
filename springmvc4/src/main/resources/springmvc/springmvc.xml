@@ -49,11 +49,11 @@
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/api/interceptor/test"/>
-            <bean class="com.joezhou.interceptor.MyInterceptorA"/>
+            <bean class="com.joezhou.interceptor.InterceptorA"/>
         </mvc:interceptor>
         <mvc:interceptor>
             <mvc:mapping path="/api/interceptor/test"/>
-            <bean class="com.joezhou.interceptor.MyInterceptorB"/>
+            <bean class="com.joezhou.interceptor.InterceptorB"/>
         </mvc:interceptor>
     </mvc:interceptors>
 
