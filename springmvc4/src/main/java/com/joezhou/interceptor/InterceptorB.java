@@ -13,17 +13,17 @@ public class InterceptorB implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest req, HttpServletResponse resp, Object handler) throws Exception {
-        System.out.println("MyInterceptorB:preHandle()...");
+        System.out.println("InterceptorB:preHandle()...");
         return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest req, HttpServletResponse resp,Object handler, ModelAndView modelAndView) throws Exception {
-        System.out.println("MyInterceptorB:postHandle()...");
+        System.out.println("InterceptorB:postHandle()...");
     }
 
     @Override
     public void afterCompletion(HttpServletRequest req, HttpServletResponse resp, Object handler, Exception ex) throws Exception {
-        System.out.println("MyInterceptorB:afterCompletion()...");
+        System.out.println("InterceptorB:afterCompletion()...");
     }
 }
