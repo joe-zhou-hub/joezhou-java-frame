@@ -1,9 +1,12 @@
 package com.joezhou.controller;
 
+import com.joezhou.util.MyNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * @author JoeZhou
@@ -13,17 +16,41 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ExceptionController {
 
     @ResponseBody
-    @RequestMapping("test")
-    public String test(Integer num) {
+    @RequestMapping("exception-handler-test")
+    public String exceptionHandlerTest(Integer num) {
+        System.out.println("test()...");
         System.out.println(1 / num);
+        int[] arr = {1, 2};
+        System.out.println(arr[num]);
         return "ok";
     }
 
     @ResponseBody
-    @ExceptionHandler({ArithmeticException.class, ArrayIndexOutOfBoundsException.class})
+    @ExceptionHandler(ArithmeticException.class)
     public String exceptionHandler(Exception e) {
-        System.out.println("exceptionHandler()...");
-        e.printStackTrace();
+        System.out.println("ExceptionController.exceptionHandler()..." + e);
         return "err";
+    }
+
+    @RequestMapping("response-status-test")
+    public String responseStatusTest(Integer num) {
+        System.out.println("responseStatusTest()...");
+        return num == 0 ? "forward:response-status" : "success";
+    }
+
+    @RequestMapping("response-status")
+    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "页面走丢了！")
+    public String responseStatus() {
+        System.out.println("responseStatus()...");
+        return "error";
+    }
+
+    @ResponseBody
+    @RequestMapping("my-not-found-exception-test")
+    public String myNotFoundExceptionTest(Integer num) throws MyNotFoundException {
+        if(num == 0){
+            throw new MyNotFoundException();
+        }
+        return "ok";
     }
 }
