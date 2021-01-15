@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.IOException;
 
@@ -15,23 +16,15 @@ import java.io.IOException;
 @Controller
 @RequestMapping("/api/file")
 public class FileController {
-    
+
     @ResponseBody
     @RequestMapping("upload")
-    public String upload(@RequestParam("avatar") MultipartFile avatar) throws IOException {
-        String descPath = "F:" + File.separator + "upload" + File.separator
-                + System.currentTimeMillis() + avatar.getOriginalFilename();
-
-        File descFile = new File(descPath);
-        if (!descFile.getParentFile().exists()) {
-            System.out.println(descFile.getParentFile().mkdirs());
+    public String upload(@NotNull @RequestParam("avatar") MultipartFile avatar) throws IOException {
+        File desc = new File("F:\\upload" + System.currentTimeMillis() + avatar.getOriginalFilename());
+        if (!desc.getParentFile().exists()) {
+            System.out.println(desc.getParentFile().mkdirs());
         }
-        if (!avatar.isEmpty()) {
-            avatar.transferTo(descFile);
-        }
-
-
-
+        avatar.transferTo(desc);
         return "ok";
     }
 }
