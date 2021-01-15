@@ -22,14 +22,14 @@ public class ExceptionController {
         System.out.println(1 / num);
         int[] arr = {1, 2};
         System.out.println(arr[num]);
-        return "ok";
+        return "success";
     }
 
     @ResponseBody
     @ExceptionHandler(ArithmeticException.class)
     public String exceptionHandler(Exception e) {
         System.out.println("ExceptionController.exceptionHandler()..." + e);
-        return "err";
+        return "error";
     }
 
     @RequestMapping("response-status-test")
@@ -51,6 +51,6 @@ public class ExceptionController {
         if(num == 0){
             throw new MyNotFoundException();
         }
-        return "ok";
+        return "success";
     }
 }

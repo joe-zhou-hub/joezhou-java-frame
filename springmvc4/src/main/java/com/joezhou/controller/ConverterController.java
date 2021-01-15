@@ -21,7 +21,7 @@ public class ConverterController {
     public String stringToDate(Date date, String name) {
         System.out.println(date);
         System.out.println(name);
-        return "ok";
+        return "success";
     }
 
     @ResponseBody
@@ -36,7 +36,7 @@ public class ConverterController {
             }
         }
         System.out.println(student);
-        return "ok";
+        return "success";
     }
 
 }

@@ -15,6 +15,6 @@ public class InterceptorController {
     @RequestMapping("test")
     public String test() {
         System.out.println("test()...");
-        return "ok";
+        return "success";
     }
 }

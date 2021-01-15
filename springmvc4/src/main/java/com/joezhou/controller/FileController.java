@@ -30,7 +30,7 @@ public class FileController {
             System.out.println(desc.getParentFile().mkdirs());
         }
         avatar.transferTo(desc);
-        return "ok";
+        return "success";
     }
 
     @RequestMapping("download")

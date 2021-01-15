@@ -27,6 +27,6 @@ public class HibernateValidatorController {
             }
         }
         System.out.println(teacher);
-        return "ok";
+        return "success";
     }
 }

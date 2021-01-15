@@ -16,6 +16,6 @@ public class ExceptionUtil {
 	@ExceptionHandler({ArithmeticException.class, ArrayIndexOutOfBoundsException.class})
 	public String exceptionHandler(Exception e) {
 		System.out.println("ExceptionUtil.exceptionHandler()..." + e);
-		return "err";
+		return "error";
 	}
 }
