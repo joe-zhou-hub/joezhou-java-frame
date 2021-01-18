@@ -22,8 +22,7 @@
     </insert>
 
     <delete id="deleteByIds">
-        DELETE
-        FROM `user` WHERE
+        DELETE FROM `user` WHERE
         <foreach collection="array" item="e" open=" id in (" separator="," close=")">
             ${e}
         </foreach>

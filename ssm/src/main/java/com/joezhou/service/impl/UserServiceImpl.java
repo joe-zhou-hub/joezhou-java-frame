@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
         // throw new RuntimeException("exception and rollback...");
     }
 
-    @Transactional(rollbackForClassName = "Exception")
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateById(User user) {
         if (user != null) {
@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
         if (ids != null && ids.length != 0) {
             for (Integer id : ids) {
                 if (id == null) {
-                    throw new NullPointerException("ids中有元素为null");
+                    throw new NullPointerException("ids中有元素为null...");
                 }
             }
             userMapper.deleteByIds(ids);
