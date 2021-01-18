@@ -39,8 +39,7 @@ public class UserServiceTest {
 
     @Test
     public void updateById() {
-        User user = new User(21, "test-name-1", 3, 1);
-        userService.updateById(user);
+        userService.updateById(new User(10, "test-name-1", 3, 1));
     }
 
     @Test
