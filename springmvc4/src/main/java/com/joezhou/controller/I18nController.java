@@ -12,6 +12,7 @@ public class I18nController {
 
     @RequestMapping("test")
     public String test() {
+        System.out.println("test()...");
         return "forward:/view/i18n.jsp";
     }
 }
