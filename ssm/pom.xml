@@ -63,15 +63,6 @@
       <version>${spring}</version>
     </dependency>
 
-    <!--spring-context-support-->
-    <!--
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context-support</artifactId>
-      <version>${spring}</version>
-    </dependency>
-    -->
-
     <!--log4j-core-->
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>

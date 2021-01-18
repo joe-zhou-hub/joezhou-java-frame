@@ -1,4 +1,4 @@
-package com.joezhou.mapper;
+package com.joezhou.service;
 
 import com.joezhou.pojo.User;
 import com.joezhou.util.PagingUtil;
@@ -8,44 +8,44 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+/**
+ * @author JoeZhou
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:spring/app-mapper.xml")
-public class UserMapperTest {
+@ContextConfiguration({"classpath:spring/app-mapper.xml", "classpath:spring/app-service.xml"})
+public class UserServiceTest {
 
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
 
     @Test
     public void paging() {
-        System.out.println(userMapper.paging(new PagingUtil("1", "5").getLimitSuffix()));
+        PagingUtil pagingUtil = new PagingUtil("1", "5");
+        System.out.println(userService.paging(pagingUtil));
+        System.out.println(pagingUtil);
     }
 
     @Test
     public void selectById() {
-        System.out.println(userMapper.selectById(1));
+        System.out.println(userService.selectById(1));
     }
 
     @Test
     public void insert() {
         User user = new User(null, "test-name", 2, 1);
-        userMapper.insert(user);
+        userService.insert(user);
         System.out.println(user);
     }
 
     @Test
     public void updateById() {
         User user = new User(21, "test-name-1", 3, 1);
-        userMapper.updateById(user);
+        userService.updateById(user);
     }
 
     @Test
     public void deleteByIds() {
-        userMapper.deleteByIds(new Integer[]{3, 4});
+        // userService.deleteByIds(new Integer[]{6, null});
+        userService.deleteByIds(new Integer[]{6, 7});
     }
-
-    @Test
-    public void count() {
-        System.out.println(userMapper.count());
-    }
-
 }

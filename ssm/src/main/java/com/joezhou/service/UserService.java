@@ -1,28 +1,22 @@
-package com.joezhou.mapper;
+package com.joezhou.service;
 
 import com.joezhou.pojo.User;
+import com.joezhou.util.PagingUtil;
 
 import java.util.List;
 
 /**
  * @author JoeZhou
  */
-public interface UserMapper {
+public interface UserService {
 
     /**
      * 分页查询用户信息
      *
-     * @param limitSuffix SQL分页后缀
+     * @param pagingUtil SQL分页工具
      * @return 用户信息
      */
-    List<User> paging(String limitSuffix);
-
-    /**
-     * 查询用户表总条目数
-     *
-     * @return 用户表总条目数
-     */
-    int count();
+    List<User> paging(PagingUtil pagingUtil);
 
     /**
      * 根据主键查询用户信息

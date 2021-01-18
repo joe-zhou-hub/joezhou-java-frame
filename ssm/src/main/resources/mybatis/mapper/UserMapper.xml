@@ -5,14 +5,49 @@
 
 <mapper namespace="com.joezhou.mapper.UserMapper">
 
-    <sql id="*">
-        `id`, `name`, `age`, `gender`
-    </sql>
+    <select id="paging" resultType="User">
+        SELECT `id`, `name`, `age`, `gender`
+        FROM `user` ${value}
+    </select>
 
-    <select id="findById" resultType="User">
-        SELECT
-        <include refid="*"/>
+    <select id="selectById" resultType="User">
+        SELECT `id`, `name`, `age`, `gender`
         FROM `user`
         WHERE `id` = #{id}
     </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `user` (`id`, `name`, `age`, `gender`)
+        VALUES (#{id}, #{name}, #{age}, #{gender});
+    </insert>
+
+    <delete id="deleteByIds">
+        DELETE
+        FROM `user` WHERE
+        <foreach collection="array" item="e" open=" id in (" separator="," close=")">
+            ${e}
+        </foreach>
+    </delete>
+
+    <delete id="updateById">
+        UPDATE `user`
+        <set>
+            <if test='name != null'>
+                `name` = #{name},
+            </if>
+            <if test='age != null'>
+                `age` = #{age},
+            </if>
+            <if test='gender != null'>
+                `gender` = #{gender},
+            </if>
+        </set>
+        WHERE `id` = #{id}
+    </delete>
+
+    <select id="count" resultType="_int">
+        SELECT count(*)
+        FROM `user`
+    </select>
+
 </mapper>

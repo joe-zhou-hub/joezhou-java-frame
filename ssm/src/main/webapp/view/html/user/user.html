@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>login</title>
+    <base href="/ssm/">
+    <link href="bootstrap337/css/bootstrap.min.css" rel="stylesheet">
+    <link href="view/style/user/user.css" rel="stylesheet">
+</head>
+<body>
+<section class="operation-sec">
+    <article class="pull-left">
+        <button id="insert-btn" class="btn btn-info" type="button">添加</button>
+        <button id="delete-btn" class="btn btn-danger" type="button">批量删除</button>
+    </article>
+    <label class="pull-right">
+        <select id="paging-size-sel" class="form-control">
+            <option value="1">1条数据&nbsp;/&nbsp;页</option>
+            <option value="5">5条数据&nbsp;/&nbsp;页</option>
+            <option value="10">10条数据&nbsp;/&nbsp;页</option>
+        </select>
+    </label>
+</section>
+
+<section id="user-list-sec">
+    <form id="delete-form">
+        <table id="user-list-tab" class="table table-condensed table-striped table-hover">
+            <thead id="user-list-thead"></thead>
+            <tbody id="user-list-tbody"></tbody>
+        </table>
+    </form>
+</section>
+
+<section class="paging-sec">
+    <ol id="paging-numbers-ol" class="pagination"></ol>
+</section>
+
+<script src="jquery321/jquery-3.2.1.min.js"></script>
+<script src="bootstrap337/js/bootstrap.min.js"></script>
+<script src="view/script/user/user.js"></script>
+</body>
+</html>
