@@ -3,6 +3,7 @@
 <html>
 <head>
     <title>Title</title>
+    <meta charset="UTF-8">
 </head>
 <body>
 <h1><spring:message code="title"/></h1>
