@@ -1,6 +1,5 @@
 package com.joezhou.service.impl;
 
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.joezhou.mapper.UserMapper;
 import com.joezhou.pojo.User;
@@ -23,11 +22,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PageInfo<User> paging(Integer page, Integer size) {
-        if (page == null || size == null) {
+    public PageInfo<User> paging(Integer pageNum, Integer pageSize) {
+        if (pageNum == null || pageSize == null) {
             return new PageInfo<>();
         }
-        PageHelper.startPage(page, size);
         return new PageInfo<>(userMapper.selectAll());
     }
 

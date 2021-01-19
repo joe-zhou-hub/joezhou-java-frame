@@ -83,43 +83,45 @@ function renderPaging(pageInfo) {
     renderLastAndNextBtn();
     renderPagingMessage();
     updatePagingSize();
-}
 
-function renderPrevAndFirstBtn() {
-    if (pageNum === 1) {
-        $(`<li class="disabled"><a>&laquo;</a></li>`).appendTo(navigatePageNumsOl);
-        $(`<li class="disabled"><a>首页</a></li>`).appendTo(navigatePageNumsOl);
-    } else {
-        $(`<li class="item"><a>&laquo;</a></li>`).click(() => paging(pageNum - 1, pageSize)).appendTo(navigatePageNumsOl);
-        $(`<li class="item"><a>首页</a></li>`).click(() => paging(1, pageSize)).appendTo(navigatePageNumsOl);
-    }
-}
-
-function renderNavigatePageNums() {
-    $.each(navigatePageNums, (i, v) => {
-        let li = $(`<li class="item"><a>${v}</a></li>`).appendTo(navigatePageNumsOl);
-        if (v === pageNum) {
-            li.addClass("active");
+    function renderPrevAndFirstBtn() {
+        if (pageNum === 1) {
+            $(`<li class="disabled"><a>&laquo;</a></li>`).appendTo(navigatePageNumsOl);
+            $(`<li class="disabled"><a>首页</a></li>`).appendTo(navigatePageNumsOl);
         } else {
-            li.click(() => paging(v, pageSize));
+            $(`<li class="item"><a>&laquo;</a></li>`).click(() => paging(pageNum - 1, pageSize)).appendTo(navigatePageNumsOl);
+            $(`<li class="item"><a>首页</a></li>`).click(() => paging(1, pageSize)).appendTo(navigatePageNumsOl);
         }
-    });
-}
+    }
 
-function renderLastAndNextBtn() {
-    if (pageNum === pages) {
-        $(`<li class="disabled"><a>尾页</a></li>`).appendTo(navigatePageNumsOl);
-        $(`<li class="disabled"><a>&raquo;</a></li>`).appendTo(navigatePageNumsOl);
-    } else {
-        $(`<li class="item"><a>尾页</a></li>`).click(() => paging(pages, pageSize)).appendTo(navigatePageNumsOl);
-        $(`<li class="item"><a>&raquo;</a></li>`).click(() => paging(pageNum + 1, pageSize)).appendTo(navigatePageNumsOl);
+    function renderNavigatePageNums() {
+        $.each(navigatePageNums, (i, v) => {
+            let li = $(`<li class="item"><a>${v}</a></li>`).appendTo(navigatePageNumsOl);
+            if (v === pageNum) {
+                li.addClass("active");
+            } else {
+                li.click(() => paging(v, pageSize));
+            }
+        });
+    }
+
+    function renderLastAndNextBtn() {
+        if (pageNum === pages) {
+            $(`<li class="disabled"><a>尾页</a></li>`).appendTo(navigatePageNumsOl);
+            $(`<li class="disabled"><a>&raquo;</a></li>`).appendTo(navigatePageNumsOl);
+        } else {
+            $(`<li class="item"><a>尾页</a></li>`).click(() => paging(pages, pageSize)).appendTo(navigatePageNumsOl);
+            $(`<li class="item"><a>&raquo;</a></li>`).click(() => paging(pageNum + 1, pageSize)).appendTo(navigatePageNumsOl);
+        }
+    }
+
+    function renderPagingMessage() {
+        $(`<li><a>当前是第&nbsp;${pageNum}&nbsp;/&nbsp;${pages}&nbsp;页，共&nbsp;${total}&nbsp;条数据</a></li>`).appendTo(navigatePageNumsOl);
+    }
+
+    function updatePagingSize() {
+        pageSizeSel.val(pageSize);
     }
 }
 
-function renderPagingMessage() {
-    $(`<li><a>当前是第&nbsp;${pageNum}&nbsp;/&nbsp;${pages}&nbsp;页，共&nbsp;${total}&nbsp;条数据</a></li>`).appendTo(navigatePageNumsOl);
-}
 
-function updatePagingSize() {
-    pageSizeSel.val(pageSize);
-}
