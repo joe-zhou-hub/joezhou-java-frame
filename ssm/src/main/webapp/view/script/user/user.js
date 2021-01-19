@@ -1,15 +1,10 @@
 const APP_NAME = "/ssm";
-let pagingSizeSel;
-let pagingNumbersOl;
+let pageSizeSel, navigatePageNumsOl;
 let pageNum, pageSize, total, pages, navigatePageNums;
 
 $(() => {
-    pagingSizeSel = $("#paging-size-sel").change(() => changePagingSize());
-    $("#delete-btn").click(() => {
-        if (confirm("确认删除吗？")) {
-            deleteByIds();
-        }
-    });
+    pageSizeSel = $("#paging-size-sel").change(() => changePageSize());
+    $("#delete-btn").click(() => deleteByIds());
     $("#insert-btn").click(() => insert());
     paging(1, 5);
 });
@@ -18,44 +13,47 @@ function insert() {
     location.href = `${APP_NAME}/view/html/user/user-insert.html`
 }
 
-function changePagingSize() {
-    paging(1, pagingSizeSel.val())
+function changePageSize() {
+    paging(1, pageSizeSel.val())
 }
 
 function deleteByIds() {
-    $.ajax({
-        "url": `${APP_NAME}/api/user/delete-by-ids`,
-        "type": "post",
-        "data": $("#delete-form").serialize(),
-        "success": response => {
-            alert(response["msg"]);
-            if (response["status"] === 200) {
-                location.href = `${APP_NAME}/view/html/user/user.html`;
+    if (confirm("确认删除吗？")) {
+        $.ajax({
+            "url": `${APP_NAME}/api/user/delete-by-ids`,
+            "type": "post",
+            "data": $("#delete-form").serialize(),
+            "success": response => {
+                alert(response["msg"]);
+                if (response["status"] === 200) {
+                    location.href = `${APP_NAME}/view/html/user/user.html`;
+                }
             }
-        }
-    });
+        });
+    }
 }
 
 function paging(pageNum, pageSize) {
-
     $.ajax({
         "url": `${APP_NAME}/api/user/paging`,
         "type": "post",
         "data": {"pageNum": pageNum, "pageSize": pageSize},
         "success": response => {
-            //console.log(response);
             if (response["status"] === 200) {
                 renderTable(response["data"]["list"]);
                 renderPaging(response["data"]);
             } else {
-                alert(response["msa"]);
+                alert(response["msg"]);
             }
         }
     });
 }
 
 function renderTable(users) {
-    buildTHead();
+    let userListTHead = $("#user-list-thead").html("");
+    let headTr = $(`<tr></tr>`).appendTo(userListTHead);
+    $(`<th><label><input id="select-all-cbx" type="checkbox"/></label></th>`).appendTo(headTr);
+    $(`<th>序号</th><th>姓名</th><th>年龄</th><th>性别</th><th>操作</th>`).appendTo(headTr);
     let userListTbody = $("#user-list-tbody").html("");
     $.each(users, (i, v) => {
         let tr = $("<tr></tr>").appendTo(userListTbody);
@@ -73,26 +71,15 @@ function renderTable(users) {
     });
 }
 
-function buildTHead() {
-    let userListTHead = $("#user-list-thead").html("");
-    let headTr = $(`<tr></tr>`).appendTo(userListTHead);
-    $(`<th><label><input id="select-all-cbx" type="checkbox"/></label></th>`).appendTo(headTr);
-    $(`<th>序号</th>`).appendTo(headTr);
-    $(`<th>姓名</th>`).appendTo(headTr);
-    $(`<th>年龄</th>`).appendTo(headTr);
-    $(`<th>性别</th>`).appendTo(headTr);
-    $(`<th>操作</th>`).appendTo(headTr);
-}
-
 function renderPaging(pageInfo) {
     pageNum = pageInfo["pageNum"];
     pageSize = pageInfo["pageSize"];
     pages = pageInfo["pages"];
     total = pageInfo["total"];
     navigatePageNums = pageInfo["navigatepageNums"];
-    pagingNumbersOl = $("#paging-numbers-ol").html("");
+    navigatePageNumsOl = $("#paging-numbers-ol").html("");
     renderPrevAndFirstBtn();
-    renderNumbers();
+    renderNavigatePageNums();
     renderLastAndNextBtn();
     renderPagingMessage();
     updatePagingSize();
@@ -100,40 +87,39 @@ function renderPaging(pageInfo) {
 
 function renderPrevAndFirstBtn() {
     if (pageNum === 1) {
-        $(`<li class="disabled"><a>&laquo;</a></li>`).appendTo(pagingNumbersOl);
-        $(`<li class="disabled"><a>首页</a></li>`).appendTo(pagingNumbersOl);
+        $(`<li class="disabled"><a>&laquo;</a></li>`).appendTo(navigatePageNumsOl);
+        $(`<li class="disabled"><a>首页</a></li>`).appendTo(navigatePageNumsOl);
     } else {
-        $(`<li class="item"><a>&laquo;</a></li>`).click(() => paging(pageNum - 1, pageSize)).appendTo(pagingNumbersOl);
-        $(`<li class="item"><a>首页</a></li>`).click(() => paging(1, pageSize)).appendTo(pagingNumbersOl);
+        $(`<li class="item"><a>&laquo;</a></li>`).click(() => paging(pageNum - 1, pageSize)).appendTo(navigatePageNumsOl);
+        $(`<li class="item"><a>首页</a></li>`).click(() => paging(1, pageSize)).appendTo(navigatePageNumsOl);
     }
 }
 
-function renderLastAndNextBtn() {
-    if (pageNum === pages) {
-        $(`<li class="disabled"><a>尾页</a></li>`).appendTo(pagingNumbersOl);
-        $(`<li class="disabled"><a>&raquo;</a></li>`).appendTo(pagingNumbersOl);
-    } else {
-        $(`<li class="item"><a>尾页</a></li>`).click(() => paging(pages, pageSize)).appendTo(pagingNumbersOl);
-        $(`<li class="item"><a>&raquo;</a></li>`).click(() => paging(pageNum + 1, pageSize)).appendTo(pagingNumbersOl);
-    }
-}
-
-function renderNumbers() {
+function renderNavigatePageNums() {
     $.each(navigatePageNums, (i, v) => {
-        let li = $(`<li class="item"><a>${v}</a></li>`).appendTo(pagingNumbersOl);
+        let li = $(`<li class="item"><a>${v}</a></li>`).appendTo(navigatePageNumsOl);
         if (v === pageNum) {
             li.addClass("active");
         } else {
             li.click(() => paging(v, pageSize));
         }
     });
+}
 
+function renderLastAndNextBtn() {
+    if (pageNum === pages) {
+        $(`<li class="disabled"><a>尾页</a></li>`).appendTo(navigatePageNumsOl);
+        $(`<li class="disabled"><a>&raquo;</a></li>`).appendTo(navigatePageNumsOl);
+    } else {
+        $(`<li class="item"><a>尾页</a></li>`).click(() => paging(pages, pageSize)).appendTo(navigatePageNumsOl);
+        $(`<li class="item"><a>&raquo;</a></li>`).click(() => paging(pageNum + 1, pageSize)).appendTo(navigatePageNumsOl);
+    }
 }
 
 function renderPagingMessage() {
-    $(`<li><a>当前是第&nbsp;${pageNum}&nbsp;/&nbsp;${pages}&nbsp;页，共&nbsp;${total}&nbsp;条数据</a></li>`).appendTo(pagingNumbersOl);
+    $(`<li><a>当前是第&nbsp;${pageNum}&nbsp;/&nbsp;${pages}&nbsp;页，共&nbsp;${total}&nbsp;条数据</a></li>`).appendTo(navigatePageNumsOl);
 }
 
 function updatePagingSize() {
-    pagingSizeSel.val(pageSize);
+    pageSizeSel.val(pageSize);
 }
