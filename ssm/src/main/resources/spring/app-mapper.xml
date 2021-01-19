@@ -7,7 +7,7 @@
 
     <!--注入属性文件-->
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="classpath:mybatis/db.properties"/>
+        <property name="location" value="classpath:db.properties"/>
     </bean>
 
     <!--数据源-->
