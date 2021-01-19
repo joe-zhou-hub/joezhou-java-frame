@@ -1,7 +1,6 @@
 package com.joezhou.service;
 
 import com.joezhou.pojo.User;
-import com.joezhou.util.PagingUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +19,7 @@ public class UserServiceTest {
 
     @Test
     public void paging() {
-        PagingUtil pagingUtil = new PagingUtil("1", "5");
-        System.out.println(userService.paging(pagingUtil));
-        System.out.println(pagingUtil);
+        System.out.println(userService.paging(1,5));
     }
 
     @Test

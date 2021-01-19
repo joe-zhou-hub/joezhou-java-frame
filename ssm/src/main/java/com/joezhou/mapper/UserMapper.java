@@ -10,19 +10,12 @@ import java.util.List;
 public interface UserMapper {
 
     /**
-     * 分页查询用户信息
+     * 查询全部用户信息
      *
-     * @param limitSuffix SQL分页后缀
-     * @return 用户信息
+     * @return 全部用户信息
      */
-    List<User> paging(String limitSuffix);
+    List<User> selectAll();
 
-    /**
-     * 查询用户表总条目数
-     *
-     * @return 用户表总条目数
-     */
-    int count();
 
     /**
      * 根据主键查询用户信息

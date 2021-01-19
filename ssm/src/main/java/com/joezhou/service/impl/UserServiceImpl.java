@@ -1,15 +1,13 @@
 package com.joezhou.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.joezhou.mapper.UserMapper;
 import com.joezhou.pojo.User;
 import com.joezhou.service.UserService;
-import com.joezhou.util.PagingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author JoeZhou
@@ -25,18 +23,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> paging(PagingUtil pagingUtil) {
-
-        if (pagingUtil == null) {
-            return new ArrayList<>();
+    public PageInfo<User> paging(Integer page, Integer size) {
+        if (page == null || size == null) {
+            return new PageInfo<>();
         }
-
-        if (pagingUtil.getLimitSuffix() == null || "".equals(pagingUtil.getLimitSuffix())) {
-            return new ArrayList<>();
-        }
-        pagingUtil.buildTotalAndPages(userMapper.count());
-        pagingUtil.buildNumbers();
-        return userMapper.paging(pagingUtil.getLimitSuffix());
+        PageHelper.startPage(page, size);
+        return new PageInfo<>(userMapper.selectAll());
     }
 
     @Override

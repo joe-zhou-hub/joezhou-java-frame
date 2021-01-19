@@ -1,17 +1,13 @@
 package com.joezhou.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.joezhou.pojo.User;
 import com.joezhou.service.UserService;
 import com.joezhou.util.JsonData;
-import com.joezhou.util.PagingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author JoeZhou
@@ -29,16 +25,10 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping("paging")
-    public JsonData paging(PagingUtil pagingUtil) {
-        List<User> users = userService.paging(pagingUtil);
-        if (users.isEmpty()) {
-            return new JsonData(500, "data empty!");
-        } else {
-            Map<String, Object> result = new HashMap<>(2);
-            result.put("users", users);
-            result.put("pagingUtil", pagingUtil);
-            return new JsonData(result);
-        }
+    public JsonData paging(Integer page, Integer size) {
+        PageInfo<User> users = userService.paging(page, size);
+        return new JsonData(users);
+
     }
 
     @ResponseBody

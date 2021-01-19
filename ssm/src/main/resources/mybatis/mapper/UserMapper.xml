@@ -5,9 +5,9 @@
 
 <mapper namespace="com.joezhou.mapper.UserMapper">
 
-    <select id="paging" resultType="User">
+    <select id="selectAll" resultType="User">
         SELECT `id`, `name`, `age`, `gender`
-        FROM `user` ${value}
+        FROM `user`
     </select>
 
     <select id="selectById" resultType="User">

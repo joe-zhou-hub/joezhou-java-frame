@@ -1,7 +1,6 @@
 package com.joezhou.mapper;
 
 import com.joezhou.pojo.User;
-import com.joezhou.util.PagingUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,8 @@ public class UserMapperTest {
     private UserMapper userMapper;
 
     @Test
-    public void paging() {
-        System.out.println(userMapper.paging(new PagingUtil("1", "5").getLimitSuffix()));
+    public void selectAll() {
+        System.out.println(userMapper.selectAll());
     }
 
     @Test
@@ -41,11 +40,6 @@ public class UserMapperTest {
     @Test
     public void deleteByIds() {
         userMapper.deleteByIds(new Integer[]{3, 4});
-    }
-
-    @Test
-    public void count() {
-        System.out.println(userMapper.count());
     }
 
 }
