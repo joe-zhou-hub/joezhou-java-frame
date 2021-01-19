@@ -32,7 +32,7 @@ public class UserController {
     public JsonData paging(PagingUtil pagingUtil) {
         List<User> users = userService.paging(pagingUtil);
         if (users.isEmpty()) {
-            return new JsonData(500, "paging fail!");
+            return new JsonData(500, "data empty!");
         } else {
             Map<String, Object> result = new HashMap<>(2);
             result.put("users", users);
