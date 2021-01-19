@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS `student`
 (
     `id`     INT(11) AUTO_INCREMENT PRIMARY KEY,
     `name`   VARCHAR(50)  NOT NULL COMMENT '学生姓名',
-    `gender` TINYINT(1)   NULL COMMENT '学生性别',
+    `gender` TINYINT(2)   NULL COMMENT '学生性别',
     `age`    INT(3)       NULL COMMENT '学生年龄',
     `info`   VARCHAR(500) NULL COMMENT '学生信息'
 )
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `teacher`
 (
     `id`     INT(11) AUTO_INCREMENT PRIMARY KEY,
     `name`   VARCHAR(50)  NOT NULL COMMENT '教师姓名',
-    `gender` TINYINT(1)   NULL COMMENT '教师性别',
+    `gender` TINYINT(2)   NULL COMMENT '教师性别',
     `age`    INT(3)       NULL COMMENT '教师年龄',
     `info`   VARCHAR(500) NULL COMMENT '教师信息'
 )
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `worker`
 (
     `id`     INT(11) AUTO_INCREMENT PRIMARY KEY,
     `name`   VARCHAR(50)  NOT NULL COMMENT '工人姓名',
-    `gender` TINYINT(1)   NULL COMMENT '工人性别',
+    `gender` TINYINT(2)   NULL COMMENT '工人性别',
     `age`    INT(3)       NULL COMMENT '工人年龄',
     `info`   VARCHAR(500) NULL COMMENT '工人信息'
 )
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `leader`
 (
     `id`     INT(11) AUTO_INCREMENT PRIMARY KEY,
     `name`   VARCHAR(50)  NOT NULL COMMENT '领导姓名',
-    `gender` TINYINT(1)   NULL COMMENT '领导性别',
+    `gender` TINYINT(2)   NULL COMMENT '领导性别',
     `age`    INT(3)       NULL COMMENT '领导年龄',
     `info`   VARCHAR(500) NULL COMMENT '领导信息'
 )
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `user`
 (
     `id`     INT(11) AUTO_INCREMENT PRIMARY KEY,
     `name`   VARCHAR(50)  NOT NULL COMMENT '用户姓名',
-    `gender` TINYINT(1)   NULL COMMENT '用户性别',
+    `gender` TINYINT(2)   NULL COMMENT '用户性别',
     `age`    INT(3)       NULL COMMENT '用户年龄',
     `info`   VARCHAR(500) NULL COMMENT '用户信息'
 )
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `dog`
 (
     `id`     INT(11) AUTO_INCREMENT PRIMARY KEY,
     `name`   VARCHAR(50)  NOT NULL COMMENT '小狗姓名',
-    `gender` TINYINT(1)   NULL COMMENT '小狗性别',
+    `gender` TINYINT(2)   NULL COMMENT '小狗性别',
     `age`    INT(3)       NULL COMMENT '小狗年龄',
     `info`   VARCHAR(500) NULL COMMENT '小狗信息'
 )
@@ -109,10 +109,38 @@ CREATE TABLE IF NOT EXISTS `cat`
 (
     `id`     INT(11) AUTO_INCREMENT PRIMARY KEY,
     `name`   VARCHAR(50)  NOT NULL COMMENT '小猫姓名',
-    `gender` TINYINT(1)   NULL COMMENT '小猫性别',
+    `gender` TINYINT(2)   NULL COMMENT '小猫性别',
     `age`    INT(3)       NULL COMMENT '小猫年龄',
     `info`   VARCHAR(500) NULL COMMENT '小猫信息'
 )
     COMMENT '小猫表';
+
+CREATE TABLE IF NOT EXISTS `pig`
+(
+    `id`     INT(11) AUTO_INCREMENT PRIMARY KEY,
+    `name`   VARCHAR(50)  NOT NULL COMMENT '小猪姓名',
+    `gender` TINYINT(2)   NULL COMMENT '小猪性别',
+    `age`    INT(3)       NULL COMMENT '小猪年龄',
+    `info`   VARCHAR(500) NULL COMMENT '小猪信息'
+)
+    COMMENT '小猪表';
+
+INSERT INTO `pig`
+VALUES (1, 'name1', 1, 1, '111'),
+       (2, 'name2', 1, 2, '222'),
+       (3, 'name3', 1, 3, '333'),
+       (4, 'name4', 1, 4, '444'),
+       (5, 'name5', 1, 5, '555'),
+       (6, 'name6', 1, 6, '666'),
+       (7, 'name7', 1, 7, '777'),
+       (8, 'name8', 1, 8, '888'),
+       (9, 'name9', 1, 9, '999'),
+       (10, 'name10', 1, 10, '101010'),
+       (11, 'name11', 1, 11, '111111'),
+       (12, 'name12', 1, 12, '121212'),
+       (13, 'name13', 1, 13, '131313'),
+       (14, 'name14', 1, 14, '141414'),
+       (15, 'name15', 1, 15, '151515');
+COMMIT;
 
 

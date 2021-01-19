@@ -8,21 +8,35 @@
 
     <context:property-placeholder location="classpath:jdbc/db.properties"/>
 
-    <bean id="cat-data-source" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+    <bean id="pig-data-source" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="${jdbc.driver}"/>
         <property name="url" value="${jdbc.url}"/>
         <property name="username" value="${jdbc.username}"/>
         <property name="password" value="${jdbc.password}"/>
     </bean>
 
-    <bean id="cat-session-factory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <bean id="pig-session-factory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <!--若存在mybatis主配文件，可使用configLocation进行注入"/>-->
         <!--<property name="configLocation" value="classpath:mybatis/mybatis.xml"/>-->
         <property name="typeAliasesPackage" value="com.joezhou.pojo"/>
-        <property name="dataSource" ref="cat-data-source"/>
+        <property name="dataSource" ref="pig-data-source"/>
         <property name="mapperLocations">
             <array>
-                <value>com/joezhou/mapper/CatMapper.xml</value>
+                <value>com/joezhou/mapper/PigMapper.xml</value>
+            </array>
+        </property>
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageInterceptor">
+                    <property name="properties">
+                        <!--使用下面的方式配置参数，一行配置一个-->
+                        <value>
+                            helperDialect=mysql
+                            pageSizeZero=true
+                            reasonable=true
+                        </value>
+                    </property>
+                </bean>
             </array>
         </property>
     </bean>
@@ -34,10 +48,10 @@
     </bean>
     -->
 
-    <!--单配CatMapper接口-->
-    <bean id="catMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="com.joezhou.mapper.CatMapper"/>
-        <property name="sqlSessionFactory" ref="cat-session-factory"/>
+    <!--单配PigMapper接口-->
+    <bean id="pigMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.joezhou.mapper.PigMapper"/>
+        <property name="sqlSessionFactory" ref="pig-session-factory"/>
     </bean>
 
 </beans>

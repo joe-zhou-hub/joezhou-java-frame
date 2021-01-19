@@ -136,6 +136,13 @@
       <version>2.9.7</version>
     </dependency>
 
+    <!--pagehelper-->
+    <dependency>
+      <groupId>com.github.pagehelper</groupId>
+      <artifactId>pagehelper</artifactId>
+      <version>5.2.0</version>
+    </dependency>
+
   </dependencies>
 
 </project>

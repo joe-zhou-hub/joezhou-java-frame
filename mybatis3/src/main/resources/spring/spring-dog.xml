@@ -16,7 +16,9 @@
     </bean>
 
     <bean id="dog-session-factory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="configLocation" value="mybatis-sm.xml"/>
+        <!--若存在mybatis主配文件，可使用configLocation进行注入"/>-->
+        <!--<property name="configLocation" value="classpath:mybatis/mybatis.xml"/>-->
+        <property name="typeAliasesPackage" value="com.joezhou.pojo"/>
         <property name="dataSource" ref="dog-data-source"/>
         <property name="mapperLocations">
             <array>
