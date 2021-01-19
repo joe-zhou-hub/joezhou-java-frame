@@ -25,8 +25,8 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping("paging")
-    public JsonData paging(Integer page, Integer size) {
-        PageInfo<User> users = userService.paging(page, size);
+    public JsonData paging(Integer pageNum, Integer pageSize) {
+        PageInfo<User> users = userService.paging(pageNum, pageSize);
         return new JsonData(users);
 
     }

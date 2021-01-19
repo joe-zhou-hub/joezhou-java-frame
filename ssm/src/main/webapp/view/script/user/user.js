@@ -1,7 +1,7 @@
 const APP_NAME = "/ssm";
 let pagingSizeSel;
 let pagingNumbersOl;
-let page, size, total, pages, numbers;
+let pageNum, pageSize, total, pages, navigatePageNums;
 
 $(() => {
     pagingSizeSel = $("#paging-size-sel").change(() => changePagingSize());
@@ -36,16 +36,17 @@ function deleteByIds() {
     });
 }
 
-function paging(page, size) {
+function paging(pageNum, pageSize) {
 
     $.ajax({
         "url": `${APP_NAME}/api/user/paging`,
         "type": "post",
-        "data": {"page": page, "size": size},
+        "data": {"pageNum": pageNum, "pageSize": pageSize},
         "success": response => {
+            //console.log(response);
             if (response["status"] === 200) {
-                renderTable(response["data"]["users"]);
-                renderPaging(response["data"]["pagingUtil"]);
+                renderTable(response["data"]["list"]);
+                renderPaging(response["data"]);
             } else {
                 alert(response["msa"]);
             }
@@ -83,12 +84,12 @@ function buildTHead() {
     $(`<th>操作</th>`).appendTo(headTr);
 }
 
-function renderPaging(pagingUtil) {
-    page = parseInt(pagingUtil["page"]);
-    size = parseInt(pagingUtil["size"]);
-    pages = parseInt(pagingUtil["pages"]);
-    total = parseInt(pagingUtil["total"]);
-    numbers = pagingUtil["numbers"];
+function renderPaging(pageInfo) {
+    pageNum = pageInfo["pageNum"];
+    pageSize = pageInfo["pageSize"];
+    pages = pageInfo["pages"];
+    total = pageInfo["total"];
+    navigatePageNums = pageInfo["navigatepageNums"];
     pagingNumbersOl = $("#paging-numbers-ol").html("");
     renderPrevAndFirstBtn();
     renderNumbers();
@@ -98,40 +99,41 @@ function renderPaging(pagingUtil) {
 }
 
 function renderPrevAndFirstBtn() {
-    if (page === 1) {
+    if (pageNum === 1) {
         $(`<li class="disabled"><a>&laquo;</a></li>`).appendTo(pagingNumbersOl);
         $(`<li class="disabled"><a>首页</a></li>`).appendTo(pagingNumbersOl);
     } else {
-        $(`<li class="item"><a>&laquo;</a></li>`).click(() => paging(page - 1, size)).appendTo(pagingNumbersOl);
-        $(`<li class="item"><a>首页</a></li>`).click(() => paging(1, size)).appendTo(pagingNumbersOl);
+        $(`<li class="item"><a>&laquo;</a></li>`).click(() => paging(pageNum - 1, pageSize)).appendTo(pagingNumbersOl);
+        $(`<li class="item"><a>首页</a></li>`).click(() => paging(1, pageSize)).appendTo(pagingNumbersOl);
     }
 }
 
 function renderLastAndNextBtn() {
-    if (page === pages) {
+    if (pageNum === pages) {
         $(`<li class="disabled"><a>尾页</a></li>`).appendTo(pagingNumbersOl);
         $(`<li class="disabled"><a>&raquo;</a></li>`).appendTo(pagingNumbersOl);
     } else {
-        $(`<li class="item"><a>尾页</a></li>`).click(() => paging(pages, size)).appendTo(pagingNumbersOl);
-        $(`<li class="item"><a>&raquo;</a></li>`).click(() => paging(page + 1, size)).appendTo(pagingNumbersOl);
+        $(`<li class="item"><a>尾页</a></li>`).click(() => paging(pages, pageSize)).appendTo(pagingNumbersOl);
+        $(`<li class="item"><a>&raquo;</a></li>`).click(() => paging(pageNum + 1, pageSize)).appendTo(pagingNumbersOl);
     }
 }
 
 function renderNumbers() {
-    $.each(numbers, (i, v) => {
+    $.each(navigatePageNums, (i, v) => {
         let li = $(`<li class="item"><a>${v}</a></li>`).appendTo(pagingNumbersOl);
-        if (parseInt(v) === page) {
+        if (v === pageNum) {
             li.addClass("active");
         } else {
-            li.click(() => paging(parseInt(v), size));
+            li.click(() => paging(v, pageSize));
         }
     });
+
 }
 
 function renderPagingMessage() {
-    $(`<li><a>当前是第&nbsp;${page}&nbsp;/&nbsp;${pages}&nbsp;页，共&nbsp;${total}&nbsp;条数据</a></li>`).appendTo(pagingNumbersOl);
+    $(`<li><a>当前是第&nbsp;${pageNum}&nbsp;/&nbsp;${pages}&nbsp;页，共&nbsp;${total}&nbsp;条数据</a></li>`).appendTo(pagingNumbersOl);
 }
 
 function updatePagingSize() {
-    pagingSizeSel.val(size);
+    pagingSizeSel.val(pageSize);
 }

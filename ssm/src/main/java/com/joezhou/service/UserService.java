@@ -11,11 +11,11 @@ public interface UserService {
     /**
      * 分页查询用户信息
      *
-     * @param page 显示第几页
-     * @param size 每页显示几条
+     * @param pageNum 显示第几页
+     * @param pageSize 每页显示几条
      * @return 部分用户信息
      */
-    PageInfo<User> paging(Integer page, Integer size);
+    PageInfo<User> paging(Integer pageNum, Integer pageSize);
 
     /**
      * 根据主键查询用户信息
