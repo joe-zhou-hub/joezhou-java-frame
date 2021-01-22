@@ -15,12 +15,18 @@ import java.util.Date;
 @Data
 public class Teacher implements Serializable {
 
-    @NotNull
-    @Email
+    @NotNull(message = "email is null...", groups = GroupA.class)
+    @Email(message = "email is error...", groups = GroupA.class)
     private String email;
 
-    @NotNull
-    @Past
+    @NotNull(message = "birth is null...", groups = GroupB.class)
+    @Past(message = "birth is error...", groups = GroupB.class)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birth;
-} 
+
+    public interface GroupA {
+    }
+
+    public interface GroupB {
+    }
+}

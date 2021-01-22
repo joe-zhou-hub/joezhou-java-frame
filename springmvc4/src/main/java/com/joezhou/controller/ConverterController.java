@@ -26,15 +26,18 @@ public class ConverterController {
 
     @ResponseBody
     @RequestMapping("date-time-format")
-    public String dateTimeFormat(Student student, BindingResult result) {
+    public String dateTimeFormat(Student student, BindingResult bindingResult) {
 
-        if (result.hasErrors()) {
-            System.out.println("爆发了" + result.getErrorCount() + "个异常！");
-            for (ObjectError e : result.getAllErrors()) {
-                System.out.println("爆发异常的对象是：" + e.getObjectName());
-                System.out.println("具体异常的内容为：" + e.getDefaultMessage());
+        if (bindingResult.hasErrors()) {
+            System.out.println("bindingResult: there is " + bindingResult.getErrorCount() + " exceptions...");
+            for (ObjectError e : bindingResult.getAllErrors()) {
+                System.out.println("bindingResult: exception from: " + e.getObjectName());
+                System.out.println("bindingResult: exception message: " + e.getDefaultMessage());
             }
+        } else {
+            System.out.println("no errors...");
         }
+
         System.out.println(student);
         return "success";
     }
