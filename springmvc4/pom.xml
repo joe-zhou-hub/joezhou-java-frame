@@ -69,6 +69,20 @@
       <version>6.0.13.Final</version>
     </dependency>
 
+    <!--javax.el-api-->
+    <dependency>
+      <groupId>javax.el</groupId>
+      <artifactId>javax.el-api</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+
+    <!--javax.el-->
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>javax.el</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+
     <!--commons-fileupload-->
     <dependency>
       <groupId>commons-fileupload</groupId>
