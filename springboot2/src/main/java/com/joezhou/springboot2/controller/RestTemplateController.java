@@ -16,18 +16,22 @@ public class RestTemplateController {
     @ResponseBody
     @GetMapping("get-mapping")
     public String getMapping(String name) {
-        return "getMapping()..." + name;
+        System.out.println("getMapping()..." + name);
+        return "data: " + name;
     }
 
     @ResponseBody
     @PostMapping("post-mapping")
     public String postMapping(String name) {
-        return "postMapping()..." + name;
+        System.out.println("postMapping()..." + name);
+        return "data: " + name;
     }
 
-    @RequestMapping("request-mapping")
-    public String requestMapping() {
-        System.out.println("requestMapping()...");
+    @RequestMapping("redirect")
+    public String redirect(String name) {
+        System.out.println("redirect()..." + name);
+        // `/` 不能省略
         return "redirect:/success.html";
     }
+
 }
