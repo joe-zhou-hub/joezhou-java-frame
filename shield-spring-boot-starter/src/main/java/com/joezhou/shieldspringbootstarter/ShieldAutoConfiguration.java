@@ -30,6 +30,4 @@ public class ShieldAutoConfiguration {
         return shieldOperations;
     }
 
-
-
 }
