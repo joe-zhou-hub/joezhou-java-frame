@@ -16,6 +16,7 @@ public class ShieldProperties {
     private String shieldWords;
 
     /**
+     * joezhou.shield.enable=true
      * enable shield if true
      */
     private Boolean enabled;

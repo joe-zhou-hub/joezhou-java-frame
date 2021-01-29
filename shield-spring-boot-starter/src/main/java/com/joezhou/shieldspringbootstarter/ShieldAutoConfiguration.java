@@ -24,10 +24,12 @@ public class ShieldAutoConfiguration {
     }
 
     /***
+     * joezhou.shield.enabled=true时：返回设置了屏蔽词的ShieldOperations实例
      * 必须写在 shieldOperations() 之上，否则因重复实例化相同 class 值而报错。
      * @return ShieldOperations实例
      */
     @Bean
+    @ConditionalOnMissingBean
     @ConditionalOnProperty(
             name = "joezhou.shield.enabled",
             havingValue = "true",
@@ -38,12 +40,14 @@ public class ShieldAutoConfiguration {
         return shieldOperations;
     }
 
+    /***
+     * joezhou.shield.enabled=false时：返回空的ShieldOperations实例
+     * @return ShieldOperations实例
+     */
     @Bean
     @ConditionalOnMissingBean
     public ShieldOperations shieldOperations() {
-        ShieldOperations shieldOperations = new ShieldOperations();
-        shieldOperations.setShieldWords(shieldProperties.getShieldWords());
-        return shieldOperations;
+        return new ShieldOperations();
     }
 
 }
