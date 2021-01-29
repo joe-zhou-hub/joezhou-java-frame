@@ -1,0 +1,18 @@
+2021-01-29 16:07:22.877 WARN  - [080-exec-2] c.joezhou.springboot2.controller.LogBackController.test:21 : WARN级别信息...
+2021-01-29 16:09:14.871 INFO  - [080-exec-3] c.joezhou.springboot2.controller.LogBackController.test:20 : INFO级别信息...
+2021-01-29 16:09:14.888 WARN  - [080-exec-3] c.joezhou.springboot2.controller.LogBackController.test:21 : WARN级别信息...
+2021-01-29 16:11:11.792 INFO  - [tartedMain] com.joezhou.springboot2.Springboot2Application.logStarting:55 : Starting Springboot2Application using Java 1.8.0_171 on CN-20200701IAMA with PID 5056 (C:\workspace\joezhou-java-frame\springboot2\target\classes started by Administrator in C:\workspace\joezhou-java-frame)
+2021-01-29 16:11:11.802 INFO  - [tartedMain] com.joezhou.springboot2.Springboot2Application.logStartupProfileInfo:660 : No active profile set, falling back to default profiles: default
+2021-01-29 16:11:12.595 INFO  - [tartedMain] o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor.logTo:255 : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2021-01-29 16:11:12.596 INFO  - [tartedMain] o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor.logTo:255 : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2021-01-29 16:11:16.168 INFO  - [tartedMain] o.s.boot.web.embedded.tomcat.TomcatWebServer.initialize:108 : Tomcat initialized with port(s): 8080 (http)
+2021-01-29 16:11:16.201 INFO  - [tartedMain] org.apache.coyote.http11.Http11NioProtocol.log:173 : Initializing ProtocolHandler ["http-nio-8080"]
+2021-01-29 16:11:16.204 INFO  - [tartedMain] org.apache.catalina.core.StandardService.log:173 : Starting service [Tomcat]
+2021-01-29 16:11:16.204 INFO  - [tartedMain] org.apache.catalina.core.StandardEngine.log:173 : Starting Servlet engine: [Apache Tomcat/9.0.41]
+2021-01-29 16:11:16.395 INFO  - [tartedMain] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/].log:173 : Initializing Spring embedded WebApplicationContext
+2021-01-29 16:11:16.396 INFO  - [tartedMain] o.s.b.w.s.c.ServletWebServerApplicationContext.prepareWebApplicationContext:289 : Root WebApplicationContext: initialization completed in 3795 ms
+2021-01-29 16:11:17.104 INFO  - [tartedMain] o.s.scheduling.concurrent.ThreadPoolTaskExecutor.initialize:181 : Initializing ExecutorService 'applicationTaskExecutor'
+2021-01-29 16:11:17.582 INFO  - [tartedMain] o.s.b.d.autoconfigure.OptionalLiveReloadServer.startServer:58 : LiveReload server is running on port 35729
+2021-01-29 16:11:17.630 INFO  - [tartedMain] org.apache.coyote.http11.Http11NioProtocol.log:173 : Starting ProtocolHandler ["http-nio-8080"]
+2021-01-29 16:11:17.685 INFO  - [tartedMain] o.s.boot.web.embedded.tomcat.TomcatWebServer.start:220 : Tomcat started on port(s): 8080 (http) with context path ''
+2021-01-29 16:11:17.704 INFO  - [tartedMain] com.joezhou.springboot2.Springboot2Application.logStarted:61 : Started Springboot2Application in 8.689 seconds (JVM running for 11.929)

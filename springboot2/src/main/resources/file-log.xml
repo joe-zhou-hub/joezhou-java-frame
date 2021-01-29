@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!--文件日志Appender-->
+    <!--仅WARN级别的日志输出到文件中-->
+    <appender name="info-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p - [%4.10(%t)] %c{50}.%M:%L : %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+
+        <file>springboot2/log/warn.log</file>
+
+        <append>true</append>
+
+        <!--过滤器：不记录ERROR，只记录WARN-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+
+            <!--日志信息为ERROR级别时阻止（DENY）-->
+            <onMatch>DENY</onMatch>
+
+            <!--日志信息不为ERROR级别时允许记录（ACCEPT）-->
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+
+        <!--滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>log/warn.%d.%i.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>5GB</totalSizeCap>
+            <maxFileSize>5MB</maxFileSize>
+        </rollingPolicy>
+
+    </appender>
+
+    <!--日志记录器-->
+    <logger name="com.joezhou.springboot2.controller" level="INFO">
+        <appender-ref ref="info-appender"/>
+    </logger>
+
+    <!--根记录器，最低级别为INFO，建议放在最后-->
+    <root level="INFO">
+        <appender-ref ref="info-appender" />
+    </root>
+
+
+</configuration>
