@@ -1,4 +1,4 @@
-package com.joezhou.springboot2.pojo;
+package com.joezhou.springboot2.mybatis;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.joezhou.springboot2.controller;
+package com.joezhou.springboot2.restTemplate;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

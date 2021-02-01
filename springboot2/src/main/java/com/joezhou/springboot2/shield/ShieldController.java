@@ -1,4 +1,4 @@
-package com.joezhou.springboot2.controller;
+package com.joezhou.springboot2.shield;
 
 import com.joezhou.shieldspringbootstarter.ShieldOperations;
 import org.springframework.beans.factory.annotation.Autowired;

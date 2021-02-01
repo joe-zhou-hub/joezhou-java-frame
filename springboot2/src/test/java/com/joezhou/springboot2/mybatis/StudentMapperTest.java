@@ -1,5 +1,6 @@
-package com.joezhou.springboot2.mapper;
+package com.joezhou.springboot2.mybatis;
 
+import com.joezhou.springboot2.mybatis.StudentMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package com.joezhou.springboot2;
+package com.joezhou.springboot2.shield;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.web.client.RestTemplate;

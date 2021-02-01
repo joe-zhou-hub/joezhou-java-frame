@@ -36,7 +36,7 @@
     </appender>
 
     <!--日志记录器-->
-    <logger name="com.joezhou.springboot2.controller" level="INFO">
+    <logger name="com.joezhou.springboot2.shield" level="INFO">
         <appender-ref ref="info-appender"/>
     </logger>
 

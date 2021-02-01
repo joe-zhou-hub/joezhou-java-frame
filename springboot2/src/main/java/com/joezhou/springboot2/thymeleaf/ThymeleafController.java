@@ -1,4 +1,4 @@
-package com.joezhou.springboot2.controller;
+package com.joezhou.springboot2.thymeleaf;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +15,7 @@ public class ThymeleafController {
     @RequestMapping("test")
     public String test(Map<String, Object> map, String name) {
         map.put("msg", name);
-        // /templates/main.html
-        return "main";
+        // /templates/thymeleaf-test.html
+        return "thymeleaf-test";
     }
 }

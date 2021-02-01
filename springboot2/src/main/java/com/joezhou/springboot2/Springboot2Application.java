@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.solr.SolrAutoConfiguration;
  * @author JoeZhou
  */
 @SpringBootApplication(exclude = SolrAutoConfiguration.class)
-@MapperScan("com.joezhou.springboot2.mapper")
+@MapperScan("com.joezhou.springboot2.mybatis")
 public class Springboot2Application {
 
     public static void main(String[] args) {

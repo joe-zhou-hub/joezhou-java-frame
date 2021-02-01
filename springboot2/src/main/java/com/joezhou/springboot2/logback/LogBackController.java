@@ -1,4 +1,4 @@
-package com.joezhou.springboot2.controller;
+package com.joezhou.springboot2.logback;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

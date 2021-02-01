@@ -1,7 +1,5 @@
-package com.joezhou.springboot2.controller;
+package com.joezhou.springboot2.mybatis;
 
-import com.joezhou.springboot2.pojo.Student;
-import com.joezhou.springboot2.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

@@ -1,6 +1,4 @@
-package com.joezhou.springboot2.service;
-
-import com.joezhou.springboot2.pojo.Student;
+package com.joezhou.springboot2.mybatis;
 
 /**
  * @author JoeZhou

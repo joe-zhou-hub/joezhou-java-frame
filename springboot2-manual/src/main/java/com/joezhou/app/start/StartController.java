@@ -1,4 +1,4 @@
-package com.joezhou.app.controller;
+package com.joezhou.app.start;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
