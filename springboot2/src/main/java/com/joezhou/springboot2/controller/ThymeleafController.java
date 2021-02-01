@@ -16,6 +16,6 @@ public class ThymeleafController {
     public String test(Map<String, Object> map, String name) {
         map.put("msg", name);
         // 搭配前缀后缀，组成/templates/html/main.html
-        return "main";
+        return "main2";
     }
 }
