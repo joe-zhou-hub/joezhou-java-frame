@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>thymeleaf</title>
+</head>
+<body>
+
+<h1>thymeleaf!</h1>
+
+<!--从map中取出msg-->
+<h2 th:text="${msg }"></h2>
+
+<!--${msg}可以直接跟字符串使用加号拼接-->
+<h2 th:text="'前置字符串内容: ' + ${msg } + ' :后置字符串内容'"></h2>
+
+<!--${msg}可以在两个竖线（|）之内格式化输出-->
+<h2 th:text="|前置字符串内容: ${msg } :后置字符串内容|"></h2>
+
+</body>
+</html>
