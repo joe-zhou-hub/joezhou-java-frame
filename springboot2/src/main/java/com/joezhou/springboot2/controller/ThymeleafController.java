@@ -15,7 +15,7 @@ public class ThymeleafController {
     @RequestMapping("test")
     public String test(Map<String, Object> map, String name) {
         map.put("msg", name);
-        // 搭配前缀后缀，组成/templates/html/main.html
-        return "main2";
+        // /templates/main.html
+        return "main";
     }
 }
