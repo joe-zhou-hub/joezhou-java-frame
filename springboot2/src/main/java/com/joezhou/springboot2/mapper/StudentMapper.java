@@ -12,8 +12,8 @@ public interface StudentMapper {
     /**
      * 根据主键查询学生记录
      *
-     * @param student 学生实体
+     * @param id 学生ID
      * @return 一条学生记录
      */
-    Student findById(Student student);
+    Student findById(Integer id);
 }

@@ -21,9 +21,10 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student findById(Student student) {
-        if (student == null) {
+        Integer id;
+        if (student == null || (id = student.getId()) == null) {
             return new Student();
         }
-        return studentMapper.findById(student);
+        return studentMapper.findById(1);
     }
 }
