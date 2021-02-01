@@ -48,6 +48,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!--spring-boot-starter-tomcat-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <!--shield-spring-boot-starter-->
         <dependency>
             <groupId>com.joezhou</groupId>

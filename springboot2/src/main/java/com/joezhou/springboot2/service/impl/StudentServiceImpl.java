@@ -25,6 +25,6 @@ public class StudentServiceImpl implements StudentService {
         if (student == null || (id = student.getId()) == null) {
             return new Student();
         }
-        return studentMapper.findById(1);
+        return studentMapper.findById(id);
     }
 }

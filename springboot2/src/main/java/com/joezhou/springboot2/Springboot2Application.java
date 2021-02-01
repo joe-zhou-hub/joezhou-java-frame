@@ -17,3 +17,13 @@ public class Springboot2Application {
     }
 
 }
+
+/*
+@SpringBootApplication
+public class Springboot2Application extends SpringBootServletInitializer {
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return builder.sources(Springboot2Application.class);
+    }
+}
+*/
