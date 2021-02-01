@@ -20,7 +20,7 @@ public interface StudentMapper {
      * @return 一条学生记录
      */
     @Select("<script>" +
-            "select * from student where" +
+            "select id, name, age, gender, info from student where " +
             "<if test='id != null'>id = #{id}</if>" +
             "</script>")
     Student findById(@Param("id") Integer id);
