@@ -6,31 +6,34 @@
 </head>
 <body>
 <section>
-    <span>用户02</span>
-    <button type="button" onclick="socket.close()">用户02退出通话</button>
-    <button type="button" onclick="location.reload()">用户02恢复通话</button>
+    <h1>用户A</h1>
+    <button type="button" onclick="socket.close()">用户A退出通话</button>
+    <button type="button" onclick="location.reload()">用户A恢复通话</button>
 </section>
 
 <script type="text/javascript">
+
     let socket;
+    /*页面加载时连接到socket*/
     onload = () => {
-        if (typeof (WebSocket) == "undefined") {
+        if (!WebSocket) {
             alert("浏览器不支持WebSocket！");
         } else {
+
             // 使用ws://协议连接WebSocket服务端，并传递session和id过去
-            socket = new WebSocket("ws://localhost:8080/websocket-server/2");
+            socket = new WebSocket("ws://localhost:8080/websocket-server/1");
 
             // 连接到WebSocket服务端时触发
             socket.onopen = () => {
-                console.log("用户02连接到WebSocket...");
-                socket.send("服务端，你好！我是用户02！");
+                console.log("用户A连接到WebSocket...");
+                socket.send("服务端，你好！我是用户A！");
             };
 
             // 获得服务端消息推送时触发
             socket.onmessage = msg => console.log("服务端推送消息：" + msg["data"]);
 
             // 从WebSocket服务端断开连接时触发
-            socket.onclose = () => console.log("用户02从WebSocket服务端断开连接...");
+            socket.onclose = () => console.log("用户A从WebSocket服务端断开连接...");
 
             // WebSocket发生了错误...
             socket.onerror = () => console.log("WebSocket发生了错误...");

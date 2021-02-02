@@ -21,20 +21,24 @@ public class WebSocketServer {
 
     @OnOpen
     public void onOpen(@PathParam("id") String id, Session session) {
+
+        // 后面推送消息的时候还会用到session对象
         this.session = session;
+
         webSocketServerMap.put(id, this);
-        Map<String, String> pathParameters = session.getPathParameters();
-        session.getRequestParameterMap();
-        session.getAsyncRemote().sendText("连接成功！");
-        System.out.println("用户连接：" + id);
-        System.out.println("当前连接总人数：" + webSocketServerMap.size());
+
+        // session.getRequestParameterMap();
+        // 向B端的onmessage()事件中传递消息："连接成功..."
+        session.getAsyncRemote().sendText("连接成功...");
+        System.out.println("用户连入：" + id);
+        System.out.println("当前连接总数：" + webSocketServerMap.size());
     }
 
     @OnClose
     public void onClose(@PathParam("id") String id, Session session) {
         webSocketServerMap.remove(id);
         System.out.println("用户登出：" + id);
-        System.out.println("当前连接总人数：" + webSocketServerMap.size());
+        System.out.println("当前连接总数：" + webSocketServerMap.size());
     }
 
     @OnError
@@ -44,14 +48,15 @@ public class WebSocketServer {
     }
 
     @OnMessage
-    public void onMessage(String message, Session session) {
-        System.out.println("来自客户端的消息:" + message);
+    public void onMessage(String msg, Session session) {
+        System.out.println("来自客户端的消息:" + msg);
     }
 
     public void sendById(String msg, String id) {
-        WebSocketServer userWebSocketServer = webSocketServerMap.get(id);
-        if (userWebSocketServer != null) {
-            userWebSocketServer.session.getAsyncRemote().sendText(msg);
+        // zhaosi 001
+        WebSocketServer webSocketServer = webSocketServerMap.get(id);
+        if (webSocketServer != null) {
+            webSocketServer.session.getAsyncRemote().sendText(msg);
         }
     }
     
