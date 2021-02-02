@@ -25,35 +25,33 @@ public class WebSocketServer {
     @OnOpen
     public void onOpen(@PathParam("id") String id, Session session) {
         this.session = session;
+
         servers.put(id, this);
-        for (String key : servers.keySet()) {
-            servers.get(key).session.getAsyncRemote().sendText("cli-" + id + " login...");
-        }
-        System.out.println("cli-" + id + " login...");
-        System.out.println("current clients size：" + servers.size());
+        System.out.printf("cli-%s login, total %d clients...\n", id, servers.size());
+        sendToAll("cli-" + id + " login...");
     }
 
     @OnClose
     public void onClose(@PathParam("id") String id, Session session) {
         servers.remove(id);
-        System.out.println("cli-" + id + " logoff...");
-        System.out.println("current clients size：" + servers.size());
-
-        for (String key : servers.keySet()) {
-            servers.get(key).session.getAsyncRemote().sendText("cli-" + id + " logoff...");
-        }
+        System.out.printf("cli-%s logoff, total %d clients...\n", id, servers.size());
+        sendToAll("cli-" + id + " logoff...");
     }
 
     @OnMessage
     public void onMessage(@PathParam("id") String id, String msg, Session session) {
-        for (String key : servers.keySet()) {
-            servers.get(key).session.getAsyncRemote().sendText("from cli-" + id + ": " + msg);
-        }
+        sendToAll("cli-" + id + " say: " + msg);
     }
 
     @OnError
     public void onError(@PathParam("id") String id, Throwable e, Session session) {
         System.out.println("cli-" + id + " error...");
         e.printStackTrace();
+    }
+
+    private void sendToAll(String msg){
+        for (String key : servers.keySet()) {
+            servers.get(key).session.getAsyncRemote().sendText(msg);
+        }
     }
 }
