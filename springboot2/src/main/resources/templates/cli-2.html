@@ -28,15 +28,15 @@
     };
 
     function login() {
-        if (!WebSocket) {
-            screen.innerText = "browser not support websocket!\n";
-        } else {
+        if (WebSocket) {
             // 使用ws://协议连接S端，并传递B端id过去
             socket = new WebSocket("ws://localhost:8080/websocket-server/2");
             socket.onopen = () => screen.innerText += "client: cli-2 login...\n";
             socket.onmessage = msg => screen.innerText += "server: " + msg["data"] + "\n";
             socket.onclose = () => screen.innerText += "client: cli-2 logoff...\n";
             socket.onerror = () => screen.innerText += "client: cli-2 error...\n";
+        } else {
+            screen.innerText = "browser not support websocket!\n";
         }
     }
 
@@ -53,7 +53,7 @@
         }
     }
 
-    function clearMsg(){
+    function clearMsg() {
         screen.innerText = "";
     }
 

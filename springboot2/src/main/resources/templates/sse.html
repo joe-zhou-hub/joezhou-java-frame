@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div id="screen"></div>
+<script type="text/javascript">
+    let screen;
+    onload = () => {
+        if (EventSource) {
+            screen = document.getElementById("screen");
+            let eventSource = new EventSource("api/sse/test");
+            eventSource.onopen = () => screen.innerText += "sse open...\n";
+            eventSource.onmessage = ev => screen.innerText += ev.data + "\n";
+        } else {
+            screen.innerText = "browser not support sse!\n";
+        }
+    };
+
+</script>
+</body>
+</html>
