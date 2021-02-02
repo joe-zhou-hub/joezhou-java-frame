@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户1</title>
+</head>
+<body>
+<section>
+    <h1>用户1</h1>
+    <button type="button" onclick="login()">上线</button>
+    <button type="button" onclick="logoff()">下线</button>
+    <hr/>
+    <label>
+        <input id="msg-ipt" placeholder="input msg here..."/>
+    </label>
+    <button type="button" onclick="sendMsg()">发送</button>
+    <button type="button" onclick="clearMsg()">清屏</button>
+    <hr/>
+    <div id="screen"></div>
+</section>
+
+<script type="text/javascript">
+
+    let socket, screen, msgIpt;
+
+    onload = () => {
+        screen = document.getElementById("screen");
+        msgIpt = document.getElementById("msg-ipt");
+    };
+
+    function login() {
+        if (!WebSocket) {
+            screen.innerText = "browser not support websocket!\n";
+        } else {
+            // 使用ws://协议连接S端，并传递B端id过去
+            socket = new WebSocket("ws://localhost:8080/websocket-server/1");
+            socket.onopen = () => screen.innerText += "client: cli-1 login...\n";
+            socket.onmessage = msg => screen.innerText += "server: " + msg["data"] + "\n";
+            socket.onclose = () => screen.innerText += "client: cli-1 logoff...\n";
+            socket.onerror = () => screen.innerText += "client: cli-1 error...\n";
+        }
+    }
+
+    function logoff() {
+        if (socket) {
+            socket.close();
+        }
+    }
+
+    function sendMsg() {
+        if (socket) {
+            socket.send(msgIpt.value);
+            msgIpt.value = "";
+        }
+    }
+
+    function clearMsg(){
+        screen.innerText = "";
+    }
+
+</script>
+</body>
+</html>
