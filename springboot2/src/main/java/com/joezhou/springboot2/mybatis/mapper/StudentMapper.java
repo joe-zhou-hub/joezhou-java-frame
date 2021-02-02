@@ -1,6 +1,6 @@
-package com.joezhou.springboot2.mybatis;
+package com.joezhou.springboot2.mybatis.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
+import com.joezhou.springboot2.pojo.Student;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
  * @author JoeZhou
  */
 @Repository
-@Mapper
 public interface StudentMapper {
 
     /**
@@ -22,5 +21,5 @@ public interface StudentMapper {
             "select id, name, age, gender, info from student where " +
             "<if test='id != null'>id = #{id}</if>" +
             "</script>")
-    Student findById(@Param("id") Integer id);
+    Student selectById(@Param("id") Integer id);
 }

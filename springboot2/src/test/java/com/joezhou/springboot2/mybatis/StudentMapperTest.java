@@ -1,6 +1,6 @@
 package com.joezhou.springboot2.mybatis;
 
-import com.joezhou.springboot2.mybatis.StudentMapper;
+import com.joezhou.springboot2.mybatis.mapper.StudentMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +15,7 @@ class StudentMapperTest {
     private StudentMapper studentMapper;
 
     @Test
-    void findById() {
-        System.out.println(studentMapper.findById(1));
+    void selectById() {
+        System.out.println(studentMapper.selectById(1));
     }
 }

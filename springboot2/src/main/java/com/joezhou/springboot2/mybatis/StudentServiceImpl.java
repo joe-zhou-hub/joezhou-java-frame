@@ -1,5 +1,7 @@
 package com.joezhou.springboot2.mybatis;
 
+import com.joezhou.springboot2.mybatis.mapper.StudentMapper;
+import com.joezhou.springboot2.pojo.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +19,11 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student findById(Student student) {
+    public Student selectById(Student student) {
         Integer id;
         if (student == null || (id = student.getId()) == null) {
             return new Student();
         }
-        return studentMapper.findById(id);
+        return studentMapper.selectById(id);
     }
 }

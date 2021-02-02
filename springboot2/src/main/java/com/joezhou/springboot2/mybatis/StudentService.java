@@ -1,5 +1,7 @@
 package com.joezhou.springboot2.mybatis;
 
+import com.joezhou.springboot2.pojo.Student;
+
 /**
  * @author JoeZhou
  */
@@ -10,5 +12,5 @@ public interface StudentService {
      * @param student 学生实体
      * @return 一条学生记录
      */
-    Student findById(Student student);
+    Student selectById(Student student);
 }
