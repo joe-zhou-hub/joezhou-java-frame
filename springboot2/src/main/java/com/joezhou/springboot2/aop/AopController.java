@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class AopController {
 
     @RequestMapping("execute")
-    public String execute() {
+    public String execute(Integer meta) {
+        if (meta == 0) {
+            throw new RuntimeException("execute() exception...");
+        }
         System.out.println("execute()...");
         return "success";
     }
