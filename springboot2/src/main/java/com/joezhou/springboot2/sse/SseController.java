@@ -13,7 +13,7 @@ public class SseController {
     @RequestMapping(value = "test", produces = "text/event-stream;charset=UTF-8")
     public String test() {
         try {
-            Thread.sleep(1000);
+            Thread.sleep(1000L);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
