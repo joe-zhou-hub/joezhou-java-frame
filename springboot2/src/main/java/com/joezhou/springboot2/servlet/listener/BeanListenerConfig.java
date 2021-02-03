@@ -10,10 +10,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class BeanListenerConfig {
 
-
     @Bean
     public ServletListenerRegistrationBean servletListenerRegistrationBean() {
-        //多个监听器，则需要配置多个@Bean方法。
         return new ServletListenerRegistrationBean<>(new BeanListener());
     }
 }
