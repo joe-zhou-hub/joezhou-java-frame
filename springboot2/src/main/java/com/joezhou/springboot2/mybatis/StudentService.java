@@ -1,7 +1,5 @@
 package com.joezhou.springboot2.mybatis;
 
-import com.joezhou.springboot2.pojo.Student;
-
 /**
  * @author JoeZhou
  */
