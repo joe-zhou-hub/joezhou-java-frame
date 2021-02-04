@@ -10,7 +10,7 @@ import java.util.Arrays;
 /**
  * @author JoeZhou
  */
-@Component("myDiskSpaceHealthIndicator")
+@Component
 public class MyDiskSpaceHealthIndicator implements HealthIndicator {
 
     @Override
@@ -25,7 +25,6 @@ public class MyDiskSpaceHealthIndicator implements HealthIndicator {
 
         if (rootFiles != null && rootFiles.length > 0) {
 
-            // 计算磁盘空间总量和磁盘剩余空间
             for (File file : rootFiles) {
                 totalDiskSpace += file.getTotalSpace();
                 freeDiskSpace += file.getUsableSpace();
