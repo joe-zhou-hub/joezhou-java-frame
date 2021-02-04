@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class AsyncTask {
 
     @Async
-    public void taskA() {
+    public Future<String> taskA() {
         try {
             long start = System.currentTimeMillis();
             TimeUnit.SECONDS.sleep(1L);
@@ -24,10 +24,11 @@ public class AsyncTask {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        return new AsyncResult<>("taskA done...");
     }
 
     @Async
-    public void taskB() {
+    public Future<String> taskB() {
         try {
             long start = System.currentTimeMillis();
             TimeUnit.SECONDS.sleep(2L);
@@ -36,10 +37,11 @@ public class AsyncTask {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        return new AsyncResult<>("taskB done...");
     }
 
     @Async
-    public void taskC() {
+    public Future<String> taskC() {
         try {
             long start = System.currentTimeMillis();
             TimeUnit.SECONDS.sleep(3L);
@@ -48,44 +50,6 @@ public class AsyncTask {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-    @Async
-    public Future<String> taskD() {
-        try {
-            long start = System.currentTimeMillis();
-            TimeUnit.SECONDS.sleep(1L);
-            long end = System.currentTimeMillis();
-            System.out.println("taskD spend: " + (end - start));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return new AsyncResult<>("taskD...");
-    }
-
-    @Async
-    public Future<String> taskE() {
-        try {
-            long start = System.currentTimeMillis();
-            TimeUnit.SECONDS.sleep(2L);
-            long end = System.currentTimeMillis();
-            System.out.println("taskE spend: " + (end - start));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return new AsyncResult<>("taskE...");
-    }
-
-    @Async
-    public Future<String> taskF() {
-        try {
-            long start = System.currentTimeMillis();
-            TimeUnit.SECONDS.sleep(3L);
-            long end = System.currentTimeMillis();
-            System.out.println("taskF spend: " + (end - start));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return new AsyncResult<>("taskF...");
+        return new AsyncResult<>("taskC done...");
     }
 }
