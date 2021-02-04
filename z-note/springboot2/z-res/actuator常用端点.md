@@ -1,7 +1,7 @@
 端点             | 描述
 :---:|:---:
-`health`         | 展示项目中的健康信息
-`info`           | 展示任意的项目信息
+`health`         | 展示项目中的健康信息，默认开启
+`info`           | 展示任意的项目信息，默认开启
 `metrics`        | 展示运行状态的度量信息
 `auditevents`    | 展示当前项目中的审计事件信息，需要 `AuditEventRepository` 的bean
 `beans`          | 展示当前项目中所有Spring bean的完整列表
