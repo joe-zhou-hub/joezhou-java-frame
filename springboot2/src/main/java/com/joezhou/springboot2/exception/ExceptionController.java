@@ -13,7 +13,7 @@ public class ExceptionController {
     @RequestMapping("/execute")
     public String execute(Integer meta) {
         if (meta == 0) {
-            throw new RuntimeException("execute exception...");
+            throw new RuntimeException("execute() exception...");
         }
         return "success";
     }

@@ -12,6 +12,7 @@ import java.util.Map;
  */
 @ControllerAdvice
 public class GlobalException {
+
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public Map<String, Object> exception(Exception e) {
