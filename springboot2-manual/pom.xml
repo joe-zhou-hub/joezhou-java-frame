@@ -13,7 +13,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.3.1.RELEASE</version>
-        <!--可以再maven仓库中可以查找到该<parent>-->
+        <!--表示允许在maven仓库中可以查找到它-->
         <relativePath/>
     </parent>
 
