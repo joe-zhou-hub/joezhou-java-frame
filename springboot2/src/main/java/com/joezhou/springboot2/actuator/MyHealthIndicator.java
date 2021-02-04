@@ -11,7 +11,7 @@ import java.util.Arrays;
  * @author JoeZhou
  */
 @Component
-public class MyDiskSpaceHealthIndicator implements HealthIndicator {
+public class MyHealthIndicator implements HealthIndicator {
 
     @Override
     public Health health() {
