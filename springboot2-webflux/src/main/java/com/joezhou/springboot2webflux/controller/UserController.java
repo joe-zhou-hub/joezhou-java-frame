@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+
 /**
  * @author JoeZhou
  */
@@ -27,9 +29,9 @@ public class UserController {
         return userService.selectById(id);
     }
 
-    @RequestMapping("/select-all")
+    @RequestMapping(value = "/select-all", produces = "application/stream+json")
     public Flux<User> selectAll() {
-        return userService.selectAll();
+        return userService.selectAll().delayElements(Duration.ofSeconds(2));
     }
 
 }
