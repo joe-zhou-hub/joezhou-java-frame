@@ -10,7 +10,6 @@ import org.springframework.boot.autoconfigure.solr.SolrAutoConfiguration;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.ServletContext;
@@ -22,7 +21,7 @@ import java.util.EnumSet;
 @SpringBootApplication(exclude = SolrAutoConfiguration.class)
 @MapperScan("com.joezhou.springboot2.mybatis.mapper")
 @ServletComponentScan("com.joezhou.springboot2.servlet")
-@EnableScheduling
+/*@EnableScheduling*/
 @EnableAsync
 public class Springboot2Application implements ServletContextInitializer {
 

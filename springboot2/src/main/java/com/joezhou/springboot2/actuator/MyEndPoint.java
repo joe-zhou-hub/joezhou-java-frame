@@ -4,22 +4,32 @@ import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * @author JoeZhou
  */
 @Configuration
-@Endpoint(id = "my-end-point")
+@Endpoint(id = "students")
 public class MyEndPoint {
 
     @ReadOperation
-    public Map<String, String> execute() {
-        Map<String, String> map = new HashMap<>(3);
-        map.put("key-01", "value-01");
-        map.put("key-02", "value-02");
-        map.put("key-03", "value-03");
-        return map;
+    public List<Map<String, String>> execute() {
+        List<Map<String, String>> users = new ArrayList<>();
+        Map<String, String> map;
+        map = new HashMap<>(3);
+        map.put("id", "1");
+        map.put("name", "赵四");
+        map.put("age", "58");
+        users.add(map);
+        map = new HashMap<>(3);
+        map.put("id", "2");
+        map.put("name", "刘能");
+        map.put("age", "59");
+        users.add(map);
+        return users;
     }
 }
