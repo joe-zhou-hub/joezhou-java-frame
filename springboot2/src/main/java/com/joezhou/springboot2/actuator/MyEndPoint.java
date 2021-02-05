@@ -13,6 +13,7 @@ import java.util.Map;
 @Configuration
 @Endpoint(id = "my-end-point")
 public class MyEndPoint {
+
     @ReadOperation
     public Map<String, String> execute() {
         Map<String, String> map = new HashMap<>(3);
