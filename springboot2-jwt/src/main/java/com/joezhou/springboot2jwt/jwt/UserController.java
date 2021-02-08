@@ -29,6 +29,7 @@ public class UserController {
                     .withClaim("username", userFromDb.getUsername())
                     .withClaim("password", secretKey)
                     .withClaim("avatar", userFromDb.getAvatar())
+                    .withIssuer("JoeZhou").with
                     .sign(Algorithm.HMAC256(secretKey));
         }
         return "login fail...";
