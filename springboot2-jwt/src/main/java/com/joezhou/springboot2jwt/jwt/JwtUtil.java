@@ -16,7 +16,7 @@ public class JwtUtil {
      */
     private static String secretKey = "yy06200210";
 
-    public static String geneToken(User user) {
+    public static String create(User user) {
         Integer id;
         String username, avatar;
         if (user == null || (id = user.getId()) == null || (username = user.getUsername()) == null || (avatar = user.getAvatar()) == null) {
@@ -35,7 +35,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    public static Claims checkToken(String token) {
+    public static Claims verify(String token) {
         final Claims claims;
         try {
             claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
