@@ -22,6 +22,7 @@ public class JwtUtil {
         if (user == null || (id = user.getId()) == null || (username = user.getUsername()) == null || (avatar = user.getAvatar()) == null) {
             return null;
         }
+
         // 设置负载（发行人，发行时间，过期时间）和签名
         // 每个claim对象都对应payload中的一个kv对
         return Jwts.builder()
@@ -38,7 +39,6 @@ public class JwtUtil {
     public static Claims checkToken(String token) {
         final Claims claims;
         try {
-            // 获取payload
             claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
         } catch (Exception e) {
             e.printStackTrace();
