@@ -1,4 +1,4 @@
-package com.joezhou.springboot2.jwt;
+package com.joezhou.springboot2jwt.jwt;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

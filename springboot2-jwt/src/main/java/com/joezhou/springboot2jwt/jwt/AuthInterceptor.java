@@ -1,4 +1,4 @@
-package com.joezhou.springboot2.jwt;
+package com.joezhou.springboot2jwt.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -46,8 +46,8 @@ public class AuthInterceptor implements HandlerInterceptor {
                 String username, password;
                 try {
                     DecodedJWT decodedJwt = JWT.decode(token);
-                    username = decodedJwt.getClaim("username").toString();
-                    password = decodedJwt.getClaim("password").toString();
+                    username = decodedJwt.getClaim("username").asString();
+                    password = decodedJwt.getClaim("password").asString();
                 } catch (JWTDecodeException j) {
                     throw new RuntimeException("token decode error...");
                 }

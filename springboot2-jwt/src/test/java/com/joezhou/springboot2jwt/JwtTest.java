@@ -1,5 +1,7 @@
-package com.joezhou.springboot2.jwt;
+package com.joezhou.springboot2jwt;
 
+import com.joezhou.springboot2jwt.jwt.JwtUtil;
+import com.joezhou.springboot2jwt.jwt.User;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +20,7 @@ class JwtTest {
     void checkJwt() {
         // 将上一个方法生成的token拿过来
         // 这个字符串稍微改动一点都会返回一个null的Claims
-        String token = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsImF2YXRhciI6ImFkbWluLmpwZyIsInN1YiI6IkpvZVpob3UiLCJpYXQiOjE2MTI3NDczNzMsImV4cCI6MTYxMjgzMzc3M30.INl0HMyxwWpLtd9mhW9yB9PlLQLUHKm57UfeYVzNdIg";
+        String token = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsImF2YXRhciI6ImFkbWluLmpwZyIsInN1YiI6InRlc3QiLCJpc3MiOiJKb2VaaG91IiwiaWF0IjoxNjEyNzY2ODQxLCJleHAiOjE2MTI4NTMyNDF9.EKRh_QW3lwrPPgg2zlLlTyT223Bgm4mjzWz6b-KzWrw";
         Claims claims = JwtUtil.checkToken(token);
         if (claims != null) {
             System.out.println(claims.get("id"));

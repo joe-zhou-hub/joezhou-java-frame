@@ -1,4 +1,4 @@
-package com.joezhou.springboot2.jwt;
+package com.joezhou.springboot2jwt.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

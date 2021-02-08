@@ -1,4 +1,4 @@
-package com.joezhou.springboot2.jwt;
+package com.joezhou.springboot2jwt.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -22,13 +22,13 @@ public class UserController {
 
     @RequestMapping("login")
     public String login(User user) {
-        user = userService.login(user);
-        if (user != null) {
-            String secretKey = user.getPassword();
+        User userFromDb = userService.login(user);
+        if (userFromDb != null) {
+            String secretKey = userFromDb.getPassword();
             return JWT.create()
-                    .withClaim("username", user.getUsername())
+                    .withClaim("username", userFromDb.getUsername())
                     .withClaim("password", secretKey)
-                    .withClaim("avatar", user.getAvatar())
+                    .withClaim("avatar", userFromDb.getAvatar())
                     .sign(Algorithm.HMAC256(secretKey));
         }
         return "login fail...";

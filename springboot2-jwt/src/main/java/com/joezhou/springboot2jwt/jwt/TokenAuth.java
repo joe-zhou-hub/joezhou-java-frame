@@ -1,4 +1,4 @@
-package com.joezhou.springboot2.jwt;
+package com.joezhou.springboot2jwt.jwt;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
