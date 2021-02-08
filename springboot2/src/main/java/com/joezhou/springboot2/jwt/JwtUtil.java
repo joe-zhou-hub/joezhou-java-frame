@@ -12,7 +12,7 @@ import java.util.Date;
 public class JwtUtil {
 
     /**
-     * 密钥：不能暴露
+     * secretKey must not be exposed
      */
     private static String secretKey = "yy06200210";
 
@@ -22,14 +22,13 @@ public class JwtUtil {
         if (user == null || (id = user.getId()) == null || (username = user.getUsername()) == null || (avatar = user.getAvatar()) == null) {
             return null;
         }
-
-        // 设置负载（发行人，发行时间，过期时间）和签名
-        // 每个claim对象都对应payload中的一个kv对
+        // claim: the custom kv in payload
         return Jwts.builder()
                 .claim("id", id)
                 .claim("username", username)
                 .claim("avatar", avatar)
-                .setSubject("JoeZhou")
+                .setSubject("test")
+                .setIssuer("JoeZhou")
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 3600 * 24L))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
