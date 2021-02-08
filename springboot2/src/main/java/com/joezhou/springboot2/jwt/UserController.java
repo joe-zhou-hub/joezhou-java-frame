@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author JoeZhou
  */
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/jwt")
 public class UserController {
 
     private UserService userService;
@@ -22,31 +22,21 @@ public class UserController {
 
     @RequestMapping("login")
     public String login(User user) {
-        User userFromDb = userService.login(user);
-
-        if (userFromDb == null) {
-            return "login error...";
-        } else {
-            String token = JWT.create()
-                    .withClaim("username", userFromDb.getUsername())
-                    .withClaim("password", userFromDb.getPassword())
-                    .sign(Algorithm.HMAC256(userFromDb.getPassword()));
-            return "token: " + token
-                    + " id: " + userFromDb.getId()
-                    + " password: " + userFromDb.getPassword()
-                    + " avatar: " + userFromDb.getAvatar();
+        user = userService.login(user);
+        if (user != null) {
+            String secretKey = user.getPassword();
+            return JWT.create()
+                    .withClaim("username", user.getUsername())
+                    .withClaim("password", secretKey)
+                    .withClaim("avatar", user.getAvatar())
+                    .sign(Algorithm.HMAC256(secretKey));
         }
+        return "login fail...";
     }
 
-    @LoginAuth
-    @RequestMapping("login-auth")
-    public String loginAuth() {
-        return "loginAuth...";
-    }
-
-    @PassToken
-    @RequestMapping("pass-token")
-    public String passToken() {
-        return "passToken()...";
+    @TokenAuth
+    @RequestMapping("execute")
+    public String execute() {
+        return "execute()...";
     }
 }

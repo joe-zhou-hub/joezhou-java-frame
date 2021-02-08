@@ -7,6 +7,7 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -17,6 +18,7 @@ import java.lang.reflect.Method;
 /**
  * @author JoeZhou
  */
+@Component
 public class AuthInterceptor implements HandlerInterceptor {
 
     private UserService userService;
@@ -27,54 +29,41 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
+    public boolean preHandle(HttpServletRequest req, HttpServletResponse resp, Object obj) {
 
-        // 如果不是映射到方法直接通过
-        if (!(object instanceof HandlerMethod)) {
-            return true;
-        }
+        // if url is reference controller method
+        if (obj instanceof HandlerMethod) {
+            Method method = ((HandlerMethod)obj).getMethod();
 
-        HandlerMethod handlerMethod = (HandlerMethod) object;
-        Method method = handlerMethod.getMethod();
+            // check token if the method is marked with @LoginAuth
+            if (method.isAnnotationPresent(TokenAuth.class)) {
 
-        // 如果方法上有 @PassToken，跳过认证，直接放行
-        if (method.isAnnotationPresent(PassToken.class)) {
-            return true;
-        }
+                String token = req.getHeader("token");
+                if (token == null) {
+                    throw new RuntimeException("token is null...");
+                }
 
-        // 如果方法上有 @LoginAuth，执行认证
-        if (method.isAnnotationPresent(LoginAuth.class)) {
+                String username, password;
+                try {
+                    DecodedJWT decodedJwt = JWT.decode(token);
+                    username = decodedJwt.getClaim("username").toString();
+                    password = decodedJwt.getClaim("password").toString();
+                } catch (JWTDecodeException j) {
+                    throw new RuntimeException("token decode error...");
+                }
 
-            // 从请求头中取出 token
-            String token = httpServletRequest.getHeader("token");
-            if (token == null) {
-                throw new RuntimeException("token is null, plz re-login...");
+                User user = userService.login(new User(null, username, password, null));
+                if (user == null) {
+                    throw new RuntimeException("login error...");
+                }
+
+                JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
+                try {
+                    jwtVerifier.verify(token);
+                } catch (JWTVerificationException e) {
+                    throw new RuntimeException("token verify error...");
+                }
             }
-
-            // 获取 token 中的 user id
-            String username, password;
-            try {
-                DecodedJWT decodedJwt = JWT.decode(token);
-                username = decodedJwt.getClaim("username").toString();
-                password = decodedJwt.getClaim("password").toString();
-                System.out.println(username + "::::" + password);
-            } catch (JWTDecodeException j) {
-                throw new RuntimeException("401: token decode error...");
-            }
-
-            User userFromDb = userService.login(new User(null, username, password, null));
-            if (userFromDb == null) {
-                throw new RuntimeException("500: login error, plz re-login...");
-            }
-
-            // 验证 token
-            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(userFromDb.getPassword())).build();
-            try {
-                jwtVerifier.verify(token);
-            } catch (JWTVerificationException e) {
-                throw new RuntimeException("401: token verify error...");
-            }
-            return true;
         }
 
         return true;

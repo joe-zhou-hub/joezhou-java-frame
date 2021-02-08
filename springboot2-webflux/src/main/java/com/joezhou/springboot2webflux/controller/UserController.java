@@ -14,7 +14,7 @@ import java.time.Duration;
  * @author JoeZhou
  */
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/webflux")
 public class UserController {
 
     private UserService userService;
