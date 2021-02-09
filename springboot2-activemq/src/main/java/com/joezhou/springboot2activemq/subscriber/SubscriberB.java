@@ -12,7 +12,7 @@ import javax.jms.JMSException;
 @Component
 public class SubscriberB {
 
-    @JmsListener(destination = "start.topic", containerFactory = "jmsListenerContainerTopic")
+    @JmsListener(destination = "start.topic", containerFactory = "jmsListenerContainerFactory")
     public void spendFromTopic(ActiveMQTextMessage msg) {
         try {
             System.out.println("subscriberB spend: " + msg.getText());

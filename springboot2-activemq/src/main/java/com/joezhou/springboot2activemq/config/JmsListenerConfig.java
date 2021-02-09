@@ -16,10 +16,10 @@ import javax.jms.ConnectionFactory;
 public class JmsListenerConfig {
 
     @Bean
-    public JmsListenerContainerFactory<?> jmsListenerContainerTopic(ConnectionFactory connectionFactory) {
+    public JmsListenerContainerFactory<?> jmsListenerContainerFactory(ConnectionFactory connectionFactory) {
         DefaultJmsListenerContainerFactory bean = new DefaultJmsListenerContainerFactory();
-        bean.setPubSubDomain(true);
         bean.setConnectionFactory(connectionFactory);
+        bean.setPubSubDomain(true);
         return bean;
     }
 }
