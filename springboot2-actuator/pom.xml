@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.joezhou</groupId>
-	<artifactId>springboot2-jwt</artifactId>
+	<artifactId>springboot2-actuator</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>springboot2-jwt</name>
+	<name>springboot2-actuator</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>1.8</java.version>
@@ -39,11 +39,10 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!--java-jwt-->
+		<!--spring-boot-starter-actuator-->
 		<dependency>
-			<groupId>com.auth0</groupId>
-			<artifactId>java-jwt</artifactId>
-			<version>3.4.0</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 	</dependencies>
 

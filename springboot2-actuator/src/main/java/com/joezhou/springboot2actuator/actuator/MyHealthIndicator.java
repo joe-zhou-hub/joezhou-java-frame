@@ -1,4 +1,4 @@
-package com.joezhou.springboot2.actuator;
+package com.joezhou.springboot2actuator.actuator;
 
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;

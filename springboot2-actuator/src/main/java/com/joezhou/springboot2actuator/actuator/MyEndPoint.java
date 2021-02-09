@@ -1,4 +1,4 @@
-package com.joezhou.springboot2.actuator;
+package com.joezhou.springboot2actuator.actuator;
 
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
