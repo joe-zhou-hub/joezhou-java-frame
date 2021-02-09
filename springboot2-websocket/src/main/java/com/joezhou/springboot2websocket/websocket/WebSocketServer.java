@@ -1,4 +1,4 @@
-package com.joezhou.springboot2.websocket;
+package com.joezhou.springboot2websocket.websocket;
 
 import org.springframework.stereotype.Component;
 
