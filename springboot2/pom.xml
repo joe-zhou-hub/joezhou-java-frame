@@ -62,12 +62,6 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
-        <!--spring-boot-starter-thymeleaf-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>
-
         <!--spring-boot-starter-jdbc-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
