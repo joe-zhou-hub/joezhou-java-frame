@@ -1,7 +1,10 @@
 package com.joezhou.springboot2activemq.subscriber;
 
+import org.apache.activemq.command.ActiveMQTextMessage;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
+
+import javax.jms.JMSException;
 
 /**
  * @author JoeZhou
