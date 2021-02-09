@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author JoeZhou
  */
@@ -20,8 +22,11 @@ public class PublishController {
     }
 
     @RequestMapping("send-to-topic")
-    public Object sendToTopic(String msg) {
-        publishA.sendToTopic("start.topic", msg);
-        return "success";
+    public Object sendToTopic(String msg) throws InterruptedException {
+        for (int i = 0, j = 10; i < j; i++) {
+            TimeUnit.SECONDS.sleep(1L);
+            publishA.sendToTopic("start.topic", msg + "-" + i);
+        }
+        return "sendToTopic() success";
     }
 }
