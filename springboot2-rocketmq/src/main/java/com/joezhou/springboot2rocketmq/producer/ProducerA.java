@@ -15,10 +15,10 @@ public class ProducerA {
 
     @PostConstruct
     public void init() {
-        producer = new DefaultMQProducer("producer-group-a");
-        producer.setNamesrvAddr("localhost:9876");
-        producer.setVipChannelEnabled(false);
         try {
+            producer = new DefaultMQProducer("producer-group-a");
+            producer.setNamesrvAddr("localhost:9876");
+            producer.setVipChannelEnabled(false);
             producer.start();
         } catch (Exception e) {
             e.printStackTrace();
