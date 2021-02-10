@@ -18,9 +18,9 @@ public class ConsumerB {
     public void init() {
         DefaultMQPushConsumer consumer;
         try {
-            consumer = new DefaultMQPushConsumer("consumer-group-a");
+            consumer = new DefaultMQPushConsumer("consumer-group-b");
             consumer.setNamesrvAddr("localhost:9876");
-            consumer.subscribe("topic-a", "tag-a || tag-b");
+            consumer.subscribe("topic-a", "tag-a");
             consumer.registerMessageListener((MessageListenerConcurrently) (messageExtList, context) -> {
                 try {
                     for (MessageExt messageExt : messageExtList) {
