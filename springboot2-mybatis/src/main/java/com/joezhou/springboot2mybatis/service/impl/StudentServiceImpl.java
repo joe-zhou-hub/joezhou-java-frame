@@ -1,6 +1,8 @@
-package com.joezhou.springboot2.mybatis;
+package com.joezhou.springboot2mybatis.service.impl;
 
-import com.joezhou.springboot2.mybatis.mapper.StudentMapper;
+import com.joezhou.springboot2mybatis.mapper.StudentMapper;
+import com.joezhou.springboot2mybatis.pojo.Student;
+import com.joezhou.springboot2mybatis.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

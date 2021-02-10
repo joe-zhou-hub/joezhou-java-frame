@@ -1,6 +1,6 @@
-package com.joezhou.springboot2.mybatis.mapper;
+package com.joezhou.springboot2mybatis.mapper;
 
-import com.joezhou.springboot2.mybatis.Student;
+import com.joezhou.springboot2mybatis.pojo.Student;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;

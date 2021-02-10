@@ -3,7 +3,6 @@ package com.joezhou.springboot2;
 import com.joezhou.springboot2.servlet.ContextServlet;
 import com.joezhou.springboot2.servlet.filter.ContextFilter;
 import com.joezhou.springboot2.servlet.listener.ContextListener;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.solr.SolrAutoConfiguration;
@@ -19,7 +18,6 @@ import java.util.EnumSet;
  * @author JoeZhou
  */
 @SpringBootApplication(exclude = SolrAutoConfiguration.class)
-@MapperScan("com.joezhou.springboot2.mybatis.mapper")
 @ServletComponentScan("com.joezhou.springboot2.servlet")
 /*@EnableScheduling*/
 @EnableAsync
