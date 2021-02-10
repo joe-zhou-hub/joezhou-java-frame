@@ -12,18 +12,18 @@ import javax.annotation.PostConstruct;
  * @author JoeZhou
  */
 @Component
-public class ConsumerA {
+public class ConsumerB {
 
     @PostConstruct
     public void init() {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("consumer-group-a");
         consumer.setNamesrvAddr("localhost:9876");
         try {
-            consumer.subscribe("topic-a", "tag-a");
+            consumer.subscribe("topic-a", "tag-a || tag-b");
             consumer.registerMessageListener((MessageListenerConcurrently) (messageExtList, context) -> {
                 try {
                     for (MessageExt messageExt : messageExtList) {
-                        System.out.println("ConsumerA spend: " + new String(messageExt.getBody()));
+                        System.out.println("ConsumerB spend: " + new String(messageExt.getBody()));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
