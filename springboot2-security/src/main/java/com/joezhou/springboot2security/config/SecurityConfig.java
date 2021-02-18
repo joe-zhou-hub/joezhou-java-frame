@@ -21,9 +21,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
 
         http.formLogin()
-                .loginPage("/api/user/login-page-routing")
-                .loginProcessingUrl("/api/user/login")
-                .successForwardUrl("/api/user/login-success")
+                .loginPage("/api/user/login-routing")
+                .loginProcessingUrl("/login")
+                .successForwardUrl("/api/user/main-routing")
                 .permitAll();
     }
 }
