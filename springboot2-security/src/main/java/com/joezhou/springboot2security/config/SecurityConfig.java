@@ -14,10 +14,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-            http.authorizeRequests()
+        http.authorizeRequests()
                 .antMatchers("/", "/index.html", "/ad.html").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin();
+                .anyRequest().authenticated();
+
+        http.csrf().disable();
+
+        http.formLogin()
+                .loginPage("/api/user/login-page-routing")
+                .loginProcessingUrl("/api/user/login")
+                .successForwardUrl("/api/user/login-success")
+                .permitAll();
     }
 }

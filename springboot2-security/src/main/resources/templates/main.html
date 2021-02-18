@@ -1,10 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-<h1>main.html</h1>
+<section sec:authorize="isAuthenticated()">
+    <h1>登陆成功!</h1>
+    <ul>
+        <li>登录账号为: <strong sec:authentication="name"></strong></li>
+        <li>principal: <strong sec:authentication="principal"></strong></li>
+        <li>登录密码为: <strong sec:authentication="principal.password"></strong></li>
+        <li>登录角色为: <strong sec:authentication="principal.authorities"></strong></li>
+        <li>账号仍可用: <strong sec:authentication="principal.enabled"></strong></li>
+        <li>凭证未过期: <strong sec:authentication="principal.credentialsNonExpired"></strong></li>
+        <li>账号未过期: <strong sec:authentication="principal.accountNonExpired"></strong></li>
+        <li>账号未锁定: <strong sec:authentication="principal.accountNonLocked"></strong></li>
+    </ul>
+</section>
 </body>
 </html>
