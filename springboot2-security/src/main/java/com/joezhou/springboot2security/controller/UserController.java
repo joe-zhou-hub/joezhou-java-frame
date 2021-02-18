@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/api/user")
 public class UserController {
 
-    @RequestMapping("login-page-routing")
-    public String loginPageRouting() {
-        System.out.println("loginPageRouting()...");
+    @RequestMapping("login-routing")
+    public String loginRouting() {
+        System.out.println("loginRouting()...");
         return "login";
     }
     
