@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>custom login page</title>
+</head>
+<body>
+<form action="/login" method="post">
+    <label><input type="text" name="username"/></label>
+    <label><input type="password" name="password"/></label>
+    <button type="submit">登录</button>
+    <mark th:if="${param.error}">账密错误</mark>
+    <mark th:if="${param.logout}">您已注销</mark>
+</form>
+</body>
+</html>
