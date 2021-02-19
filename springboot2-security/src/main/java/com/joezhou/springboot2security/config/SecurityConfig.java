@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * @author JoeZhou
@@ -21,8 +22,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsServiceImpl userDetailsServiceImpl;
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     public void configureGlobal(AuthenticationManagerBuilder builder) throws Exception {
-        builder.userDetailsService(userDetailsServiceImpl);
+        builder.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder);
     }
 
     @Override

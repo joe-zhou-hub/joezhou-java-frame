@@ -4,10 +4,12 @@ import com.joezhou.springboot2security.pojo.Permission;
 import com.joezhou.springboot2security.pojo.Role;
 import com.joezhou.springboot2security.pojo.User;
 import com.joezhou.springboot2security.util.DataUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -19,6 +21,13 @@ import java.util.List;
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
 
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public UserDetailsServiceImpl(PasswordEncoder passwordEncoder){
+        this.passwordEncoder = passwordEncoder;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) {
 
@@ -28,7 +37,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new RuntimeException("username not exist...");
         }
 
-        String password = "{noop}" + user.getPassword();
+        String password = passwordEncoder.encode(user.getPassword());
         System.out.println("password: " + password);
 
         return new org.springframework.security.core.userdetails.User(username, password, getAuthoritiesByUser(user));
