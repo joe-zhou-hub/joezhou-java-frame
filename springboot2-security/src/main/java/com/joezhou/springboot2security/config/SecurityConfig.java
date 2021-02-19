@@ -15,10 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    /**
-     * 后面UserDetailsServiceImpl中还要使用到配置类中的bean，
-     * 这里不建议使用构造器方式注入UserDetailsServiceImpl，以免形成环注，导致服务器启动失败。
-     */
     @Autowired
     private UserDetailsServiceImpl userDetailsServiceImpl;
 
@@ -26,7 +22,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configureGlobal(AuthenticationManagerBuilder builder) throws Exception {
         builder.userDetailsService(userDetailsServiceImpl);
     }
-
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

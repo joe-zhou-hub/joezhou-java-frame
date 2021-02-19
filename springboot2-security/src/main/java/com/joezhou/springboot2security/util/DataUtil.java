@@ -43,7 +43,7 @@ public class DataUtil {
 
         User zhaosi = new User();
         zhaosi.setUsername("zhaosi");
-        zhaosi.setPassword("123");
+        zhaosi.setPassword("zhaosi");
         zhaosi.getRoles().add(commRole);
         usersFromDb.put(zhaosi.getUsername(), zhaosi);
         return usersFromDb;
