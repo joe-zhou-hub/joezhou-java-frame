@@ -25,8 +25,5 @@ public class UserController {
     }
 
     @RequestMapping("logout")
-    public String logout() {
-        System.out.println("logout()...");
-        return "login";
-    }
+    public void logout() {}
 }

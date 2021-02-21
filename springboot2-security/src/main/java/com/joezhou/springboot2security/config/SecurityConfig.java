@@ -1,5 +1,7 @@
 package com.joezhou.springboot2security.config;
 
+import com.joezhou.springboot2security.handler.CustomLoginFailureHandler;
+import com.joezhou.springboot2security.handler.CustomLoginSuccessHandler;
 import com.joezhou.springboot2security.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +27,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
+    private CustomLoginSuccessHandler customLoginSuccessHandler;
+
+    @Autowired
+    private CustomLoginFailureHandler customLoginFailureHandler;
+
+    @Autowired
     public void configureGlobal(AuthenticationManagerBuilder builder) throws Exception {
         builder.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder);
     }
@@ -41,7 +49,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.formLogin()
                 .loginPage("/api/user/login-routing")
                 .loginProcessingUrl("/login")
-                .successForwardUrl("/api/user/main-routing")
+                //.successForwardUrl("/api/user/main-routing")
+                .successHandler(customLoginSuccessHandler)
+                .failureHandler(customLoginFailureHandler)
                 .permitAll()
                 .and().logout()
                 .logoutUrl("/api/user/logout")
