@@ -15,7 +15,7 @@ import java.io.IOException;
 public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest req, HttpServletResponse resp, Authentication authentication) throws IOException {
+    public void onAuthenticationSuccess(HttpServletRequest req, HttpServletResponse resp, Authentication auth) throws IOException {
         System.out.println("CustomLoginSuccessHandler...");
         resp.setContentType("application/json;charset=UTF-8");
         resp.getWriter().write("login success!");
