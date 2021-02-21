@@ -1,0 +1,57 @@
+**配置：** FREEMARKER (FreeMarkerAutoConfiguration)
+```properties
+# Set whether HttpServletRequest attributes are allowed to override (hide) controller 
+# generated model attributes of the same name.
+spring.freemarker.allow-request-override=false 
+
+# Set whether HttpSession attributes are allowed to override (hide) controller 
+# generated model attributes of the same name.
+spring.freemarker.allow-session-override=false 
+
+# Enable template caching.
+spring.freemarker.cache=false 
+
+# Template encoding.
+spring.freemarker.charset=UTF-8 
+
+# Check that the templates location exists.
+spring.freemarker.check-template-location=true 
+
+# Content-Type value.
+spring.freemarker.content-type=text/html 
+
+# Enable MVC view resolution for this technology.
+spring.freemarker.enabled=true 
+
+# Set whether all request attributes should be added to the model prior to merging with the template.
+spring.freemarker.expose-request-attributes=false 
+
+# Set whether all HttpSession attributes should be added to the model prior to merging with the template.
+spring.freemarker.expose-session-attributes=false 
+
+# Set whether to expose a RequestContext for use by Spring's macro library, 
+# under the name "springMacroRequestContext".
+spring.freemarker.expose-spring-macro-helpers=true 
+
+# Prefer file system access for template loading. 
+# File system access enables hot detection of template changes.
+spring.freemarker.prefer-file-system-access=true 
+
+# Prefix that gets prepended to view names when building a URL.
+spring.freemarker.prefix= 
+
+# Name of the RequestContext attribute for all views.
+spring.freemarker.request-context-attribute= 
+
+# Well-known FreeMarker keys which will be passed to FreeMarker's Configuration.
+spring.freemarker.settings.*= 
+
+# Suffix that gets appended to view names when building a URL.
+spring.freemarker.suffix= 
+
+# Comma-separated list of template paths.
+spring.freemarker.template-loader-path=classpath:/templates/
+
+# White list of view names that can be resolved.
+spring.freemarker.view-names= 
+```
