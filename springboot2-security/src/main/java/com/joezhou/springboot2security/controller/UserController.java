@@ -23,4 +23,10 @@ public class UserController {
         System.out.println(SecurityContextHolder.getContext().getAuthentication());
         return "main";
     }
+
+    @RequestMapping("logout")
+    public String logout() {
+        System.out.println("logout()...");
+        return "login";
+    }
 }

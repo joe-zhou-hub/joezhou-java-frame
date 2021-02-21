@@ -31,6 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http.authorizeRequests()
                 .antMatchers("/", "/index.html", "/ad.html").permitAll()
                 .anyRequest().authenticated();
@@ -41,6 +42,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/api/user/login-routing")
                 .loginProcessingUrl("/login")
                 .successForwardUrl("/api/user/main-routing")
+                .permitAll()
+                .and().logout()
+                .logoutUrl("/api/user/logout")
+                .deleteCookies("JSESSIONID")
+                .invalidateHttpSession(true)
                 .permitAll();
     }
 }
