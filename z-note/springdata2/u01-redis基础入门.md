@@ -31,23 +31,30 @@
     - cmd: `tasklist /fi "pid eq 4988`：查看4988进程的详细信息。
 - 启动客户端：在单独cmd窗口中启动redis客户端并保持窗口：
     - `redis-cli -h 127.0.0.1 -p 6379`：默认IP为localhost，默认端口6379。
-- 部署服务端：可以将redis部署为windows服务，但并不建议：
-    - `z-res/redis部署为windows服务.md`
+- 部署服务端：将redis部署为windows服务可以一直保持后台运行：
+    - cmd: `redis-server --service-install --service-name redis32`：部署redis32服务。
+    - cmd: `redis-server --service-uninstall --service-name redis32`：卸载redis32服务。
+    - cmd: `redis-server --service-start --service-name redis32`：启动redis32服务。
+    - cmd: `redis-server --service-stop --service-name redis32`：停止redis32服务。
+    - cmd: `net start redis32`：在任意位置启动redis32服务。
+    - cmd: `net stop redis32`：在任意位置停止redis32服务。
 
 # 2. 主配文件
 
-**概念：** redis主配文件可自主拓展开发，如 `config/start.conf`：
+**概念：** redis主配文件可自主拓展开发，如 `start.conf`：
 - 常用配置：
-    - `daemoinze`：改为yes表示以守护进程启动redis，注意windows无效。
+    - `daemonize`：改为yes表示以守护进程启动redis，注意windows无效。
     - `bind`：配置访问IP，需允许外网所有IP访问时必须删除此项并添加 `protected-mode no`。
     - `port`：指定端口号。
     - `dir workspace`：指定redis工作目录以存放日志文件等，需提前创建该目录。
     - `logfile 6380.log`：指定日志文件名，建议以端口号进行命名。 
     - `requirepass 123`：设置客户端登录密码为123，可提高安全性。
 - 启动服务端：进入redis根目录并以指定配置启动redis服务：
-    - cmd: `redis-server config/start.conf`。
+    - cmd: `redis-server start.conf`。
 - 启动客户端：以指定端口和指定密码连接服务端：
     - `redis-cli -p 6380 -a 123`：不填写密码也可以登录，但无操作数据权限。
+- 部署服务端：以指定配置的方式将服务部署为windows服务：
+    - cmd: `redis-server --service-install start.conf --service-name redis-start`。
 
 # 3. 数据类型
 
