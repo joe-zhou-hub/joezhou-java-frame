@@ -105,25 +105,24 @@
 
 ## 3.3 哈希hash
 
-**概念：** hash类型可视为拥有字符串属性的HashMap容器，适合于存储bean对象，如User，Student等：
-- 存储特性：
-    - 若hash中包含很少的字段，那么该类型的数据也将仅占用很少的磁盘空间。
+**概念：** hash类型可视为拥有字符串属性的HashMap容器，适合于存储bean对象，如User等：
+- 存储特性：若hash中包含很少的字段，那么该类型的数据也将仅占用很少的磁盘空间：
     - 每一个hash可以存储4294967295个键值对。
     - hash冲突时采用渐进式rehash操作：同时保留新旧两个hash，查询时同时查询两个hash结构，在后续的定时任务及hash操作的过程中完成从旧hash到新hash的数据迁移。
 - 常用命令：
     - `hset user a 1`：为 `user` 设置 `a=1` 属性，成功返回1。
     - `hsetnx user a 1`：为 `user` 设置 `a=1` 属性，若 `a` 已存在则失败。
-    - `hincriby user a 5`：为 `user` 中的 `a` 值自增5。
+    - `hincrby user a 5`：为 `user` 中的 `a` 值自增5。
     - `hincrbyfloat user a 1.5`: 为 `user` 中的 `a` 值自增1.5。
-    - `hget user a`：返回 `user` 中的 `a` 值，key不为string报错，key不存在返回 `nil`。
-    - `hgetall user`：返回 `user` 中所有的KV对，执行速度较慢。
-    - `hdel user a`：删除 `user` 中的 `a` 属性，同时多删空格分隔，返回影响的条目数。
+    - `hget user a`：返回 `user` 中的 `a` 值，键不为string报错，键不存在返回 `nil`。
+    - `hgetall user`：返回 `user` 中所有的键值对，执行速度较慢。
+    - `hdel user a b`：同时删除 `user` 中的 `a` 和 `b` 属性，返回总影响数。
     - `hexists user a`：判断 `user` 中是否存在 `a` 属性，存在返回1，不存在返回2。
-    - `hlen user`：返回 `user` 中所有的KV对的数量。
+    - `hlen user`：返回 `user` 中所有的键值对数。
     - `hmget user a b`：批量返回 `user` 中 `a` 和 `b` 的值，原子操作节省网络IO次数，但为重量级命令。
     - `hmset user a 1 b 2`：批量设置 `user`中的 `a=1` 和 `b=2`，原子操作节省网络IO次数，但为重量级命令。
-    - `hkeys key`：返回user中所有属性。
-    - `hvals user`：返回user中所有属性对应的value。
+    - `hkeys user`：返回user中所有属性。
+    - `hvals user`：返回user中所有属性对应的值。
 
 ## 3.4 字符列表list
 
