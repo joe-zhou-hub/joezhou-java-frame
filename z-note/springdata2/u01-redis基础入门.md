@@ -138,24 +138,16 @@
 
 ## 3.6 有序字符集合zset
 
-**概念：** zset和集合set一样也是string类型元素的集合，类似于SortedSet，且不允许重复的成员。不同的是zset中的每个元素都会关联一个double类型的带权值score，zset正是通过score来为集合中的成员进行从小到大的排序：
-- 存储特性：zset集合的成员是唯一的，但分数score却可以重复。
-- 常用命令：`age` 集合不存在时自动创建：
-    - `zadd age 1.5 a 1.6 b`：向集合中添加1.5分的a和1.6分的b，同名覆盖，返回影响数。
-    - `zrange age 0 3`：升序返回集合中索引0到3范围内的元素，不带分数。
-    - `zrange age 0 3 withscores`：升序返回集合中索引0到3范围内的元素，带分数。
-    - `zrange age 0 -1`：升序返回集合中所有元素。
-    - `zrevrange age 0 -1`：降序返回集合中所有元素。
-    - `zrem age a b`：从集合中删除 `a` 和 `b`，返回影响数。
-    - `zscore age a`：返回集合中 `a` 的分数，`a` 不存在返回 `nil`。
-    - `zincrby age 5 a`：将集合中 `a` 的分数自增5，负数表示自减，返回 `a` 自增/自减后的值。
-    - `zcard age`：返回集合中全部元素的个数。
-    - `zrank age a`：返回集合中 `a` 的升序排名索引，从0开始。
-    - `zrevrank age a`：返回集合中 `a` 的降序排名索引，从0开始。
-    - `zrangebyscore age 0 9 withscores`：升序返回集合中0到9分范围内的排名，带分数。
-    - `zrevrangebyscore age 9 0 withscores`：降序返回集合中9到0分范围内的排名，带分数。
-    - `zcount age 0 9`：返回集合中0到9分范围内有多少元素。
-    - `zremrangebyrank age 0 5`：删除集合中排名索引0到5之间的全部元素。
-    - `zremrangebyscore age 0 9`：删除集合中分数范围在1到9之间的全部元素。
-    - `zinterstore age3 2 age1 age2`：将 `age1` 和 `age2` 两个集合的交集（分数相加）存入 `age3`。
-    - `zunionstore age3 2 age1 age2`：将 `age1` 和 `age2` 两个集合的并集（分数相加）存入 `age3`。
+**概念：** zset类型可视为有序的SortedSet，每个元素都会关联一个double类型的分数score以进行排序，元素不允许重复但是分数可以重复：
+- `zadd age 1.5 a 1.6 b`：向age中添加1.5分的a元素和1.6分的b元素，同名覆盖，返回总影响数。
+- `zrange/zrevrange age 0 3 withscores`：带分数升序/降序返回age中索引0到3的元素，省略withscores则不带分数。
+- `zrem age a b`：从age中删除a元素和b元素，返回总影响数。
+- `zscore age a`：返回age中a元素的分数，元素不存在返回nil。
+- `zincrby age 5 a`：将age中a元素的分数自增5并返回，负数表示自减。
+- `zcard age`：返回age中全部元素总数。
+- `zrank/zrevrank age a`：返回age中a的升序/降序排名，从0开始。
+- `zrangebyscore/zrevrangebyscore age 0 9 withscores`：升序/降序返回age中索引0到9分的排名，带分数。
+- `zcount age 0 9`：返回age中0到9分的元素数量。
+- `zremrangebyrank age 0 5`：删除age中排名索引0到5的全部元素，返回总影响数。
+- `zremrangebyscore age 0 9`：删除age中分数在1到9的全部元素，返回总影响数。
+- `zinterstore/zunionstore k3 2 k1 k2`：将k1和k2两个集合的交集/并集存入k3，分数相加。
