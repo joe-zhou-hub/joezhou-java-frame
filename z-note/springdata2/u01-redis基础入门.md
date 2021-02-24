@@ -58,92 +58,83 @@
 
 # 3. 数据类型
 
-**概念：** redis所有的key都是字符串类型，而value则可使用 `string/hash/list/set/zset` 五种数据类型，除string外的容器型数据结构必须遵守以下规则：
-- `create if not exists`：当容器不存在时，创建容器，再进行操作。
-- `drop if not elements`：当容器中无元素时，立即删除容器，释放内存。
+**概念：** redis所有键都是字符串类型，而值则可使用 `string/hash/list/set/zset` 五种数据类型，除string外的容器型数据结构都可以在添加元素时自动创建，且容器中无元素时自动删除以释放内存：
+- `nil` 表示无值，任何变量在没有被赋值之前的值都为 `nil`。
 
 ## 3.1 通用命令
 
 **概念：** `keys` 是重量级命令，不在生产环境中对主节点使用，其余都是轻量级命令：
-- `keys 5?[a-z]*`：返以第1位是 `5`，第3位置是字母，其后随意的所有键。
+- `keys 5?[a-z]*`：返回第1位是5，第3位置是字母，其后随意的所有键。
 - `dbsize`：返回总键数。
-- `exists a`：判断键 `a` 是否存在，存在返回1，不存在返回0。
-- `del a b`：同时删除键 `a` 和 `b`，返回成功删除总数，删除失败的键计为0。
-- `expire a 20`：设置键 `a` 20秒后过期，成功返回1。
-- `ttl a`：返回键 `a` 的当前寿命，单位秒，键不存在返回-2，键永生返回-1。
-- `persist a`：移除键 `a` 的过期时间，使其永生。
-- `type a`：返回键 `a` 的数据类型，键不存在返回none。
+- `exists a`：判断键a是否存在，存在返回1，不存在返回0。
+- `del a b`：同时删除键a和键b，返回总影响数，删除失败的键计为0。
+- `expire a 20`：设置键a在20秒后过期，成功返回1。
+- `ttl a`：返回键a的当前寿命，单位秒，键不存在返回-2，键永生返回-1。
+- `persist a`：移除键a的过期时间，使其永生。
+- `type a`：返回键a的数据类型，键不存在返回none。
 
 ## 3.2 字符串string
 
-**概念：** string类型包括字符串，整数（自动转型，存值范围与long类型相同），二进制（如图片或序列化对象）等，常用于缓存，计数器，分布式锁等场景：
-- 存储特性：一个string类型的键最多能存512MB的值：
-    - 当值小于1MB时，扩容都是加倍现有空间。
-    - 当值大于1MB时，每次扩容1MB，直到512MB。
-- 常用命令：`nil` 表示无值，任何变量在没有被赋值之前的值都为 `nil`：
-    - `set a 1`：永久存储 `a=1`，同名覆盖，无论键是否存在都成功，总是返回 `OK`。
-    - `setnx a 1`：永久存储 `a=1`，同名覆盖，键不存在时才成功并返回1，否则返回0。
-    - `set a 1 xx`：永久存储 `a=1`，同名覆盖，键存在时才成功并返回 `OK`，否则返回 `nil`。
-    - `mset a 1 b 2`：批量永久存储 `a=1` 和 `b=2`，原子操作节省网络IO次数，但为重量级命令。
-    - `get a`：获取 `a` 值，键不为string报错，键不存在返回 `nil`。
-    - `mget a b`：批量获取 `a` 和 `b` 值，原子操作节省网络IO次数，但为重量级命令。
-    - `del a`：删除 `a`，删除成功返回1，键不存在返回0。
-    - `incr a`：自增 `a` 值，返回自增后结果，键不存在设置 `a=1` 并返回1。
-    - `decr a`：自减 `a` 值，返回自减后结果，键不存在设置 `a=-1` 并返回-1。
-    - `incrby a 5`：将 `a` 值自增5并返回，键不存在设置 `a=5` 并返回5。
-    - `decrby a 5`：将 `a` 值自减5并返回，键不存在设置 `a=-5` 并返回-5。
-    - `incrbyfloat a 1.5`：将 `a` 自增1.5并返回字符串1.5，负数表示自减。
-    - `setex a 8 5`：存储 `a=5`，并设置8秒后过期，返回 `OK`。
-    - `getset a 5`：将 `a` 值修改为 `5` 并返回原值，原子组合操作。
-    - `append a 5`：将 `5` 追加到 `a` 值末尾，返回字节长度。
-    - `strlen a`：返回 `a` 值长度，UTF8编码下每个中文2字节。
-    - `getrange a 0 9`：返回 `a` 值中，索引0到索引9范围内的所有值。
-    - `setrange a 0 9`：设置 `a` 值中，索引0的值为9。
+**概念：** string类型包括字符串，整数和二进制等，常用于缓存，计数器，分布式锁等场景，一个string键最多能存512MB的值，当值小于1MB时，扩容都是加倍现有空间，当值大于1MB时，每次扩容1MB，直到512MB：
+- `set a 1`：永久存储a=1，同名覆盖，无论键是否存在都成功，总是返回OK。
+- `setnx a 1`：永久存储a=1，同名覆盖，键不存在时才成功并返回1，否则返回0。
+- `set a 1 xx`：永久存储a=1，同名覆盖，键存在时才成功并返回OK，否则返回nil。
+- `setex a 8 5`：存储a=5，并设置8秒后过期，返回OK。
+- `mset a 1 b 2`：批量永久存储a=1和b=2，原子操作节省网络IO次数，重量级命令。
+- `get a`：获取a值，键不为string报错，键不存在返回nil。
+- `mget a b`：批量获取a和b值，原子操作节省网络IO次数，但为重量级命令。
+- `del a`：删除键a，删除成功返回1，键不存在返回0。
+- `incr/decr a`：对a值自增/自减1并返回，键不存在时视为a=0，返回 `1/-1`。
+- `incrby/decrby a 5`：对a值自增/自减5并返回，键不存在时视为a=0，返回 `5/-5`。
+- `incrbyfloat a 1.5`：对a值自增1.5并返回，负数表示自减。
+- `getset a 5`：将a值修改为5，并返回a原值，原子组合操作。
+- `append a b`：在a值末尾拼接b，返回拼接后的字节长度。
+- `strlen a`：返回a值字节长度，UTF8编码下每个中文2字节。
+- `getrange a 0 9`：返回a值中，索引0到9范围内的所有值。
+- `setrange a 0 9`：设置a值中，索引0的值为9。
 
 ## 3.3 哈希hash
 
 **概念：** hash类型可视为拥有字符串属性的HashMap容器，每个hash最多存储4294967295个键值对，适合于存储bean对象：
-- `hset user a 1`：为 `user` 设置 `a=1` 属性，成功返回1。
-- `hsetnx user a 1`：为 `user` 设置 `a=1` 属性，若 `a` 已存在则失败。
-- `hincrby user a 5`：为 `user` 中的 `a` 值自增5。
-- `hincrbyfloat user a 1.5`: 为 `user` 中的 `a` 值自增1.5。
-- `hget user a`：返回 `user` 中的 `a` 值，键不为string报错，键不存在返回 `nil`。
-- `hgetall user`：返回 `user` 中所有的键值对，执行速度较慢。
-- `hdel user a b`：同时删除 `user` 中的 `a` 和 `b` 属性，返回总影响数。
-- `hexists user a`：判断 `user` 中是否存在 `a` 属性，存在返回1，不存在返回2。
-- `hlen user`：返回 `user` 中所有的键值对数。
-- `hmget user a b`：批量返回 `user` 中 `a` 和 `b` 的值，原子操作节省网络IO次数，但为重量级命令。
-- `hmset user a 1 b 2`：批量设置 `user`中的 `a=1` 和 `b=2`，原子操作节省网络IO次数，但为重量级命令。
-- `hkeys user`：返回user中所有属性。
-- `hvals user`：返回user中所有属性对应的值。
+- `hset user a 1`：为user设置a=1属性，成功返回1。
+- `hsetnx user a 1`：为user设置a=1属性，若a已存在则失败。
+- `hincrby user a 5`：为user中的a值自增5。
+- `hincrbyfloat user a 1.5`: 为user中的a值自增1.5。
+- `hget user a`：返回user中的a值，值不为string报错，键不存在返回nil。
+- `hgetall user`：返回user中所有键值对，执行速度较慢。
+- `hdel user a b`：同时删除user中的属性a和属性b，返回总影响数。
+- `hexists user a`：判断user中是否存在属性a，存在返回1，不存在返回2。
+- `hlen user`：返回user中所有的键值对数。
+- `hmget user a b`：批量返回user中a值和b值，原子操作节省网络IO次数，重量级命令。
+- `hmset user a 1 b 2`：批量为user设置a=1和b=2，原子操作节省网络IO次数，重量级命令。
+- `hkeys/hvals user`：返回user中所有属性/值。
 
 ## 3.4 字符列表list
 
 **概念：** list类型可视为有序的LinkedList，允许重复元素，允许双端操作，最多包含4294967295个元素：
-- `lpush/rpush age 1 2`：在 `age` 头/尾部依次插入1和2，返回插入后 `age` 的长度。
-- `lrange age 0 2`：取出 `age` 中，索引0到2的全部元素，两端包括，负数视为倒数。
-- `lpop/rpop age`：返回并删除（弹出） `age` 的链表头/尾，空列表返回 `nil`。
-- `linsert age before/after a b`：在 `age` 中的第一个 `a` 前/后插入 `b`，重量级命令。
-- `lrem age 5 1`：从左到右删除 `age` 中最多5个1，负数从右到左删，0视为全部删除，重量级命令。
-- `ltrim age 0 9`：在 `age` 中，从索引0保留到索引9，两端包括，其余删除，重量级命令。
-- `lindex age 3`：返回 `age` 中索引3上的元素，越界返回 `nil` 重量级命令。
-- `llen age`：返回 `age` 长度。
-- `lset age 3 9`：将 `age` 中索引3上的元素改为9，重量级命令。
-- `blpop/brpop age 10`：阻塞版 `lpop/rpop`，空列表会在10秒内进行阻塞等待新元素，0表示永远等待。
+- `lpush/rpush age 1 2`：在age头/尾部依次插入1和2，返回插入后长度。
+- `lrange age 0 2`：取出age中，索引0到2的全部元素，两端包括，负数视为倒数。
+- `lpop/rpop age`：返回并删除（弹出）age头/尾，空列表返回nil。
+- `linsert age before/after a b`：在age中的第一个a元素前/后插入b元素，重量级命令。
+- `lrem age 5 1`：从左到右删除age中最多5个1，负数从右到左删，0视为全部删除，重量级命令。
+- `ltrim age 0 9`：保留age中索引0到9的值，两端包括，其余删除，重量级命令。
+- `lindex age 3`：返回age中索引3上的元素，不存在返回nil，重量级命令。
+- `llen age`：返回age元素总个数。
+- `lset age 3 9`：将age中索引3上的元素改为9，重量级命令。
+- `blpop/brpop age 10`：阻塞版lpop/rpop，空列表会在10秒内进行阻塞等待新元素，0表示永远等待。
 
 ## 3.5 字符集合set
 
-**概念：** set类型可视为无序的HashSet，元素不允许重复，底层是哈希表，所以操作数据的复杂度都是O(1)，最多包含4294967295个元素：：
-- `sadd hobby a b`：向 `hobby` 中添加 `a` 和 `b`，重复添加返回0，返回总影响数。
-- `smembers hobby`：返回 `hobby` 中的所有元素，重量级命令。
-- `srem hobby a b`：从 `hobby` 中删除 `a` 和 `b`，返回影响数。
-- `scard hobby`: 返回 `hobby` 中的元素个数。
-- `sismember hobby a`：判断 `hobby` 中是否存在 `a`，存在返回1，不存在返回0。 
-- `srandmember hobby 5`：随机从 `hobby` 中返回5个元素。
-- `spop hobby`：随机从 `hobby` 中返回并删除（弹出）一个元素。
-- `sdiff hobby1 hobby2 store hobby3`：返回两个set集合的差集并存入 `hobby3`，重量级命令。
-- `sinter hobby1 hobby2 store hobby3`：返回两个set集合的交集并存入 `hobby3`，重量级命令。
-- `sunion hobby1 hobby2 store hobby3`：返回两个set集合的并集并存入 `hobby3`，重量级命令。
+**概念：** set类型可视为无序的HashSet，元素不允许重复，最多包含4294967295个元素：：
+- `sadd hobby a b`：向hobby中添加a元素和b元素，重复添加返回0，返回总影响数。
+- `smembers hobby`：返回hobby中的所有元素，重量级命令。
+- `srem hobby a b`：从hobby中删除a元素和b元素，返回总影响数。
+- `scard hobby`: 返回hobby中的元素个数。
+- `sismember hobby a`：判断hobby中是否存在a元素，存在返回1，不存在返回0。 
+- `srandmember hobby 5`：随机从hobby中返回5个元素。
+- `spop hobby`：随机从hobby中返回并删除（弹出）一个元素。
+- `sdiff/sinter/sunion h1 h2`：返回h1和h2的差/交/并集，重量级命令。
+- `sdiffstore/sinterstore/sunionstore h3 h1 h2`：返回h1和h2的差/交/并集并存入h3，重量级命令。
 
 ## 3.6 有序字符集合zset
 
