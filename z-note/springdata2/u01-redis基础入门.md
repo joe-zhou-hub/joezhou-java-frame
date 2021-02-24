@@ -58,7 +58,6 @@
 
 # 3. 数据类型
 
-
 **概念：** redis所有的key都是字符串类型，而value则可使用 `string/hash/list/set/zset` 五种数据类型，除string外的容器型数据结构必须遵守以下规则：
 - `create if not exists`：当容器不存在时，创建容器，再进行操作。
 - `drop if not elements`：当容器中无元素时，立即删除容器，释放内存。
@@ -66,10 +65,7 @@
 ## 3.1 通用命令
 
 **概念：** `keys` 是重量级命令，不在生产环境中对主节点使用，其余都是轻量级命令：
-- `keys *`：返回所有键。
-- `keys a*`：返回以 `a` 开头的所有键。
-- `keys a[c-d]*`：返回以 `a` 开头，第2位是 `c-d` 范围内字母（包括两端）的所有键。
-- `keys a?c`：返回以 `a` 开头，第3位是 `c` 的所有键。
+- `keys 5?[a-z]*`：返以第1位是 `5`，第3位置是字母，其后随意的所有键。
 - `dbsize`：返回总键数。
 - `exists a`：判断键 `a` 是否存在，存在返回1，不存在返回0。
 - `del a b`：同时删除键 `a` 和 `b`，返回成功删除总数，删除失败的键计为0。
@@ -106,64 +102,48 @@
 
 ## 3.3 哈希hash
 
-**概念：** hash类型可视为拥有字符串属性的HashMap容器，适合于存储bean对象，如User等：
-- 存储特性：若hash中包含很少的字段，那么该类型的数据也将仅占用很少的磁盘空间：
-    - 每一个hash可以存储4294967295个键值对。
-    - hash冲突时采用渐进式rehash操作：同时保留新旧两个hash，查询时同时查询两个hash结构，在后续的定时任务及hash操作的过程中完成从旧hash到新hash的数据迁移。
-- 常用命令：
-    - `hset user a 1`：为 `user` 设置 `a=1` 属性，成功返回1。
-    - `hsetnx user a 1`：为 `user` 设置 `a=1` 属性，若 `a` 已存在则失败。
-    - `hincrby user a 5`：为 `user` 中的 `a` 值自增5。
-    - `hincrbyfloat user a 1.5`: 为 `user` 中的 `a` 值自增1.5。
-    - `hget user a`：返回 `user` 中的 `a` 值，键不为string报错，键不存在返回 `nil`。
-    - `hgetall user`：返回 `user` 中所有的键值对，执行速度较慢。
-    - `hdel user a b`：同时删除 `user` 中的 `a` 和 `b` 属性，返回总影响数。
-    - `hexists user a`：判断 `user` 中是否存在 `a` 属性，存在返回1，不存在返回2。
-    - `hlen user`：返回 `user` 中所有的键值对数。
-    - `hmget user a b`：批量返回 `user` 中 `a` 和 `b` 的值，原子操作节省网络IO次数，但为重量级命令。
-    - `hmset user a 1 b 2`：批量设置 `user`中的 `a=1` 和 `b=2`，原子操作节省网络IO次数，但为重量级命令。
-    - `hkeys user`：返回user中所有属性。
-    - `hvals user`：返回user中所有属性对应的值。
+**概念：** hash类型可视为拥有字符串属性的HashMap容器，每个hash最多存储4294967295个键值对，适合于存储bean对象：
+- `hset user a 1`：为 `user` 设置 `a=1` 属性，成功返回1。
+- `hsetnx user a 1`：为 `user` 设置 `a=1` 属性，若 `a` 已存在则失败。
+- `hincrby user a 5`：为 `user` 中的 `a` 值自增5。
+- `hincrbyfloat user a 1.5`: 为 `user` 中的 `a` 值自增1.5。
+- `hget user a`：返回 `user` 中的 `a` 值，键不为string报错，键不存在返回 `nil`。
+- `hgetall user`：返回 `user` 中所有的键值对，执行速度较慢。
+- `hdel user a b`：同时删除 `user` 中的 `a` 和 `b` 属性，返回总影响数。
+- `hexists user a`：判断 `user` 中是否存在 `a` 属性，存在返回1，不存在返回2。
+- `hlen user`：返回 `user` 中所有的键值对数。
+- `hmget user a b`：批量返回 `user` 中 `a` 和 `b` 的值，原子操作节省网络IO次数，但为重量级命令。
+- `hmset user a 1 b 2`：批量设置 `user`中的 `a=1` 和 `b=2`，原子操作节省网络IO次数，但为重量级命令。
+- `hkeys user`：返回user中所有属性。
+- `hvals user`：返回user中所有属性对应的值。
 
 ## 3.4 字符列表list
 
-**概念：** list类型可视为按照插入顺序排序的LinkedList，允许重复元素：
-- 存储特性：
-    - list允许双端操作，即可以在头部 `left` 或尾部 `right` 操作元素。
-    - list中可以包含的最大元素数量是4294967295。
-- 常用命令：`age` 列表不存在时自动创建：
-    - `lpush age 1 2`：在 `age` 头部依次插入1和2，返回插入后 `age` 的长度。
-    - `rpush age 1 2`：在 `age` 尾部依次追加1和2，返回插入后 `age` 的长度。
-    - `lrange age 0 2`：取出 `age` 中，索引0到2的全部元素，两端包括，负数视为倒数。
-    - `lpop age`：返回并删除（弹出） `age` 的链表头，空列表返回 `nil`。
-    - `rpop age`：返回并删除（弹出） `age` 的链表尾，空列表返回 `nil`。
-    - `linsert age before a b`：在 `age` 中的第一个 `a` 前插入 `b`，重量级命令。
-    - `linsert age after a b`：在 `age` 中的第一个 `a` 后插入 `b`，重量级命令。
-    - `lrem age 5 1`：从左到右删除 `age` 中最多5个1，负数从右到左删，0视为全部删除，重量级命令。
-    - `ltrim age 0 9`：在 `age` 中，从索引0保留到索引9，两端包括，其余删除，重量级命令。
-    - `lindex age 3`：返回 `age` 中索引3上的元素，越界返回 `nil` 重量级命令。
-    - `llen age`：返回 `age` 长度。
-    - `lset age 3 9`：将 `age` 中索引3上的元素改为9，重量级命令。
-    - `blpop age 10`：阻塞版 `lpop`，空列表会在10秒内进行阻塞等待新元素，0表示永远等待。
-    - `brpop age 10`: 阻塞版 `rpop`，空列表会在10秒内进行阻塞等待新元素，0表示永远等待。
+**概念：** list类型可视为有序的LinkedList，允许重复元素，允许双端操作，最多包含4294967295个元素：
+- `lpush/rpush age 1 2`：在 `age` 头/尾部依次插入1和2，返回插入后 `age` 的长度。
+- `lrange age 0 2`：取出 `age` 中，索引0到2的全部元素，两端包括，负数视为倒数。
+- `lpop/rpop age`：返回并删除（弹出） `age` 的链表头/尾，空列表返回 `nil`。
+- `linsert age before/after a b`：在 `age` 中的第一个 `a` 前/后插入 `b`，重量级命令。
+- `lrem age 5 1`：从左到右删除 `age` 中最多5个1，负数从右到左删，0视为全部删除，重量级命令。
+- `ltrim age 0 9`：在 `age` 中，从索引0保留到索引9，两端包括，其余删除，重量级命令。
+- `lindex age 3`：返回 `age` 中索引3上的元素，越界返回 `nil` 重量级命令。
+- `llen age`：返回 `age` 长度。
+- `lset age 3 9`：将 `age` 中索引3上的元素改为9，重量级命令。
+- `blpop/brpop age 10`：阻塞版 `lpop/rpop`，空列表会在10秒内进行阻塞等待新元素，0表示永远等待。
 
 ## 3.5 字符集合set
 
-**概念：**  set类型是一个无序且元素不重复的集合，相当于HashSet，它是通过哈希表实现的，所以添加，删除，查找的复杂度都是 O(1)。
-- 存储特性：
-    - set集合中最大的成员数量是 4294967295。
-- 常用命令：`hobby` 集合不存在时自动创建：
-    - `sadd hobby a`：向 `hobby` 中添加 `a`，若 `a` 已存在则添加失败返回0，批量添加空格分隔，返回影响数。
-    - `srem hobby a`：从 `hobby` 中删除 `a`，批量删除空格分隔，返回影响数。
-    - `scard hobby`: 返回 `hobby` 中的元素个数。
-    - `sismember hobby a`：判断 `hobby` 中是否存在 `a`，存在返回1，不存在返回0。 
-    - `srandmember hobby 5`：随机从 `hobby` 中返回5个元素。
-    - `spop hobby`：随机从 `hobby` 中返回并删除（弹出）一个元素。
-    - `smembers hobby`：无序返回 `hobby` 中的所有元素，重量级命令。
-    - `sdiff hobby1 hobby2`：返回两个set集合的差集，重量级命令。
-    - `sinter hobby1 hobby2`：返回两个set集合的交集，重量级命令。
-    - `sunion hobby1 hobby2`：返回两个set集合的并集，重量级命令。
-    - `sdiff|sinter|sunion hobby1 hobby2 store hobby3`：返回两个set集合的差/交/并集并存入 `hobby3`。
+**概念：** set类型可视为无序的HashSet，元素不允许重复，底层是哈希表，所以操作数据的复杂度都是O(1)，最多包含4294967295个元素：：
+- `sadd hobby a b`：向 `hobby` 中添加 `a` 和 `b`，重复添加返回0，返回总影响数。
+- `smembers hobby`：返回 `hobby` 中的所有元素，重量级命令。
+- `srem hobby a b`：从 `hobby` 中删除 `a` 和 `b`，返回影响数。
+- `scard hobby`: 返回 `hobby` 中的元素个数。
+- `sismember hobby a`：判断 `hobby` 中是否存在 `a`，存在返回1，不存在返回0。 
+- `srandmember hobby 5`：随机从 `hobby` 中返回5个元素。
+- `spop hobby`：随机从 `hobby` 中返回并删除（弹出）一个元素。
+- `sdiff hobby1 hobby2 store hobby3`：返回两个set集合的差集并存入 `hobby3`，重量级命令。
+- `sinter hobby1 hobby2 store hobby3`：返回两个set集合的交集并存入 `hobby3`，重量级命令。
+- `sunion hobby1 hobby2 store hobby3`：返回两个set集合的并集并存入 `hobby3`，重量级命令。
 
 ## 3.6 有序字符集合zset
 
