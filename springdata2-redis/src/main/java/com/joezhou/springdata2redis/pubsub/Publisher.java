@@ -1,6 +1,5 @@
-package com.joezhou.springdata2redis.jedis;
+package com.joezhou.springdata2redis.pubsub;
 
-import org.junit.jupiter.api.Test;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -8,11 +7,10 @@ import redis.clients.jedis.JedisPoolConfig;
 /**
  * @author JoeZhou
  */
-class JedisPoolTest {
+public class Publisher {
+    private static JedisPoolConfig jedisPoolConfig;
 
-    private JedisPoolConfig jedisPoolConfig;
-
-    void init() {
+    static {
         jedisPoolConfig = new JedisPoolConfig();
         jedisPoolConfig.setMaxTotal(1024);
         jedisPoolConfig.setMaxWaitMillis(10000L);
@@ -20,18 +18,19 @@ class JedisPoolTest {
         jedisPoolConfig.setMinIdle(0);
     }
 
-    @Test
-    void jedisPool() {
-        init();
+    public static void main(String[] args) {
+
         try (JedisPool jedisPool = new JedisPool(jedisPoolConfig, "127.0.0.1", 6380, 10000, "123");
              Jedis jedis = jedisPool.getResource()) {
 
-            if (!"PONG".equals(jedis.ping())) {
-                throw new RuntimeException("ping error...");
+            if ("PONG".equals(jedis.ping())) {
+                jedis.publish("sohu", "hi sohu");
+                jedis.publish("sina", "hi sina");
+                System.out.println("publish msessage over...");
+            } else {
+                System.out.println("ping error...");
             }
 
-            jedis.set("jedis-pool-name", "jedis-pool-value");
-            System.out.println(jedis.get("jedis-pool-name"));
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -8,7 +8,7 @@ import redis.clients.jedis.JedisPoolConfig;
 /**
  * @author JoeZhou
  */
-class JedisPoolTest {
+class SlowLogTest {
 
     private JedisPoolConfig jedisPoolConfig;
 
@@ -21,7 +21,7 @@ class JedisPoolTest {
     }
 
     @Test
-    void jedisPool() {
+    void slowlog() {
         init();
         try (JedisPool jedisPool = new JedisPool(jedisPoolConfig, "127.0.0.1", 6380, 10000, "123");
              Jedis jedis = jedisPool.getResource()) {
@@ -30,8 +30,10 @@ class JedisPoolTest {
                 throw new RuntimeException("ping error...");
             }
 
-            jedis.set("jedis-pool-name", "jedis-pool-value");
-            System.out.println(jedis.get("jedis-pool-name"));
+            System.out.println("slowlog get: " + jedis.slowlogGet(2));
+            System.out.println("slowlog len: " + jedis.slowlogLen());
+            System.out.println("slowlog reset: " + jedis.slowlogReset());
+
         } catch (Exception e) {
             e.printStackTrace();
         }

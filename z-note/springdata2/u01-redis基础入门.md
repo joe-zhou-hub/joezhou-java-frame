@@ -42,8 +42,7 @@
 # 2. 主配文件
 
 **概念：** redis主配文件可自主拓展开发，如 `start.conf`：
-- 常用配置：
-    - `daemonize`：改为yes表示以守护进程启动redis，注意windows无效。
+- 常用配置：`daemonize yes` 表示以守护进程启动redis，但windows下无效：
     - `bind`：配置访问IP，需允许外网所有IP访问时必须删除此项并添加 `protected-mode no`。
     - `port`：指定端口号。
     - `dir workspace`：指定redis工作目录以存放日志文件等，需提前创建该目录。

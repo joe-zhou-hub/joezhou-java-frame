@@ -1,18 +1,17 @@
-package com.joezhou.springdata2redis.jedis;
+package com.joezhou.springdata2redis.pubsub;
 
-import org.junit.jupiter.api.Test;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.JedisPubSub;
 
 /**
  * @author JoeZhou
  */
-class JedisPoolTest {
+public class SubscriberB {
+    private static JedisPoolConfig jedisPoolConfig;
 
-    private JedisPoolConfig jedisPoolConfig;
-
-    void init() {
+    static {
         jedisPoolConfig = new JedisPoolConfig();
         jedisPoolConfig.setMaxTotal(1024);
         jedisPoolConfig.setMaxWaitMillis(10000L);
@@ -20,18 +19,18 @@ class JedisPoolTest {
         jedisPoolConfig.setMinIdle(0);
     }
 
-    @Test
-    void jedisPool() {
-        init();
+    public static void main(String[] args) {
         try (JedisPool jedisPool = new JedisPool(jedisPoolConfig, "127.0.0.1", 6380, 10000, "123");
              Jedis jedis = jedisPool.getResource()) {
 
             if (!"PONG".equals(jedis.ping())) {
                 throw new RuntimeException("ping error...");
             }
-
-            jedis.set("jedis-pool-name", "jedis-pool-value");
-            System.out.println(jedis.get("jedis-pool-name"));
+            System.out.println("channels: " + jedis.pubsubChannels("*"));
+            System.out.println("subscribers: " + jedis.pubsubNumSub("sina"));
+            JedisPubSub jedisPubSub = new SubscriberListener("sub-b");
+            jedisPubSub.onUnsubscribe("sohu", 1);
+            jedis.subscribe(jedisPubSub, "sohu", "sina");
         } catch (Exception e) {
             e.printStackTrace();
         }
