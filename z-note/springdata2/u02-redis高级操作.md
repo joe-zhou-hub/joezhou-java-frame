@@ -58,18 +58,24 @@
 
 # 5. BitMap
 
-**概念：** 字符串底层使用位图，即二进制形式存储，如 `a(ascii=98)` 的位图为 `01100001`，`ab(ascii=98 99)` 的位图为 `01100001 01100010`，而bitmap可以直接对位图进行按位操作：
+**概念：** 字符串底层使用位图，即二进制形式存储，而bitmap可以直接对位图进行按位操作：
+- 自动拓展：bitmap可以以字节（8bit）为单位自动扩容，如：
+    - `a(ascii=98)` 的位图为 `01100001`。
+    - `aa(ascii=98 98)` 的位图为 `01100001 01100001`。
 - 常用场景：记录网站登录用户的id，即在用户id对应的索引上设置1或0以表示登录或未登录。
-- 开发测试类 `c.j.s.jedis.BitMapTest`：
+- 开发测试类 `c.j.s.jedis.BitMapTest`：key不存在的时候会自动创建：
     - `jedis.getbit("name", 0)`：返回name位图0号位上的布尔值，对应 `getbit name 0` 命令。
     - `jedis.setbit("name", 0, true);`：设置name位图0号位上的值为1，对应 `setbit name 0 1` 命令：
         - a的位图仅8位，若强行操作1000号位，则会将其9-999位全补0，严重耗时。
-    - `jedis.bitcount("name", 0, 9)`：返回name位图0-9号位中有多少个0，对应 `bitcount name 0 9` 命令。
+    - `jedis.bitcount("name", 0, 9)`：返回name位图0-9号位中有多少个1，对应 `bitcount name 0 9` 命令。
     - `jedis.bitop(BitOP.AND/OR/NOT/XOR, "k3", "k2", "k1")`：将k1和k2位图的交/并/差/亦或结果存入k3，对应 `bitop and/or/not/xor k3 k1 k2` 命令。
     - `jedis.bitpos("name", false)`：返回name的位图中，第一个0的位置，对应 `bitpos name 1` 命令。
-- 对比set：假设网站有1亿注册用户，无论日平均活跃用户有多少，使用bitmap存储都需要完整记录1亿用户的id作为索引，每个id占1个bit，共需 `1bit*1亿=12.5M` 内存：
+- 对比set：假设网站有1亿注册用户，则使用bitmap最多需要存储1亿个用户id作为索引，共需 `1bit*1亿=12.5M` 内存：
     - 若日平均活跃用户5000W，用set集合存储int类型id，共需 `32bit*5000W=200M` 内存，差于bitmap。
     - 若日平均活跃用户10W，用set集合存储int类型id，共需 `32bit*10W=4M` 内存，优于bitmap。
+- 布隆过滤器：用于解决缓存穿透，可过滤大量无效请求，底层是一张bitmap位图和N个hash函数，函数越多失误率越低：
+    - 对数据库中的每个元素依次执行布隆过滤器的N个函数，然后在结果对应的bitmap位图索引处标1。
+    - 当客户端请求查询某元素时，先经过布隆过滤器，分别执行N个函数，然后在bitmap中比对，全为1才允许通过。
 
 # 6. GEO
 
