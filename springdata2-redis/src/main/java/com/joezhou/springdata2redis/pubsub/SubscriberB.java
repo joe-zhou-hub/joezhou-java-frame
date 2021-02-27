@@ -26,6 +26,7 @@ public class SubscriberB {
             if (!"PONG".equals(jedis.ping())) {
                 throw new RuntimeException("ping error...");
             }
+
             System.out.println("channels: " + jedis.pubsubChannels("*"));
             System.out.println("subscribers: " + jedis.pubsubNumSub("sina"));
             JedisPubSub jedisPubSub = new SubscriberListener("sub-b");

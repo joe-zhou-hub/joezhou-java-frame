@@ -43,9 +43,9 @@
 
 **概念：** redis支持发布订阅模型，但不支持消息堆积，即订阅者无法查看历史消息，集群中的发布订阅会影响所有节点，消耗带宽，此时建议单独设置一套哨兵以专门维护发布订阅功能：
 - 发布订阅模型：频道不存在时会在服务端自动创建：
-    - 订阅者subscriber订阅频道channel
-    - 发布者publisher将信息发布到频道channel	
-    - 订阅者subscriber就会收到该信息
+    - 订阅者subscriber订阅频道channel。
+    - 发布者publisher将信息发布到频道channel。
+    - 订阅者subscriber就会收到该信息。
 - 开发订阅者监听 `c.j.s.pubsub.SubscriberListener`：建议使用构造接收订阅者名称：
     - 继承 `r.c.j.JedisPubSub` 并重写 `onMessage()/onSubscribe()/onUnsubscribe()`。
 - 开发订阅者类 `c.j.s.pubsub.SubscriberA/SubscriberB/SubscriberC`：
