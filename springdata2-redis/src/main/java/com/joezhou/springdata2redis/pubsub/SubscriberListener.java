@@ -27,14 +27,4 @@ public class SubscriberListener extends JedisPubSub {
     public void onUnsubscribe(String channel, int subscribedChannels) {
         System.out.printf("onUnsubscribe(): %s unsubscribe channel %s-%d\n", subscriberName, channel, subscribedChannels);
     }
-
-    @Override
-    public void onPSubscribe(String pattern, int subscribedChannels) {
-        System.out.printf("onPSubscribe(): %s psubscribe channel %s-%d\n", subscriberName, pattern, subscribedChannels);
-    }
-
-    @Override
-    public void onPMessage(String pattern, String channel, String message) {
-        System.out.printf("onPMessage(): %s get message '%s' from channel %s\n", subscriberName, message, channel);
-    }
 }
