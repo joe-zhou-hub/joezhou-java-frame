@@ -51,23 +51,24 @@ class PipelineTest {
         try (JedisPool jedisPool = new JedisPool(jedisPoolConfig, "127.0.0.1", 6380, 10000, "123");
              Jedis jedis = jedisPool.getResource()) {
 
-            if ("PONG".equals(jedis.ping())) {
-                long startTime = System.currentTimeMillis();
-                // pipeline
-                // total spend = 10 * (netTime) + 1000 * (commandTime)
-                // carry 100 command per send
-                for (int i = 0; i < 10; i++) {
-                    Pipeline pipeline = jedis.pipelined();
-                    // 0-99, 100-199, 200-299...
-                    for (int j = i * 100; j < (i + 1) * 100; j++) {
-                        pipeline.hset("key" + i, "field" + i, "value" + i);
-                    }
-                    pipeline.syncAndReturnAll();
-                }
-                System.out.println("hset with no pipeline done: " + (System.currentTimeMillis() - startTime));
-            } else {
-                System.out.println("ping error...");
+            if (!"PONG".equals(jedis.ping())) {
+                throw new RuntimeException("ping error...");
             }
+
+            long startTime = System.currentTimeMillis();
+            // pipeline
+            // total spend = 100 * (netTime) + 100 * (commandTime)
+            // carry 100 command per send
+            for (int i = 0; i < 100; i++) {
+                Pipeline pipeline = jedis.pipelined();
+                // 0-99, 100-199, 200-299...
+                for (int j = i * 100; j < (i + 1) * 100; j++) {
+                    pipeline.hset("key" + i, "field" + i, "value" + i);
+                }
+                pipeline.syncAndReturnAll();
+            }
+            System.out.println("hset with no pipeline done: " + (System.currentTimeMillis() - startTime));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
