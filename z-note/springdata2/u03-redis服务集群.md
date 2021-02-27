@@ -74,8 +74,6 @@ slaveof 127.0.0.1 6379
 - slave加载缓冲区中的数据。
 - 全量复制完成。
 
-
-
 # 哨兵模式
 
 **概念：** sentinel哨兵部署模式解决了redis主从复制模型的高可用问题，sentinel就是一个特殊的redis，但不能存值取值，一般会搭建多个sentinel作为一个集群使用：
@@ -161,7 +159,7 @@ slaveof 127.0.0.1 6379
 
 # 分片集群
 
-**概念：** 搭建分片集群主要为了分担redis服务器压力。
+**概念：** 搭建分片集群主要为了分担redis服务器压力：
 - 每个节点负责一个槽
 - 节点之间互相通信，互知槽范围
 - 每个节点都可读可写
@@ -171,7 +169,9 @@ slaveof 127.0.0.1 6379
     - cluster-enabled:yes：以集群方式启动
     - node-a meet node b ：搭建ab节点互通
 
-# 原生安装
+## 原生安装
+
+**流程：**
 - 配置开启节点：配置6个，从7001-7006
     - `port 7001`：端口号。
     - `dir ./cluster`：工作目录，该文件夹需提前创建。
@@ -208,7 +208,7 @@ slaveof 127.0.0.1 6379
     - `redis-cli -c -p 7001`：`-c` 以集群模式连接时，可自动重定向到键对应槽位所在的节点并执行命令。
     - `get money`：成功获取该变量。
 
-# ruby安装
+## ruby安装
 
 **流程：**
 - 将redis根目录整体拷贝6份，视为6个redis实例，取名 `redis-7011` 到 `redis-7016`。
@@ -234,7 +234,7 @@ slaveof 127.0.0.1 6379
 - `redis-cli -c -p 7012`：`-c` 切换7012节点。
 - `get money`：成功获取该变量。
 
-# 集群扩容
+## 集群扩容
 
 **流程：** 集群伸缩指得就是槽和数据在节点之间的迁移，数据量越大，整个迁移过程比较慢，但不会影响程序正常运行：
 - 将redis根目录整体拷贝2份 `redis-7017` 和 `redis-7018`，预设1主1从，配置和其他节点一致，并分别粘贴一个 `redis-trib.rb`。
@@ -250,7 +250,7 @@ slaveof 127.0.0.1 6379
     - do you want to proceed with the porposed reshard plan：输入yes继续任务。
 - `redis-cli -p 7011 cluster nodes`：查看集群节点，发现7017有三段槽，分别来自于其他所有节点。
 
-# 集群收缩
+## 集群收缩
 
 **流程：** 删除7017和7018节点，为了避免触发故障转移，先删除从节点，后删除主节点：
 - `ruby redis-trib.rb reshard --from 7017的id --to 7011的id --slots 1366 127.0.0.1:7011` 数据迁移：
@@ -260,3 +260,27 @@ slaveof 127.0.0.1 6379
 - `ruby redis-trib.rb del-node 127.0.0.1:7018 7018的id`：将7018从节点从集群中删除。
 - `ruby redis-trib.rb del-node 127.0.0.1:7017 7017的id`：将7017主节点从集群中删除。
 - `redis-cli -p 7011 cluster nodes`：查看集群节点，发现7018和7017已被移除集群。
+
+## 多节点操作
+
+**流程：** 在分片集群模式下，`keys *` 命令仅能展示当前节点的全部key，若需要展示全部节点的key，则：
+- 开发测试方法 `c.j.s.jedis.JedisClusterTest.operateOnAllNodes()`：
+    - `jedisCluster.getClusterNodes()`：获取所有的集群节点，包括从节点。
+    - `jedis.info("replication")`：返回节点 `replication` 信息。
+
+## 故障转移
+
+**流程：** cluster集群内部实现了故障转移机制，无需使用sentinel：
+- 含槽主节点node-b通过ping/pong机制发现与node-a通信超时，对其标记主观下线 `pfail`。
+- 含槽主节点node-c通过ping/pong机制发现与node-a通信超时，对其标记主观下线 `pfail`。
+- 当半数以上含槽主节点都对node-a标记了 `pfail` 时，主观下线升级为客观下线，并向集群广播。
+- 所有node-a的从节点准备选举，但与node-a很久不联系的从节点没有选举资格：
+    - 与主节点最后一次通信时间超过 `cluster-node-timeout * cluster-slave-validity-factor` 时丧失资格。
+- 所有其他主节点对node-a的所有从节点投票，与node-a最后通信时间越靠前的优先级越高。
+- 从节点选举成功，执行 `slave no one` 抛弃从节点身份。
+- 执行 `clusterDelSlots` 命令将node-a的槽清空。
+- 执行 `clusterAddSlots` 命令将node-a的槽重新分配给新的主节点，并向集群广播。
+- 开发测试方法 `c.j.s.jedis.JedisClusterTest.failover()`：
+    - 连入集群并利用循环每隔1秒钟向集群发送指令。
+    - 下线主节点如 `redis7011`，查看节点选举和故障转移情况。
+    - 恢复主节点如 `redis7011`，查看节点选举和故障转移情况。
