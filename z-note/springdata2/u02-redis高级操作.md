@@ -29,11 +29,7 @@
 
 # 3. PipeLine
 
-**概念：** pipeline是流水线功能，将一批相同或不同的命令打包后，通过一次网络IO到达服务端，然后解包并依次执行命令，主要目的就是为了节省网络IO，但并不能节省命令执行时间：
-- 特点：对比mget操作：mget是原子重量级操作，在服务端一次性执行，且仅能执行get命令：
-    - pipeline可以打包相同命令或者不同命令，每个命令包的中的命令数量不要过多。
-    - pipeline是非原子操作，命令包在服务端会被解包并一条一条执行，过程中可能穿插其他命令。
-    - pipeline的每批命令都只能作用在一个节点上。
+**概念：** pipeline是流水线功能，将一批相同或不同的少量命令打包后，通过一次网络IO到达服务端，然后解包并非原子依次执行命令，以节省网络IO消耗，但并不能节省命令执行时间，且集群模式下，pipeline仅能作用于一个节点：
 - 开发测试类 `c.j.s.jedis.PipelineTest`：
     - `jedis.pipelined()`：获取Pipeline实例。
     - `pipeline.hset()`：使用Pipeline调用 `hset` 命令。
@@ -48,7 +44,7 @@
     - 订阅者subscriber就会收到该信息。
 - 开发订阅者监听 `c.j.s.pubsub.SubscriberListener`：建议使用构造接收订阅者名称：
     - 继承 `r.c.j.JedisPubSub` 并重写 `onMessage()/onSubscribe()/onUnsubscribe()`。
-- 开发订阅者类 `c.j.s.pubsub.SubscriberA/SubscriberB/SubscriberC`：
+- 开发订阅者类 `c.j.s.pubsub.SubscriberA/SubscriberB`：
     - `jedis.pubsubChannels("*")`：列出所有频道，对应 `pubsub channels` 命令。
     - `jedis.pubsubNumSub("sina")`：列出sina频道有多少订阅者，对应 `pubsub numsub sina` 命令。
     - `jedis.subscribe()`：订阅频道并阻塞，对应 `subscribe sina` 命令，参数为订阅者监听实例和频道列表。
