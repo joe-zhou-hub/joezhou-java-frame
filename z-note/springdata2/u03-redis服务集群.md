@@ -170,6 +170,7 @@ slaveof 127.0.0.1 6379
     - cluster-enabled:yes：以集群方式启动
     - node-a meet node b ：搭建ab节点互K通
 
+
 ## 原生安装
 
 **流程：**
