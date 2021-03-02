@@ -54,22 +54,21 @@
 
 # 5. BitMap
 
-**概念：** 字符串底层使用位图，即二进制形式存储，而bitmap可以直接对位图进行按位操作：
-- 自动拓展：bitmap可以以字节（8bit）为单位自动扩容，如：
-    - `a(ascii=98)` 的位图为 `01100001`。
-    - `aa(ascii=98 98)` 的位图为 `01100001 01100001`。
-- 常用场景：记录网站登录用户的id，即在用户id对应的索引上设置1或0以表示登录或未登录。
+**概念：** redis字符串的底层使用位图，即二进制形式存储，而bitmap可以直接对位图进行按位操作，常用于记录网站登录用户的id，即在用户id对应的索引上设置1或0以表示登录或未登录：
+- bitmap可以以字节（8bit）为单位自动扩容，如：
+    - `a(ascii=97)` 的位图为 `01100001`。
+    - `aa(ascii=97 97)` 的位图为 `01100001 01100001`。
 - 开发测试类 `c.j.s.jedis.BitMapTest`：key不存在的时候会自动创建：
     - `jedis.getbit("name", 0)`：返回name位图0号位上的布尔值，对应 `getbit name 0` 命令。
-    - `jedis.setbit("name", 0, true);`：设置name位图0号位上的值为1，对应 `setbit name 0 1` 命令：
+    - `jedis.setbit("name", 0, true)`：设置name位图0号位上的值为1，对应 `setbit name 0 1` 命令：
         - a的位图仅8位，若强行操作1000号位，则会将其9-999位全补0，严重耗时。
     - `jedis.bitcount("name", 0, 9)`：返回name位图0-9号位中有多少个1，对应 `bitcount name 0 9` 命令。
-    - `jedis.bitop(BitOP.AND/OR/NOT/XOR, "k3", "k2", "k1")`：将k1和k2位图的交/并/差/亦或结果存入k3，对应 `bitop and/or/not/xor k3 k1 k2` 命令。
-    - `jedis.bitpos("name", false)`：返回name的位图中，第一个0的位置，对应 `bitpos name 1` 命令。
+    - `jedis.bitop(BitOP.AND/OR/NOT/XOR, "k3", "k1", "k2")`：将k1和k2位图的交/并/差/亦或结果存入k3，对应 `bitop and/or/not/xor k3 k1 k2` 命令。
+    - `jedis.bitpos("name", false)`：返回name的位图中，第一个0的位置，对应 `bitpos name 0` 命令。
 - 对比set：假设网站有1亿注册用户，则使用bitmap最多需要存储1亿个用户id作为索引，共需 `1bit*1亿=12.5M` 内存：
     - 若日平均活跃用户5000W，用set集合存储int类型id，共需 `32bit*5000W=200M` 内存，差于bitmap。
     - 若日平均活跃用户10W，用set集合存储int类型id，共需 `32bit*10W=4M` 内存，优于bitmap。
-- 布隆过滤器：用于解决缓存穿透，可过滤大量无效请求，底层是一张bitmap位图和N个hash函数，函数越多失误率越低：
+- 布隆过滤器：用于解决缓存穿透，可过滤大量无效请求，底层是一张bitmap位图和N个函数，函数越多失误率越低：
     - 对数据库中的每个元素依次执行布隆过滤器的N个函数，然后在结果对应的bitmap位图索引处标1。
     - 当客户端请求查询某元素时，先经过布隆过滤器，分别执行N个函数，然后在bitmap中比对，全为1才允许通过。
 
@@ -77,8 +76,8 @@
 
 **概念：** geo表示地理信息定位，存储经纬度，计算两地计算，范围计算等，是redis3.2+添加的一个特性，底层使用zset结构：
 - 开发测试类 `c.j.s.jedis.GeoTest`：
-    - `jedis.geoadd("city", 1.1, 2.2, "beijing")`：将北京的经纬度添加geo中，对应 `geoadd city 1.1 2.2 beijing` 命令。
-    - `jedis.geopos("city", "beijing")`：获取北京的经纬度，对应 `geopos city beijing` 命令。
+    - `jedis.geoadd("city", 1.1, 2.2, "bj")`：将北京的经纬度添加geo中，对应 `geoadd city 1.1 2.2 bj` 命令。
+    - `jedis.geopos("city", "bj")`：获取北京的经纬度，对应 `geopos city beijing` 命令。
     - `jedis.geodist("city", "bj", "tj", GeoUnit.KM)`：获取city中北京和天津的千米距离，对应 `geodist city bj tj km` 命令。
 - 经纬度范围扫描：`jedis.georadius("city", 1.0, 2.0, 5, GeoUnit.KM, geoRadiusParam)`：扫描city中以经纬度 `[1.0, 2.0]` 为中心，5km范围内其他元素集合，对应 `georadius city 1.0 2.0 5 km` 命令：
     - `geoRadiusParam` 参数可选，用于配置额外参数，通过 `GeoRadiusParam.geoRadiusParam()` 获取。
@@ -86,8 +85,7 @@
     - `geoRadiusParam.withDist()`：设置返回结果中包含距离中心节点的位置，对应 `... withdist` 命令。
     - `geoRadiusParam.count(10)`：设置最多返回10条元素，对应 `... count 10` 命令。
     - `geoRadiusParam.sortAscending()`：设置返回结果升序排列，对应 `... asc 10` 命令。
-    - 经纬度可以改为geo中存在的元素名如 `beijing`，此时将以 `beijing` 为中心扫描。
-- 元素范围扫描：`jedis.georadiusByMember("city", "beijing", 5, GeoUnit.KM, geoRadiusParam)`：扫描city中以北京为中心，5km范围内其他元素集合，对应 `georadiusbymember city 1.0 2.0 5 km` 命令。
+    - 经纬度可以改为geo中存在的元素名如 `bj`，此时将以 `bj` 为中心扫描，命令改为 `georadiusbymember`。
 
 # 7. Redis事务
 

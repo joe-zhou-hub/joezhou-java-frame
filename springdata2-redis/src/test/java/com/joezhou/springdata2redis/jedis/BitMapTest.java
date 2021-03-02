@@ -88,7 +88,7 @@ class BitMapTest {
                 System.out.print(jedis.getbit("name", i) ? 1 : 0);
             }
             System.out.println();
-            System.out.println(jedis.bitcount("name", 0, 9));
+            System.out.println(jedis.bitcount("name", 0, -1));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -118,7 +118,7 @@ class BitMapTest {
             }
             System.out.println();
 
-            jedis.bitop(BitOP.XOR, "k3", "k2", "k1");
+            jedis.bitop(BitOP.XOR, "k3", "k1", "k2");
             System.out.print("k3-bitmap: ");
             for (long i = 0, j = jedis.strlen("k3") * 8; i < j; i++) {
                 System.out.print(jedis.getbit("k3", i) ? 1 : 0);

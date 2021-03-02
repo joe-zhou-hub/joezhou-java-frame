@@ -86,7 +86,6 @@ class GeoTest {
             GeoRadiusParam geoRadiusParam = GeoRadiusParam.geoRadiusParam();
             geoRadiusParam.withCoord().withDist().count(10).sortAscending();
 
-
             List<GeoRadiusResponse> cities = jedis.georadius("city", 110.0, 38.0, 600, GeoUnit.KM, geoRadiusParam);
             for (GeoRadiusResponse geo : cities) {
                 System.out.println(geo.getMemberByString() + " distance: " + geo.getDistance());
@@ -114,7 +113,7 @@ class GeoTest {
             jedis.geoadd("city", 115.29, 38.51, "baoding");
 
             GeoRadiusParam geoRadiusParam = GeoRadiusParam.geoRadiusParam();
-            geoRadiusParam.withCoord().withDist().count(10).sortAscending();
+            geoRadiusParam.withCoord().withDist().count(10).sortDescending();
 
             List<GeoRadiusResponse> cities = jedis.georadiusByMember("city", "beijing", 100, GeoUnit.KM, geoRadiusParam);
             for (GeoRadiusResponse geo : cities) {
