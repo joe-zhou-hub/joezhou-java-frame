@@ -100,14 +100,13 @@
     - 客户端A：`set a 1`：设置a值为1，返回OK。
     - 客户端A：`watch a`：跟踪a，初始值为1，返回OK。
     - 客户端A：`multi`：开启事务。
-    - 客户端B：`get a`：返回a值为1。
     - 客户端B：`set a 2`：将a值修改为2，返回OK。
     - 客户端A：`set a 3`：将a值修改为3，命令进入缓存队列，返回QUEUED。
     - 客户端A：`exec`：执行事务，但因为a值被客户端B改动，事务失败返回nil。
 
 # 8. 持久化
 
-**概念：** 持久化指的是将内存中的数据备份到硬盘的操作，主要用于避免宕机丢失数据的情况，redis可以同时使用两种持久化方式，但此时redis重启时会优先读取AOP文件来恢复数据。
+**概念：** 持久化指的是将内存中的数据备份到硬盘的操作，主要用于避免宕机丢失数据的情况，redis可以同时使用RDB和AOF两种持久化方式，但此时redis重启时会优先读取AOF文件来恢复数据。
 
 ## 8.1 RDB持久化
 
@@ -115,16 +114,13 @@
 - 同步触发：客户端执行 `save` 命令时生成临时RDB文件并向其dump数据，最后替换旧RDB文件，过程不会额外消耗内存但会阻塞其他命令，属于重量级命令。
 - 异步触发：客户端执行 `bgsave` 命令时主进程fork出一个子进程来异步执行 `save` 命令，该命令不阻塞，立刻返回 `background saving start` 消息，但需要额外消耗内存进行fork操作。
 - 自动触发：
-    - 默认配置下，redis在60s内进行1W次写，300s内进行10次写，或900s内进行1次写时触发 `bgsave`。
+    - 默认配置下，redis在60s内进行1W次写，300s内进行10次写，或900s内进行1次写时触发 `bgsave`，建议全部关闭。
     - `debug reload` 操作，`shutdown` 操作和主从全量复制时时也会生成RDB文件。
 - RDB配置：
     - `dbfilename dump-6380.rdb`：配置RDB文件。
     - `stop-writes-on-bgsave-error yes`：配置当 `bgsave` 出错时停止操作。
     - `rdbcompression yes`：配置对RDB文件进行压缩。
-    - `rdbchecksum yes`：对RDB文件进行检查。
-    - `redis 60 10000`：在60s内做了1W次写操作就触发 `bgsave`，建议关闭。
-    - `redis 300 10`：在300s内做了10次写操作就触发 `bgsave`，建议关闭。
-    - `redis 900 1`：在900s内做了1次写操作就触发 `bgsave`，建议关闭。   
+    - `rdbchecksum yes`：对RDB文件进行检查。 
 
 ## 8.2 AOF持久化
 
@@ -133,7 +129,7 @@
     - `always`：redis每次写操作都立刻刷盘，数据完整度高，但是磁盘IO次数多，效率低。
     - `everysec`：redis每秒刷盘，磁盘IO次数少，但有可能会丢失最后1秒的数据，是redis默认配置。
     - `no`：由OS决定如何刷盘，不用管，不可控，不建议。
-- AOF配置：
+- AOF配置：在配置文件中进行设置：
     - `appendonly yes`：开启AOF持久化，默认是关闭的。
     - `appendfilename appendonly-6380.aof`：配置AOF文件名。
     - `appendfsync everysec`：配置刷盘策略。
@@ -150,5 +146,4 @@
 
 ## 8.3 无持久化
 
-**概念：** 如果不想使用持久化，则需要将将RDB配置全部注释掉，设置 `appendonly no`，并执行 `save ""` 命令
-把持久化的本地文件全部干掉。
+**概念：** 如果不想使用持久化，则需要将RDB配置全部注释掉，设置 `appendonly no`，并执行 `save ""` 命令，把持久化的本地文件全部干掉。
