@@ -1,7 +1,6 @@
-# 1. 主从配置
+# 1. 主从模型
 
-**概念：** 主从配置用于提升服务的高可用性，解决单机redis的容灾，容量以及QPS瓶颈等问题：
-- redis支持一主一从和一主多从，且主从节点不建议部署在同一台机器。
+**概念：** redis支持一主一从和一主多从模型以提高数据容灾性，主从节点不建议部署在同一台机器上：
 - 主从中的数据只能从master流向slave，所以一般master负责写，slave负责读，读写分离。
 - 默认使用 `bgsave` 命令将数据备份到RDB文件，然后再恢复到slave以完成数同步。
 
@@ -19,55 +18,54 @@
     - `masterauth 123`：当主节点设置了密码时，在从节点中配置该项。
     - `slaveof 127.0.0.1 6381`：在从节点中配置其主节点的IP和端口号。
 
-# 2. 哨兵模式
+# 2. 哨兵模型
 
-**概念：** sentinel哨兵模式解决了redis主从复制模型的高可用问题，sentinel就是一个特殊的redis，但不能存值取值，一般会搭建多个sentinel作为一个集群使用：
+**概念：** sentinel哨兵无法操作数据，仅用于提升主从模型的高可用问题，建议搭建多个sentinel作为一个集群使用：
 - 开发配置文件 `7007/7008/7009.conf`：配置端口号，工作目录，日志，RDB文件。
-- 将3个节点配置为windows服务，启动并连接并ping通，以7007为例：
+- 将3个节点配置为windows服务并启动，以7007为例：
     - `redis-server --service-install slave/7007.conf --service-name redis7007`
     - `redis-server --service-start --service-name redis7007`
-- `slaveof 127.0.0.1 7007`：使7008和7009都成为7007的从节点。
-- 开发哨兵配置文件 `27007/27008/27009.conf`：配置端口号，工作目录，日志。
-    - `protected-mode no`：必须关闭保护模式，否则Jedis无法访问。
-    - `sentinel monitor my-master 127.0.0.1 7007 2`：监视信息：
-        - `my-master`：sentinel可以监视多套主从结构，以此名区分。
-        - `127.0.0.1 7007`：sentinel初始监视的master节点信息。
-        - `2`：至少有2个sentinel认定该master节点失效才会执行故障转移。
-    - `sentinel down-after-milliseconds my-master 5000`：对master在5秒ping不通或直接报错时认定节点失效。
-    - `sentinel parallel-syncs my-master 1`：故障转移时，最多同时有1个redis同步新的master节点数据。
-    - `sentinel failover-timeout my-master 15000`：15秒内故障转移未完成则超时失败。
-- 将3个哨兵节点部署为window服务，启动并连接并ping通，以27007为例：
+- `7008/7009 > slaveof 127.0.0.1 7007`：分别使7008和7009成为7007的从节点。
+- 开发哨兵配置文件 `27007/27008/27009.conf`：配置端口号，工作目录，日志：
+    - `protected-mode no`：关闭保护模式，否则Jedis无法访问。
+    - `sentinel monitor my-master 127.0.0.1 7007 2`：
+        - `my-master`：sentinel支持同时监视多套主从结构，以此名区分。
+        - `127.0.0.1 7007`：监视以 `127.0.0.1 7007` 为master的主从结构。
+        - `2`：累计超过2个主观下线标记时执行故障转移。
+    - `sentinel down-after-milliseconds my-master 5000`：5秒内ping不通master或直接报错时标记主观下线。
+    - `sentinel parallel-syncs my-master 1`：故障转移时最多1个节点同步新的master数据。
+    - `sentinel failover-timeout my-master 15000`：故障转移超时时间为15秒。
+- 将3个哨兵节点部署为window服务并启动，以27007为例：哨兵节点需额外添加 `--sentinel` 参数：
     - `redis-server --service-install sentinel/27007.conf --sentinel --service-name sentinel27007` 
     - `redis-server --service-start --service-name sentinel27007`
-- 查看三个sentinel节点的日志：发现sentinel节点启动后日志被重写了一些信息：
-    - `sentinel myid`：启动后生成一个ID用于唯一标识和互相发现。
-    - `known-slave`：启动后自动发现了master节点的slave节点信息。
-    - `known-sentinel`：sentinel节点可以互相发现，以保证高可用。
-- `info replication`：查看7007是否为主节点。
-- `info sentinel`：查看任一sentinel节点的监控信息。
-- 将7007节点下线，再次查看任一sentinel节点的监控信息：发现被监控的master发生变更，完成故障转移。
-- 寻找并查看sentinel队长的日志：假设队长为27007
-    - `+sdown master ..7007`：主观下线，我认定master节点7007失效了。
-    - `+odown master ..7007 quorum 2/2`：客观下线，有两个sentinel认定7007失效了，那它确实失效了。
+- 查看三个哨兵日志：生成哨兵ID，发现了全部slave，哨兵之间互相发现以保证高可用。
+- `7007 > info replication`：查看7007是否为主节点。
+- `27007/27008/27009 > info sentinel`：查看任一sentinel的监控信息。
+- `redis-server --service-stop --service-name redis7007`：将7007下线。
+- `27007/27008/27009 > info sentinel`：查看任一sentinel的监控信息，发现master发生变更。
+- 查看sentinel队长的日志：假设队长为27007：
+    - `+sdown master ..7007`：对7007标记主观下线：我觉得7007挂了。
+    - `+odown master ..7007 quorum 2/2`：对7007标记主观下线：有2两个sentinel觉得7007挂了，那它就是挂了。
     - `+try-failover`：尝试故障转移，只有一个sentinel执行故障转移操作。
     - `+vote-for-leader xxx 1`：投1票给xxx作为sentinel队长。
     - `+elected-leader`：当选队长。
-    - `+selected-slave`：选择一个slave节点，准备将其晋升为新的master节点。
+    - `+selected-slave`：选择一个slave，准备将其晋升为新的master。
     - `+failover-state-send-slaveof-noone`：对该slave节点发送 `slaveof-noone` 命令。
-    - `+failover-state-wait-promotion`：等待该slave节点晋升（执行 `slaveof-noone` 命令）。
-    - `+promoted-slave`：晋升slave节点为master节点。
-    - `+slave-reconf-sent/inprog/done`：重写slave节点的配置。
-    - `-odown master 7007`：切换前，删除对master节7007的客观下线标识，以便于它将来回归。
-    - `+failover-end`：故障转移完成。
-    - `+switch-master 7007 7008`：完成master节点的从7007到7008的切换。
-    - `+slave slave 7009`：使7009成为7008的子节点。
-    - `+slave slave 7007`：使7007成为7008的子节点，前提是7007复活。
-    - `+sdown slave`：添加对7007子节点（此时它已降级为slave子节点）的主观下线标识。
-- 查看其他两个sentinel队员的日志：
+    - `+failover-state-wait-promotion`：对该slave节点执行 `slaveof-noone` 命令。
+    - `+promoted-slave`：slave晋升为master。
+    - `+slave-reconf-sent/inprog/done`：重写slave配置。
+    - `-odown master 7007`：删除对7007的客观下线标记，以便于它将来回归。
+    - `+failover-end`：故障转移完毕。
+    - `+switch-master 7007 7008`：完成master从7007到7008的切换。
+    - `+slave slave 7009`：使7009成为7008的从节点。
+    - `+slave slave 7007`：使7007成为7008的从节点，前提是7007复活。
+    - `+sdown slave`：对7007（此时它已降级为slave子节点）重新标记主观下线标记。
+- 查看sentinel队员日志：
     - `config-update-from`：接收和同步sentinel队长的更新信息。
-- 重新上线7007节点，再次查看任一sentinel节点的监控信息：
+- `redis-server --service-start --service-name redis7007`：重新上线7007。
+- `27007/27008/27009 > info sentinel`：查看任一sentinel的监控信息：
     - 三个sentinel都删除了对7007子节点的主观下线。
-    - 其中一个sentinel执行了 `+convert-to-slave` 将7007转换成了当前master节点7008的slave节点。
+    - 其中一个sentinel执行了 `+convert-to-slave` 将7007转换成了当前master的slave。
 
 源码：JedisSentinelTest
 
@@ -85,6 +83,16 @@
 - 虚拟槽分区：redis-cluster使用：
     - 预设虚拟槽0-16383范围，每个槽映射一个数据子集，一般比节点数大。
     - 对key值求hash值对16383取余，一定分布在两个节点范围内。
+
+
+
+
+
+
+
+
+
+
 
 # 分片集群
 
