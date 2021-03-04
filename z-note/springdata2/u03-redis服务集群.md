@@ -1,80 +1,25 @@
-# 单机问题
- 
-**概念：** 单机redis的瓶颈在于无法容灾，容量有限以及QPS瓶颈，主从复制就可以让redis高可用起来，redis支持一主多从结构，每个从节点都从主节点中同步数据（备份）：
-- 一个master主节点可以有多个slave从节点，但一个slave从节点只能有一个master主节点。
-- 数据流是单向的，只能从主节点master到从节点slave，所以一般从负责读，主负责写，读写分离。
-- 主从节点是不建议部署在一台机器上的。
-- 主从复制的底层其实就是 `bgsave` 命令备份主节点数据到RDB文件，然后从节点从RDB文件进行恢复（从日志可见），即使关闭了RDB配置，也一样。
+# 1. 主从配置
 
-# 主从配置
+**概念：** 主从配置用于提升服务的高可用性，解决单机redis的容灾，容量以及QPS瓶颈等问题：
+- redis支持一主一从和一主多从，且主从节点不建议部署在同一台机器。
+- 主从中的数据只能从master流向slave，所以一般master负责写，slave负责读，读写分离。
+- 默认使用 `bgsave` 命令将数据备份到RDB文件，然后再恢复到slave以完成数同步。
 
-搭建主从主要为了服务的高可用，要求主节点和从节点数据一致。
+**流程：** 假设6381为master节点，6382为slave节点：
+- 在 `slave` 目录下开发配置文件 `6381/6382.conf`：配置端口号，工作目录，日志，RDB文件。
+- 将主从节点配置为windows服务，启动并连接，以6381为例：
+    - `redis-server --service-install slave/6381.conf --service-name redis6381`
+    - `redis-server --service-start --service-name redis6381`
+    - `redis-cli -p 6381`
+- `slaveof 127.0.0.1 6381`：使当前节点成为6381的从节点，返回OK并在后台异步清空从节点数据后建立主从关系。
+- `slaveof no one`：使当前从节点脱离主从关系，此后不再接收主节点同步的数据，但之前同步的数据仍然保留。
+- `info replication`：查看主从节点的replication信息。
+- 在主节点中读写，再切换到从节点中读写，以验证主从关系是否搭建成功。
+- 配置文件方式：若不使用命令，可直接在从节点的配置文件中额外配置并重启redis节点以搭建主从关系：
+    - `masterauth 123`：当主节点设置了密码时，在从节点中配置该项。
+    - `slaveof 127.0.0.1 6381`：在从节点中配置其主节点的IP和端口号。
 
-概念：实现主从配置有两种方式，通过命令和通过配置文件，命令可以随时进行，而配置需要在redis启动前，或者修改过后重启redis才可以生效：
-- `slaveof` 命令：在从节点中执行 `slaveof 主节点ip 主节点port` 即可成为其从节点：
-    - 该过程是异步的，立刻返回OK。
-    - 该过程会先清空从节点中所有的数据，然后再建立主从关系。
-- 在从节点中执行 `slaveof no one` 可脱离主从关系：
-    - 脱离后从节点不再接收主节点同步的数据，但之前同步的数据仍然保留。
-    - 脱离后的从节点可以通过 `slaveof` 切换新的主节点。
-- 在配置文件中配置：再redis启动之前添加配置信息：
-    - `slaveof 主节点ip 主节点port`
-    - `slave-read-only yes`：配置从节点只负责读。
-
-流程：假设6379为master，6380为slaveof
-- 拷贝两份配置文件：redis-6379.xml/redis-6380.xml
-- 启动redis-6379
-    - 分别连接redis-6379和redis-6380
-    - 分别使用 `info replication` 查看role信息。
-- 在redis-6379中 `set name zhaosi`
-- 在reids-6380中 `get name` 发现可以得到 `zhaosi`，主从搭建成功。
-- 在redis-6380中 `set name zhaosi`，报错，从节点只读。
-- 
-
-修改 reids-6379.xml 主节点配置文件
-```
-port=6379
-logfile "6379.log"
-
-# 修改一下RDB文件名，否则主从节点的RDB会混在一起，不利于主从复制
-dbfilename dump-6379.rdb
-```
-
-修改 reids-6380.xml 从节点配置文件
-```
-port=6380
-logfile "6380.log"
-
-# 修改一下RDB文件名，否则主从节点的RDB会混在一起，不利于主从复制
-dbfilename dump-6380.rdb
-
-# 如果主节点设置了密码，则从节点必须设置该项
-masterauth joezhou92
-
-slaveof 127.0.0.1 6379
-```
-
-# 全量复制
-
-概念：全量复制的开销很大，包括bgsave开销，RDB文件的网络传输开销，从节点清空自己数据的开销和从节点加载RDB时间开销，全量复制的过程中如果主从之间的网络抖动，则有可能会丢失一部分数据。
-
-流程：
-- slave向master自动内部发送 `psync run_id offset` 命令：
-    - 主节点每次启动都会生成一个随机的 `run_id`，重启更换，slave若不知道master的 `run_id`（比如master重启，或第一次主从通信）则会发送一个?。
-    - 偏移量可以理解为当前数据的光标位置，slave偏移量和master偏移量一致时，表示数据完全同步，slave若不知道master的 `offset`（比如master重启，或第一次主从通信）则会发送 -1。
-- master接收到的 `run_id` 为问号，且offset为-1，则决定执行全量复制操作。
-- master向slave返回自己的 `run_id` 和 `offset`。
-- slave保存主节点的基本信息，包括 `run_id` 和 `offset`。
-- master执行 `bgsave` 命令，生成一个RDB文件：
-    - 此时master执行的新命令都会被保存到一个 `repl_back_buffer` 缓冲区中。
-- master将RDB发送给slave。
-- master将缓冲区中的数据发送给slave。
-- slave清空自己的旧数据。
-- slave加载RDB文件。
-- slave加载缓冲区中的数据。
-- 全量复制完成。
-
-# 哨兵模式
+# 2. 哨兵模式
 
 **概念：** sentinel哨兵部署模式解决了redis主从复制模型的高可用问题，sentinel就是一个特殊的redis，但不能存值取值，一般会搭建多个sentinel作为一个集群使用：
 - master节点：7007.conf
