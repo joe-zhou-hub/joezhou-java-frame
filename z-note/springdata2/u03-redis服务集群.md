@@ -36,10 +36,10 @@
 - 将3个哨兵节点部署为window服务并启动，以27007为例：哨兵节点需额外添加 `--sentinel` 参数：
     - `redis-server --service-install sentinel/27007.conf --sentinel --service-name sentinel27007` 
     - `redis-server --service-start --service-name sentinel27007`
-- 查看三个哨兵日志：生成哨兵ID，发现了全部slave，哨兵之间互相发现以保证高可用。
+- 查看全部sentinel日志：生成哨兵ID，发现了全部slave，哨兵之间互相发现以保证高可用。
 - `27007/27008/27009 > info sentinel`：查看监视信息。
 - 手动下线7007，再查看任一sentinel的监视信息，会发现master发生变更。
-- 查看sentinel日志：假设27007为队长，27008/27009为队员：
+- 查看全部sentinel日志：假设27007为队长，27008/27009为队员：
     - `z-res/sentinel日志解析.md`
 - 重新上线7007，再查看任一sentinel的监视信息，会发现三个sentinel都删除了对7007的主观下线，且其中一个sentinel执行了 `+convert-to-slave` 将7007转换成了当前master的slave。
 - 开发：`c.j.s.JedisSentinelTest`：
