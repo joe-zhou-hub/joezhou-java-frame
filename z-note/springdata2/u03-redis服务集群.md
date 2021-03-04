@@ -1,22 +1,23 @@
 # 1. 主从模型
 
-**概念：** redis支持一主一从和一主多从模型以提高数据容灾性，主从节点不建议部署在同一台机器上：
-- 主从中的数据只能从master流向slave，所以一般master负责写，slave负责读，读写分离。
-- 默认使用 `bgsave` 命令将数据备份到RDB文件，然后再恢复到slave以完成数同步。
-
-**流程：** 假设6381为master节点，6382为slave节点：
-- 在 `slave` 目录下开发配置文件 `6381/6382.conf`：配置端口号，工作目录，日志，RDB文件。
-- 将主从节点配置为windows服务，启动并连接，以6381为例：
+**流程：** redis支持1主N从模型以提高数据容灾性，主从中的数据只能从master流向slave，故主写从读，读写分离：
+- 在 `slave` 目录下开发配置文件 `6381/6382.conf`：配置端口号，工作目录，日志，RDB文件：
+    - 主从节点不建议部署在同一台机器上。
+- 将主从节点配置为windows服务并启动，以6381为例：
     - `redis-server --service-install slave/6381.conf --service-name redis6381`
     - `redis-server --service-start --service-name redis6381`
-    - `redis-cli -p 6381`
-- `slaveof 127.0.0.1 6381`：使当前节点成为6381的从节点，返回OK并在后台异步清空从节点数据后建立主从关系。
-- `slaveof no one`：使当前从节点脱离主从关系，此后不再接收主节点同步的数据，但之前同步的数据仍然保留。
-- `info replication`：查看主从节点的replication信息。
-- 在主节点中读写，再切换到从节点中读写，以验证主从关系是否搭建成功。
-- 配置文件方式：若不使用命令，可直接在从节点的配置文件中额外配置并重启redis节点以搭建主从关系：
-    - `masterauth 123`：当主节点设置了密码时，在从节点中配置该项。
-    - `slaveof 127.0.0.1 6381`：在从节点中配置其主节点的IP和端口号。
+- `6382 > slaveof 127.0.0.1 6381`：使6382成为6381的从节点，该过程异步执行，立即返回OK：
+    - 建立主从关系之前，redis会先清空从节点的所有数据。
+    - 后台使用 `bgsave` 命令将数据备份到RDB文件，然后再恢复到slave以完成数同步。
+- `6382 > slaveof no one`：使6382脱离主从关系，此后不再接收master同步的数据，但之前同步的数据仍然保留。
+- `6381/6382 > info replication`：分别查看主从节点的replication信息。
+- `6381 > set a 100`：在主节点中写数据，返回OK。
+- `6381 > set a`：在主节点中读数据，返回 `100`。
+- `6382 > set a 100`：在从节点中写数据，报错。
+- `6382 > get a`：在从节点中读数据，返回 `100`。
+- 配置文件方式：若不使用命令，可直接在slave配置文件中额外配置并重启redis节点以搭建主从关系：
+    - `masterauth 123`：配置master认证密码，无密码时可省略。
+    - `slaveof 127.0.0.1 6381`：配置其所属master的IP和端口号。
 
 # 2. 哨兵模型
 
@@ -28,10 +29,7 @@
 - `7008/7009 > slaveof 127.0.0.1 7007`：分别使7008和7009成为7007的从节点。
 - 开发哨兵配置文件 `27007/27008/27009.conf`：配置端口号，工作目录，日志：
     - `protected-mode no`：关闭保护模式，否则Jedis无法访问。
-    - `sentinel monitor my-master 127.0.0.1 7007 2`：
-        - `my-master`：sentinel支持同时监视多套主从结构，以此名区分。
-        - `127.0.0.1 7007`：监视以 `127.0.0.1 7007` 为master的主从结构。
-        - `2`：累计超过2个主观下线标记时执行故障转移。
+    - `sentinel monitor my-master 127.0.0.1 7007 2`：监视以7007为master的主从结构，当累计超过2个主观下线标记时执行故障转移，sentinel支持同时监视多套主从结构，所需需要设置名称以区分。
     - `sentinel down-after-milliseconds my-master 5000`：5秒内ping不通master或直接报错时标记主观下线。
     - `sentinel parallel-syncs my-master 1`：故障转移时最多1个节点同步新的master数据。
     - `sentinel failover-timeout my-master 15000`：故障转移超时时间为15秒。
@@ -39,35 +37,13 @@
     - `redis-server --service-install sentinel/27007.conf --sentinel --service-name sentinel27007` 
     - `redis-server --service-start --service-name sentinel27007`
 - 查看三个哨兵日志：生成哨兵ID，发现了全部slave，哨兵之间互相发现以保证高可用。
-- `7007 > info replication`：查看7007是否为主节点。
-- `27007/27008/27009 > info sentinel`：查看任一sentinel的监控信息。
-- `redis-server --service-stop --service-name redis7007`：将7007下线。
-- `27007/27008/27009 > info sentinel`：查看任一sentinel的监控信息，发现master发生变更。
-- 查看sentinel队长的日志：假设队长为27007：
-    - `+sdown master ..7007`：对7007标记主观下线：我觉得7007挂了。
-    - `+odown master ..7007 quorum 2/2`：对7007标记主观下线：有2两个sentinel觉得7007挂了，那它就是挂了。
-    - `+try-failover`：尝试故障转移，只有一个sentinel执行故障转移操作。
-    - `+vote-for-leader xxx 1`：投1票给xxx作为sentinel队长。
-    - `+elected-leader`：当选队长。
-    - `+selected-slave`：选择一个slave，准备将其晋升为新的master。
-    - `+failover-state-send-slaveof-noone`：对该slave节点发送 `slaveof-noone` 命令。
-    - `+failover-state-wait-promotion`：对该slave节点执行 `slaveof-noone` 命令。
-    - `+promoted-slave`：slave晋升为master。
-    - `+slave-reconf-sent/inprog/done`：重写slave配置。
-    - `-odown master 7007`：删除对7007的客观下线标记，以便于它将来回归。
-    - `+failover-end`：故障转移完毕。
-    - `+switch-master 7007 7008`：完成master从7007到7008的切换。
-    - `+slave slave 7009`：使7009成为7008的从节点。
-    - `+slave slave 7007`：使7007成为7008的从节点，前提是7007复活。
-    - `+sdown slave`：对7007（此时它已降级为slave子节点）重新标记主观下线标记。
-- 查看sentinel队员日志：
-    - `config-update-from`：接收和同步sentinel队长的更新信息。
-- `redis-server --service-start --service-name redis7007`：重新上线7007。
-- `27007/27008/27009 > info sentinel`：查看任一sentinel的监控信息：
-    - 三个sentinel都删除了对7007子节点的主观下线。
-    - 其中一个sentinel执行了 `+convert-to-slave` 将7007转换成了当前master的slave。
+- `27007/27008/27009 > info sentinel`：查看监视信息。
+- 手动下线7007，再查看任一sentinel的监视信息，会发现master发生变更。
+- 查看sentinel日志：假设27007为队长，27008/27009为队员：
+    - `z-res/sentinel日志解析.md`
+- 重新上线7007，再查看任一sentinel的监视信息，会发现三个sentinel都删除了对7007的主观下线，且其中一个sentinel执行了 `+convert-to-slave` 将7007转换成了当前master的slave。
+- 开发：`c.j.s.JedisSentinelTest`：
 
-源码：JedisSentinelTest
 
 # 数据分区方式
 - 节点取余：

@@ -1,0 +1,20 @@
+- 队长日志：
+    - `+sdown master ..7007`：对7007标记主观下线：我觉得7007挂了。
+    - `+odown master ..7007 quorum 2/2`：对7007标记主观下线：有2两个sentinel觉得7007挂了，那它就是挂了。
+    - `+try-failover`：尝试故障转移，只有一个sentinel执行故障转移操作。
+    - `+vote-for-leader xxx 1`：投1票给xxx作为sentinel队长。
+    - `+elected-leader`：当选队长。
+    - `+selected-slave`：选择一个slave，准备将其晋升为新的master。
+    - `+failover-state-send-slaveof-noone`：对该slave节点发送 `slaveof-noone` 命令。
+    - `+failover-state-wait-promotion`：对该slave节点执行 `slaveof-noone` 命令。
+    - `+promoted-slave`：slave晋升为master。
+    - `+slave-reconf-sent/inprog/done`：重写slave配置。
+    - `-odown master 7007`：删除对7007的客观下线标记，以便于它将来回归。
+    - `+failover-end`：故障转移完毕。
+    - `+switch-master 7007 7008`：完成master从7007到7008的切换。
+    - `+slave slave 7009`：使7009成为7008的从节点。
+    - `+slave slave 7007`：使7007成为7008的从节点，前提是7007复活。
+    - `+sdown slave`：对7007（此时它已降级为slave子节点）重新标记主观下线标记。
+
+- 队员日志：
+    - `config-update-from`：接收和同步sentinel队长的更新信息。
