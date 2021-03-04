@@ -41,7 +41,7 @@
 - 手动下线7007，再查看任一sentinel的监视信息，会发现master发生变更。
 - 查看全部sentinel日志：假设27007为队长，27008/27009为队员：
     - `z-res/sentinel日志解析.md`
-- 重新上线7007，再查看任一sentinel的监视信息，会发现三个sentinel都删除了对7007的主观下线，且其中一个sentinel执行了 `+convert-to-slave` 将7007转换成了当前master的slave。
+- 重新上线7007，再查看任一sentinel的监视信息，会发现三个sentinel都删除了对7007的主观下线，且其中一个sentinel执行了 `+convert-to-slave` 将7007变更为当前master的slave。
 - 开发：`c.j.s.JedisSentinelTest`：
 
 
