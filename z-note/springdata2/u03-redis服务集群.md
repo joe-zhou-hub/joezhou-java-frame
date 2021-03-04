@@ -21,48 +21,32 @@
 
 # 2. 哨兵模式
 
-**概念：** sentinel哨兵部署模式解决了redis主从复制模型的高可用问题，sentinel就是一个特殊的redis，但不能存值取值，一般会搭建多个sentinel作为一个集群使用：
-- master节点：7007.conf
-    - `port 7007`：端口。
-    - `logfile 7007.log`：日志位置。
-    - `dbfilename dump-7007.rdb`：RDB文件名。
-    - `dir ./sentinel`：工作目录。
-- slave节点：7008/7009.conf，以7008为例：
-    - `port 7008`：端口。
-    - `logfile 7008.log`：日志位置。
-    - `dbfilename dump-7008.rdb`：RDB文件名。
-    - `dir ./sentinel`：工作目录。
-    - `slaveof 127.0.0.1 7007`：指定为7007的从节点。
-- sentinel节点：27007/27008/27009.conf，以27007为例：
-    - `port 27007`：端口。
-    - `logfile 27007.log`：日志位置。
+**概念：** sentinel哨兵模式解决了redis主从复制模型的高可用问题，sentinel就是一个特殊的redis，但不能存值取值，一般会搭建多个sentinel作为一个集群使用：
+- 开发配置文件 `7007/7008/7009.conf`：配置端口号，工作目录，日志，RDB文件。
+- 将3个节点配置为windows服务，启动并连接并ping通，以7007为例：
+    - `redis-server --service-install slave/7007.conf --service-name redis7007`
+    - `redis-server --service-start --service-name redis7007`
+- `slaveof 127.0.0.1 7007`：使7008和7009都成为7007的从节点。
+- 开发哨兵配置文件 `27007/27008/27009.conf`：配置端口号，工作目录，日志。
     - `protected-mode no`：必须关闭保护模式，否则Jedis无法访问。
-    - `sentinel monitor master-a 127.0.0.1 7007 2`：监视信息：
-        - `master-a`：sentinel可以监视多套主从结构，以此名区分。
+    - `sentinel monitor my-master 127.0.0.1 7007 2`：监视信息：
+        - `my-master`：sentinel可以监视多套主从结构，以此名区分。
         - `127.0.0.1 7007`：sentinel初始监视的master节点信息。
         - `2`：至少有2个sentinel认定该master节点失效才会执行故障转移。
-    - `sentinel down-after-milliseconds master-a 5000`：对master节点5秒ping不通或直接返回错误则认定它失效。
-    - `sentinel parallel-syncs master-a 1`：故障转移时，最多同时有1个redis同步新的master节点数据（串行同步）。
-    - `sentinel failover-timeout master-a 15000`：15秒内故障转移未完成则超时失败。
-    - `dir ./sentinel`：工作目录。
-- 将6个节点部署为window服务并启动（注意sentinel部署需要额外 `--sentinel` 参数），启动所有节点并ping通：
-    - `redis-server --service-install sentinel/7007/7008/7009.conf --service-name redis7007/7008/7009`
-    - `redis-server --service-install sentinel/27007/27008/27009.conf --sentinel --service-name sentinel27007/27008/27009` 
-    - `redis-server --service-start --service-name redis7007/7008/7009` 
-    - `redis-server --service-start --service-name sentinel27007/27008/27009`
-    - `redis-cli -p 7007/7008/7009/27007/27008/27009` - `ping`
+    - `sentinel down-after-milliseconds my-master 5000`：对master在5秒ping不通或直接报错时认定节点失效。
+    - `sentinel parallel-syncs my-master 1`：故障转移时，最多同时有1个redis同步新的master节点数据。
+    - `sentinel failover-timeout my-master 15000`：15秒内故障转移未完成则超时失败。
+- 将3个哨兵节点部署为window服务，启动并连接并ping通，以27007为例：
+    - `redis-server --service-install sentinel/27007.conf --sentinel --service-name sentinel27007` 
+    - `redis-server --service-start --service-name sentinel27007`
 - 查看三个sentinel节点的日志：发现sentinel节点启动后日志被重写了一些信息：
     - `sentinel myid`：启动后生成一个ID用于唯一标识和互相发现。
     - `known-slave`：启动后自动发现了master节点的slave节点信息。
     - `known-sentinel`：sentinel节点可以互相发现，以保证高可用。
-- 查看7007是否为主节点：
-    - `redis-cli -p 6379`
-    - `info replication`
-- 查看任一sentinel节点的监控信息：
-    - `26379 > info sentinel`：看出被监控的master主节点为7007。
-- 将7007节点下线，再次查看任一sentinel节点的监控信息：
-    - `26379 > info sentinel`：看出被监控的master主节点更换为7008/7009，完成故障转移。
-- 寻找并查看sentinel队长的日志：假设队长为7007
+- `info replication`：查看7007是否为主节点。
+- `info sentinel`：查看任一sentinel节点的监控信息。
+- 将7007节点下线，再次查看任一sentinel节点的监控信息：发现被监控的master发生变更，完成故障转移。
+- 寻找并查看sentinel队长的日志：假设队长为27007
     - `+sdown master ..7007`：主观下线，我认定master节点7007失效了。
     - `+odown master ..7007 quorum 2/2`：客观下线，有两个sentinel认定7007失效了，那它确实失效了。
     - `+try-failover`：尝试故障转移，只有一个sentinel执行故障转移操作。
