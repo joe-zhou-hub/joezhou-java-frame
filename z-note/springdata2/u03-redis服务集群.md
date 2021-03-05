@@ -80,7 +80,7 @@
     - `for /L %i in (5462,1,10922) do redis-cli -h 127.0.0.1 -p 7002 cluster addslots %i`：为7002分配槽5462-10922。
     - `for /L %i in (10923,1,16383) do redis-cli -h 127.0.0.1 -p 7003 cluster addslots %i`：为7003分配槽10923-16383。
     - `7001 > cluster slots`：查看7001的槽信息，以及主从配置信息。
-- 配置主从：1主4从，2主5从，6主3从：
+- 配置主从：1主4从，2主5从，3主6从：
     - `7001 > cluster nodes`：展示所有节点，主要关注第一列的nodeId。
     - `7004 > cluster replicate 7001的nodeId`：让7004称为7001的从节点。
     - `7005 > cluster replicate 7002的nodeId`：让7005称为7002的从节点。
