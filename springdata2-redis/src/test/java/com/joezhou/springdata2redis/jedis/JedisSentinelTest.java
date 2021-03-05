@@ -13,19 +13,31 @@ import java.util.Set;
  */
 class JedisSentinelTest {
 
+    private JedisPoolConfig jedisPoolConfig;
+
+    void init() {
+        jedisPoolConfig = new JedisPoolConfig();
+        jedisPoolConfig.setMaxTotal(1024);
+        jedisPoolConfig.setMaxWaitMillis(10000L);
+        jedisPoolConfig.setMaxIdle(200);
+        jedisPoolConfig.setMinIdle(0);
+    }
+
     @Test
     void jedisSentinel() {
-
+        init();
         Set<String> sentinels = new HashSet<>();
         sentinels.add("127.0.0.1:27007");
         sentinels.add("127.0.0.1:27008");
         sentinels.add("127.0.0.1:27009");
-        JedisSentinelPool jedisSentinelPool = new JedisSentinelPool("master-a", sentinels, new JedisPoolConfig());
 
-        try (Jedis jedis = jedisSentinelPool.getResource()) {
+        try (JedisSentinelPool jedisSentinelPool = new JedisSentinelPool("my-master", sentinels, jedisPoolConfig);
+             Jedis jedis = jedisSentinelPool.getResource()) {
+
             if (!"PONG".equals(jedis.ping())) {
                 throw new RuntimeException("ping error...");
             }
+
             jedis.set("sentinel-key", "sentinel-val");
             System.out.println(jedis.get("sentinel-key"));
         } catch (Exception e) {

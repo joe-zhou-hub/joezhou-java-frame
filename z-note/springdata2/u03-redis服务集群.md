@@ -42,8 +42,8 @@
 - 查看全部sentinel日志：假设27007为队长，27008/27009为队员：
     - `z-res/sentinel日志解析.md`
 - 重新上线7007，再查看任一sentinel的监视信息，会发现三个sentinel都删除了对7007的主观下线，且其中一个sentinel执行了 `+convert-to-slave` 将7007变更为当前master的slave。
-- 开发：`c.j.s.JedisSentinelTest`：
-
+- 开发 `c.j.s.JedisSentinelTest`：
+    - `new JedisSentinelPool()` 构建哨兵连接池，需要参数主从名，哨兵地址端口的Set集合以及连接池配置实例。
 
 # 数据分区方式
 - 节点取余：
