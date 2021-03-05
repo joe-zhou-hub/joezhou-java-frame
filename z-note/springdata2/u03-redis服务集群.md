@@ -45,85 +45,52 @@
 - 开发 `c.j.s.JedisSentinelTest`：
     - `new JedisSentinelPool()` 构建哨兵连接池，需要参数主从名，哨兵地址端口的Set集合以及连接池配置实例。
 
-# 数据分区方式
-- 节点取余：
-    - 客户端分片：哈希 + 取余。
-    - 缺点：节点伸缩时数据需要迁移，建议翻倍扩容以减轻迁移量。
-- 一致性哈希：
-    - 预设一个token环，数值范围是0~2^32
-    - 在token环上均匀设置N个节点。
-    - 对key值求hash值，一定分布在两个节点范围内。
-    - 按照顺时针方向找到离这个hash值最近的节点。
-    - 添加新节点时只会影响到两个节点，而不会影响其他的节点。
-    - 缺点：数据分步可能不均匀，扩容也建议均匀。
-- 虚拟槽分区：redis-cluster使用：
-    - 预设虚拟槽0-16383范围，每个槽映射一个数据子集，一般比节点数大。
-    - 对key值求hash值对16383取余，一定分布在两个节点范围内。
+# 3. 分区集群
 
-
-
-
-
-
-
-
-
-
-
-# 分片集群
-
-**概念：** 搭建分片集群主要为了分担redis服务器压力，集群仅能使用一个库db0：
-- 每个主节点负责一个槽，槽的分配尽量均匀，否则容易造成数据倾斜，从节点不带槽。
-- 主节点之间互相通信，互知槽范围。
+**概念：** 分区集群主要为了分担redis服务器压力，集群仅能使用一个库db0：
+- redis默认采取虚拟槽方式进行分区，槽的数量的分配尽量均匀以免数据倾斜，从节点不带槽。
+    - `z-res/数据分区方式.md`
+- 主节点之间可以互知槽范围以便于读数据时进行重定向操作。
 - 每个主节点都可读可写，从节点不可写，读时默认重定向到数据所在主节点后再读，若需直接在从节点读，需要每次连接从节点后先执行 `readonly` 命令再读。
 - 客户端访问一个节点时，若数在该节点中直接返回，若不在该节点中则该节点会返回数据在哪个节点中（不会帮你跳转），建议使用智能客户端，即客户端提前获知所有节点的槽范围，访问时直接访问到对应的节点以解决效率问题。
-
 
 - cluster架构：node + meet + 指派槽 + 主从复制（不使用哨兵）
     - cluster-enabled:yes：以集群方式启动
     - node-a meet node b ：搭建ab节点互K通
 
-
-## 原生安装
+## 3.1 原生安装
 
 **流程：**
-- 配置开启节点：配置6个，从7001-7006
-    - `port 7001`：端口号。
-    - `dir ./cluster`：工作目录，该文件夹需提前创建。
-    - `dbfilename dump-7001.rdb`：RDB文件。
-    - `logfile 7001.log`：日志名。
+- 开发节点信息 `cluster/7001~7006.conf`：端口号，工作目录，日志文件，RDB文件：
     - `cluster-enabled yes`：开启集群模式。
     - `cluster-config-file nodes-7001.conf`：集群配置文件。
     - `cluster-node-timeout 15000`：集群创建超时时间。
     - `cluster-require-full-coverage no`：默认yes，表示当集群中有一个节点故障则整体不对外服务，建议改为no。
-- 将6个节点配置为windows服务（可选）：
+- 将6个节点配置为windows服务并启动，以7001为例：
     - `redis-server --service-install cluster/7001.conf --service-name redis7001` 
-- 启动6个点，预设3主3从：启动日志中会有 [cluster] 标记，表示以集群的方式启动：
-    - `redis-server --service-start --service-name redis7001`：启动7001节点。
-    - `redis-cli -p 7001 cluster nodes`：查看7001节点的集群节点连接情况。
-    - `redis-cli -p 7001 cluster info`：查看7001节点的集群信息。
-    - 也可以直接查看 `nodes-7001.conf` 文件以查看7001节点的集群信息
+    - `redis-server --service-start --service-name redis7001`
+- 连入某个节点查看集群信息：也可以直接查看 `nodes-7001.conf` 文件：
+    - `7001 > cluster nodes`：查看7001的集群节点连接情况。
+    - `7001 > cluster info`：查看7001的集群信息。
 - meet：使用其中一个节点如7001去meet其他5个节点，此时6个节点完成互通：
-    - `redis-cli -p 7001 cluster meet 127.0.0.1 7002`：7001见面7002。
-- 分配槽：未分配槽的节点不可使用，使用脚本循环分配槽，否则工作量巨大：
+    - `7001 > cluster meet 127.0.0.1 7002~7006`：7001见面7002~7006。
+- 分配槽：未分配槽的主节点不可使用，使用脚本循环分配槽，否则工作量巨大：
     - bat脚本格式：`for /L %循环变量 in (起始值,变化值,终止值) do 命令`，可使用 `ehco %循环变量` 测试循环。
     - `for /L %i in (0,1,5461) do redis-cli -h 127.0.0.1 -p 7001 cluster addslots %i`：为7001分配槽0-5461。
     - `for /L %i in (5462,1,10922) do redis-cli -h 127.0.0.1 -p 7002 cluster addslots %i`：为7002分配槽5462-10922。
     - `for /L %i in (10923,1,16383) do redis-cli -h 127.0.0.1 -p 7003 cluster addslots %i`：为7003分配槽10923-16383。
-    - `redis-cli -p 7001 cluster slots`：查看7000的槽信息，以及主从配置信息。
-- 配置主从：3从1，4从2，5从3：
-    - `redis-cli -p 7000 cluster nodes`：展示所有节点，主要关注第一列的nodeId
-    - `redis-cli -p 7004 cluster replicate 7001的nodeId`
-    - `redis-cli -p 7005 cluster replicate 7002的nodeId`
-    - `redis-cli -p 7006 cluster replicate 7003的nodeId`
-    - `redis-cli -p 7000 cluster nodes`：展示所有节点，关注master到slave的改变
+    - `7001 > cluster slots`：查看7001的槽信息，以及主从配置信息。
+- 配置主从：1主4从，2主5从，6主3从：
+    - `7001 > cluster nodes`：展示所有节点，主要关注第一列的nodeId。
+    - `7004 > cluster replicate 7001的nodeId`：让7004称为7001的从节点。
+    - `7005 > cluster replicate 7002的nodeId`：让7005称为7002的从节点。
+    - `7006 > cluster replicate 7003的nodeId`：让7006称为7003的从节点。
+    - `7001 > cluster nodes`：展示所有节点，关注master到slave的改变
     - `redis-cli -c -p 7001`：`-c` 以集群模式连接时，可自动重定向到键对应槽位所在的节点并执行命令。
-    - `cluster keyslots money`：查看键 `money` 经过hash计算后的槽位。
     - `set money 100`，添加成功，观察到该变量被重定向的某节点的槽位中并存储。
-    - `redis-cli -c -p 7001`：`-c` 以集群模式连接时，可自动重定向到键对应槽位所在的节点并执行命令。
-    - `get money`：成功获取该变量。K
+    - `get money`：成功获取该变量。
 
-## ruby安装
+## 3.2 ruby安装
 
 **流程：**
 - 将redis根目录整体拷贝6份，视为6个redis实例，取名 `redis-7011` 到 `redis-7016`。
@@ -151,7 +118,7 @@
 - `redis-cli -c -p 7012`：`-c` 切换7012节点。
 - `get money`：成功获取该变量。
 
-## 集群扩容
+## 3.3 集群扩容
 
 **流程：** 集群伸缩指得就是槽和数据在节点之间的迁移，数据量越大，整个迁移过程比较慢，但不会影响程序正常运行：
 - 将redis根目录整体拷贝2份 `redis-7017` 和 `redis-7018`，预设1主1从，配置和其他节点一致，并分别粘贴一个 `redis-trib.rb`。
@@ -167,7 +134,7 @@
     - do you want to proceed with the porposed reshard plan：输入yes继续任务。
 - `redis-cli -p 7011 cluster nodes`：查看集群节点，发现7017有三段槽，分别来自于其他所有节点。
 
-## 集群收缩
+## 3.4 集群收缩
 
 **流程：** 删除7017和7018节点，为了避免触发故障转移，先删除从节点，后删除主节点：
 - `ruby redis-trib.rb reshard --from 7017的id --to 7011的id --slots 1366 127.0.0.1:7011` 数据迁移：
@@ -178,14 +145,14 @@
 - `ruby redis-trib.rb del-node 127.0.0.1:7017 7017的id`：将7017主节点从集群中删除。
 - `redis-cli -p 7011 cluster nodes`：查看集群节点，发现7018和7017已被移除集群。
 
-## 多节点操作
+## 3.5 多节点操作
 
 **流程：** 在分片集群模式下，`keys *` 命令仅能展示当前节点的全部key，若需要展示全部节点的key，则：
 - 开发测试方法 `c.j.s.jedis.JedisClusterTest.operateOnAllNodes()`：
     - `jedisCluster.getClusterNodes()`：获取所有的集群节点，包括从节点。
     - `jedis.info("replication")`：返回节点 `replication` 信息。
 
-## 故障转移
+## 3.6 故障转移
 
 **流程：** cluster集群内部实现了故障转移机制，无需使用sentinel：
 - 含槽主节点node-b通过ping/pong机制发现与node-a通信超时，对其标记主观下线 `pfail`。

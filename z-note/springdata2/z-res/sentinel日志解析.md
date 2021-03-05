@@ -1,6 +1,6 @@
 - 队长日志：
     - `+sdown master ..7007`：对7007标记主观下线：我觉得7007挂了。
-    - `+odown master ..7007 quorum 2/2`：对7007标记主观下线：有2两个sentinel觉得7007挂了，那它就是挂了。
+    - `+odown master ..7007 quorum 2/2`：对7007标记客观下线：有2两个sentinel觉得7007挂了，那它就是挂了。
     - `+try-failover`：尝试故障转移，只有一个sentinel执行故障转移操作。
     - `+vote-for-leader xxx 1`：投1票给xxx作为sentinel队长。
     - `+elected-leader`：当选队长。
