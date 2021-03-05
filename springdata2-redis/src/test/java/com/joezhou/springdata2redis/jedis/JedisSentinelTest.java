@@ -39,7 +39,7 @@ class JedisSentinelTest {
             }
 
             jedis.set("sentinel-key", "sentinel-val");
-            System.out.println(jedis.get("sentinel-key"));
+            System.out.println(jedis.get("sentinel-keyK"));
         } catch (Exception e) {
             e.printStackTrace();
         }
