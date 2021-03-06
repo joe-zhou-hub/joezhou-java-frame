@@ -48,70 +48,77 @@
 # 3. 分区集群
 
 **概念：** 分区集群主要为了分担redis服务器压力，集群仅能使用一个库db0：
-- redis默认采取虚拟槽方式进行分区，槽的数量的分配尽量均匀以免数据倾斜，从节点不带槽。
+- redis默认采取虚拟槽方式进行分区以，主节点之间可以互知槽范围，尽量均匀分配槽以免数据倾斜，从节点不带槽。
     - `z-res/数据分区方式.md`
-- 主节点之间可以互知槽范围以便于读数据时进行重定向操作。
 - 每个主节点都可读可写，从节点不可写，读时默认重定向到数据所在主节点后再读，若需直接在从节点读，需要每次连接从节点后先执行 `readonly` 命令再读。
 - 客户端访问一个节点时，若数在该节点中直接返回，若不在该节点中则该节点会返回数据在哪个节点中（不会帮你跳转），建议使用智能客户端，即客户端提前获知所有节点的槽范围，访问时直接访问到对应的节点以解决效率问题。
+- 每个redis实例的配置内容建议保持统一且定期检查一致性，以避免发生数据倾斜。
 
 ## 3.1 原生安装
 
-**流程：**
-- 开发节点信息 `cluster/7001~7006.conf`：端口号，工作目录，日志文件，RDB文件：
+**流程：** 主要为了学习底层流程，工作中不建议使用：
+- 开发配置文件 `cluster/7001~7006.conf`：配置端口号，工作目录，日志文件，RDB文件以及：
     - `cluster-enabled yes`：开启集群模式。
-    - `cluster-config-file nodes-7001.conf`：集群配置文件。
+    - `cluster-config-file nodes-7001.conf`：集群相关信息的配置文件。
     - `cluster-node-timeout 15000`：集群创建超时时间。
-    - `cluster-require-full-coverage no`：默认yes，表示当集群中有一个节点故障则整体不对外服务，建议改为no。
+    - `cluster-require-full-coverage no`：默认yes，表示当集群中有一个节点故障则整体不对外服务，建议关闭。
 - 将6个节点配置为windows服务并启动，以7001为例：
     - `redis-server --service-install cluster/7001.conf --service-name redis7001` 
     - `redis-server --service-start --service-name redis7001`
-- 连入某个节点查看集群信息：也可以直接查看 `nodes-7001.conf` 文件：
+- 在任一节点如7001查看集群信息：也可以直接查看 `nodes-7001.conf` 文件：
     - `7001 > cluster nodes`：查看7001的集群节点连接情况。
     - `7001 > cluster info`：查看7001的集群信息。
-- meet：使用其中一个节点如7001去meet其他5个节点，此时6个节点完成互通：
+- 用任一节点去meet其他5个节点，此时6个节点完成互通：
     - `7001 > cluster meet 127.0.0.1 7002~7006`：7001见面7002~7006。
-- 分配槽：未分配槽的主节点不可使用，使用脚本循环分配槽，否则工作量巨大：
-    - bat脚本格式：`for /L %循环变量 in (起始值,变化值,终止值) do 命令`，可使用 `ehco %循环变量` 测试循环。
-    - `for /L %i in (0,1,5461) do redis-cli -h 127.0.0.1 -p 7001 cluster addslots %i`：为7001分配槽0-5461。
-    - `for /L %i in (5462,1,10922) do redis-cli -h 127.0.0.1 -p 7002 cluster addslots %i`：为7002分配槽5462-10922。
-    - `for /L %i in (10923,1,16383) do redis-cli -h 127.0.0.1 -p 7003 cluster addslots %i`：为7003分配槽10923-16383。
-    - `7001 > cluster slots`：查看7001的槽信息，以及主从配置信息。
-- 配置主从：1主4从，2主5从，3主6从：
+- 为3个主节点分配槽，否则节点不可用，建议使用bat脚本循环为三个主节点分配槽以减少代码量：
+    - `for /L %循环变量 in (起始值,变化值,终止值) do 命令`：bat脚本格式。
+    - `for /L %i in (0,1,5461) do redis-cli -h 127.0.0.1 -p 7001 cluster addslots %i`
+    - `for /L %i in (5462,1,10922) do redis-cli -h 127.0.0.1 -p 7002 cluster addslots %i`
+    - `for /L %i in (10923,1,16383) do redis-cli -h 127.0.0.1 -p 7003 cluster addslots %i`
+- 在任一节点如7001查看槽信息和主从配置信息：
+    - `7001 > cluster slots`
+- 配置主从关系：7004从于7001，7005从于7002，7006从于7003：
     - `7001 > cluster nodes`：展示所有节点，主要关注第一列的nodeId。
-    - `7004 > cluster replicate 7001的nodeId`：让7004称为7001的从节点。
-    - `7005 > cluster replicate 7002的nodeId`：让7005称为7002的从节点。
-    - `7006 > cluster replicate 7003的nodeId`：让7006称为7003的从节点。
-    - `7001 > cluster nodes`：展示所有节点，关注master到slave的改变
-    - `redis-cli -c -p 7001`：`-c` 以集群模式连接时，可自动重定向到键对应槽位所在的节点并执行命令。
-    - `set money 100`，添加成功，观察到该变量被重定向的某节点的槽位中并存储。
-    - `get money`：成功获取该变量。
+    - `7004 > cluster replicate 7001的nodeId`
+    - `7005 > cluster replicate 7002的nodeId`
+    - `7006 > cluster replicate 7003的nodeId`
+- 在任一节点如7001查看集群节点信息：重点关注主从关系是否搭建成功：
+    - `7001 > cluster nodes`
+- 集群方式连接任一节点如7001并存储数据：`-c` 表示集群方式连接以自动重定向到key对应槽位所在的节点并执行命令：
+    - `redis-cli -c -p 7001`
+    - `7001 > set a 100`
+- 集群方式连接任一其他节点如7002获取在7001中存储的数据：
+    - `7002 > get a` 
 
 ## 3.2 ruby安装
 
 **流程：**
-- 将redis根目录整体拷贝6份，视为6个redis实例，取名 `redis-7011~7016`。
-- 分别在6个redis实例中添加配置文件 `7011~7016.conf`：端口，工作目录，日志文件，RDB文件，集群相关配置等。
-    - 配置文件尽量保持统一，且需要定期检查一致性，否则有可能发生数据倾斜。
-- 将6个redis实例配置为window服务。
-- 安装ruby：勾选后两项添加环境变量以及关联相关文件：
+- 将redis根目录整体拷贝6份，分别取名 `redis-7011~7016`，视为6个redis实例。
+- 在6个redis实例目录中开发配置文件 `7011~7016.conf`：配置端口，工作目录，日志，RDB文件，集群相关配置等：
+- 将6个节点配置为windows服务并启动，以7011为例：
+    - `redis-server --service-install 7011.conf --service-name redis7011`
+    - `redis-server --service-start --service-name redis7011`
+- 安装ruby：傻瓜式安装，配置项可勾选后两项，表示添加环境变量以及关联相关文件：
     - `z-res/rubyinstaller-2.2.4-x64.exe`
-- 下载 [ruby驱动](https://rubygems.org/gems/redis/versions)，选择3.2.1版本，并粘贴到ruby根目录中。
+- 下载 [ruby驱动](https://rubygems.org/gems/redis/versions)，选择3.2.1版本，并粘贴到ruby根目录中：
     - `z-res/redis-3.2.1.gem`
-- cmd: `ruby > gem install redis`：在ruby根目录中安装驱动。
-- 下载并安装集群脚本redis-trib.rb，该文件在redis源码的src文件夹中：
+- 在ruby根目录中安装驱动：
+    - `gem install redis`。
+- 将redis源码的src目录中的集群脚本 `redis-trib.rb` 分别拷贝到6个redis实例目录中：
     - `z-res/redis-win-3.2.100.zip`  
-- 将 redis-trib.rb 分别拷贝到6个redis实例中。
-- 启动6个redis实例。
-- 在任意一个redis实例的根目录中执行：`ruby redis-trib.rb create --replicas 1 127.0.0.1:7011 127.0.0.1:7012 127.0.0.1:7013 127.0.0.1:7014 127.0.0.1:7015 127.0.0.1:7016` 以使用该脚本搭建集群，数字1表示1主1从，0表示没有从节点。
-    - 出现 `Can I set the above configuration? (type 'yes' to accept)`: 观察集群和主从信息，输入yes回车。
-- 配置成功。
-- `7011 > cluster nodes`：展示所有节点，关注master到slave的改变。
-- `ruby redis-trib.rb info 127.0.0:7011`：在任意节点访问数据分布，槽分布和主从信息。
-- `ruby redis-trib.rb rebalance 127.0.0.1:7011`：在任意节点进行数据均衡，慎用。
-- `redis-cli -c -p 7011`：`-c` 表示以集群方式登录7011节点。
-- `set money 100`，添加成功，观察到该变量被重定向的某节点的槽位中并存储。
-- `redis-cli -c -p 7012`：`-c` 切换7012节点。
-- `get money`：成功获取该变量。
+- 在任一包含 `redis-trib.rb` 脚本的目录中搭建集群，数字1表示1主1从，0表示没有从节点：
+    - `7011 > ruby redis-trib.rb create --replicas 1 127.0.0.1:7011 127.0.0.1:7012 127.0.0.1:7013 127.0.0.1:7014 127.0.0.1:7015 127.0.0.1:7016` 
+    - 出现 `Can I set the above configuration? (type 'yes' to accept)` 时输入yes回车。
+- 在任一节点如7011查看集群信息，槽信息和主从关系：
+    - `7011 > cluster nodes`：
+- 在任一包含 `redis-trib.rb` 脚本的目录如7011中查看任一节点的数据分布，槽分布和主从信息：
+    - `ruby redis-trib.rb info 127.0.0.1:7011`
+- 在任一包含 `redis-trib.rb` 脚本的目录如7011中进行任一节点的数据均衡操作，线上慎用：
+    - `ruby redis-trib.rb rebalance 127.0.0.1:7011`
+- 以集群方式 `-c` 登录任一节点如7011并存储数据：
+    - `7011 > set a 100`
+- 以集群方式 `-c` 登录任一其他节点如7012获取在7011中存储的数据：
+    - `7012 > get a`
 
 ## 3.3 集群扩容
 
