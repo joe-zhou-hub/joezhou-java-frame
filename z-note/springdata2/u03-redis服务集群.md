@@ -69,30 +69,30 @@
     - `cluster-node-timeout 15000`：集群创建超时时间。
     - `cluster-require-full-coverage no`：默认yes，表示当集群中有一个节点故障则整体不对外服务，建议关闭。
 - 将6个节点配置为windows服务并启动，以7001为例：
-    - `redis-server --service-install cluster/7001.conf --service-name redis7001` 
-    - `redis-server --service-start --service-name redis7001`
+    - cmd: `redis-server --service-install cluster/7001.conf --service-name redis7001` 
+    - cmd: `redis-server --service-start --service-name redis7001`
 - 在任一节点如7001查看集群信息：也可以直接查看 `nodes-7001.conf` 文件：
-    - `7001 > cluster nodes`：查看7001的集群节点连接情况。
-    - `7001 > cluster info`：查看7001的集群信息。
+    - cmd: `7001 > cluster nodes`：查看7001的集群节点连接情况。
+    - cmd: `7001 > cluster info`：查看7001的集群信息。
 - 用任一节点去meet其他5个节点，此时6个节点完成互通：
-    - `7001 > cluster meet 127.0.0.1 7002~7006`：7001见面7002~7006。
+    - cmd: `7001 > cluster meet 127.0.0.1 7002~7006`：7001见面7002~7006。
 - 为3个主节点分配槽，否则节点不可用，建议使用bat脚本循环为三个主节点分配槽以减少代码量：
-    - `for /L %循环变量 in (起始值,变化值,终止值) do 命令`：bat脚本格式。
-    - `for /L %i in (0,1,5461) do redis-cli -h 127.0.0.1 -p 7001 cluster addslots %i`
-    - `for /L %i in (5462,1,10922) do redis-cli -h 127.0.0.1 -p 7002 cluster addslots %i`
-    - `for /L %i in (10923,1,16383) do redis-cli -h 127.0.0.1 -p 7003 cluster addslots %i`
+    - bat脚本格式：`for /L %循环变量 in (起始值,变化值,终止值) do 命令`
+    - cmd: `for /L %i in (0,1,5461) do redis-cli -h 127.0.0.1 -p 7001 cluster addslots %i`
+    - cmd: `for /L %i in (5462,1,10922) do redis-cli -h 127.0.0.1 -p 7002 cluster addslots %i`
+    - cmd: `for /L %i in (10923,1,16383) do redis-cli -h 127.0.0.1 -p 7003 cluster addslots %i`
 - 在任一节点如7001查看槽信息和主从配置信息：
-    - `7001 > cluster slots`
+    - cmd: `7001 > cluster slots`
 - 配置主从关系：7004从于7001，7005从于7002，7006从于7003：
-    - `7004/7005/7006 > cluster replicate 7001/7002/7003的nodeId`
+    - cmd: `7004/7005/7006 > cluster replicate 7001/7002/7003的nodeId`
 - 在任一节点如7001查看集群节点信息：重点关注主从关系是否搭建成功：
-    - `7001 > cluster nodes`
+    - cmd: `7001 > cluster nodes`
 - 集群方式连接任意两个节点并在集群中操作数据：
-    - `redis-cli -c -p 7001`：
+    - cmd: `redis-cli -c -p 7001`：
         - `-c` 表示集群方式连接以自动重定向到key对应槽位所在的节点并执行命令。
-    - `7001[-c] > set a 100`
-    - `redis-cli -c -p 7002`
-    - `7002[-c] > get a` 
+    - cmd: `7001[-c] > set a 100`
+    - cmd: `redis-cli -c -p 7002`
+    - cmd: `7002[-c] > get a` 
 - tst: `c.j.s.JedisClusterTest.jedisCluster()`：构建cluster连接池，获取连接，操作数据。
 
 ## 3.2 ruby安装
@@ -101,28 +101,28 @@
 - 将redis根目录整体拷贝6份，分别取名 `redis-7011~7016`，视为6个redis实例。
 - 在6个redis实例目录中开发配置文件 `7011~7016.conf`：配置端口，工作目录，日志，RDB文件，集群相关配置等：
 - 将6个节点配置为windows服务并启动，以7011为例：
-    - `redis-server --service-install 7011.conf --service-name redis7011`
-    - `redis-server --service-start --service-name redis7011`
+    - cmd: `redis-server --service-install 7011.conf --service-name redis7011`
+    - cmd: `redis-server --service-start --service-name redis7011`
 - 安装ruby：傻瓜式安装，配置项可勾选后两项，表示添加环境变量以及关联相关文件：
     - `z-res/rubyinstaller-2.2.4-x64.exe`
 - 下载 [ruby驱动](https://rubygems.org/gems/redis/versions)，选择3.2.1版本，并粘贴到ruby根目录中：
     - `z-res/redis-3.2.1.gem`
 - 在ruby根目录中安装驱动：
-    - `ruby > gem install redis`。
+    - cmd: `ruby > gem install redis`。
 - 将redis源码的src目录中的集群脚本 `redis-trib.rb` 分别拷贝到6个redis实例目录中：
     - `z-res/redis-win-3.2.100.zip`  
 - 在任一包含 `redis-trib.rb` 脚本的目录中搭建集群，数字1表示1主1从，0表示没有从节点：
-    - `7011 > ruby redis-trib.rb create --replicas 1 127.0.0.1:7011 127.0.0.1:7012 127.0.0.1:7013 127.0.0.1:7014 127.0.0.1:7015 127.0.0.1:7016` 
+    - cmd: `7011 > ruby redis-trib.rb create --replicas 1 127.0.0.1:7011 127.0.0.1:7012 127.0.0.1:7013 127.0.0.1:7014 127.0.0.1:7015 127.0.0.1:7016` 
     - `Can I set the above configuration? (type 'yes' to accept)`：输入yes回车。
 - 在任一节点如7011查看集群信息，槽信息和主从关系：
-    - `7011 > cluster nodes`：
+    - cmd: `7011 > cluster nodes`：
 - 在任一包含 `redis-trib.rb` 脚本的目录如7011中查看任一节点的数据分布，槽分布和主从信息：
-    - `7011 > ruby redis-trib.rb info 127.0.0.1:7011`
+    - cmd: `7011 > ruby redis-trib.rb info 127.0.0.1:7011`
 - 在任一包含 `redis-trib.rb` 脚本的目录如7011中进行任一节点的数据均衡操作，线上慎用：
-    - `7011> ruby redis-trib.rb rebalance 127.0.0.1:7011`
+    - cmd: `7011> ruby redis-trib.rb rebalance 127.0.0.1:7011`
 - 集群方式连接任意两个节点并在集群中操作数据：
-    - `7011[-c] > set a 100`
-    - `7012[-c] > get a`
+    - cmd: `7011[-c] > set a 100`
+    - cmd: `7012[-c] > get a`
 
 ## 3.3 集群扩容
 
