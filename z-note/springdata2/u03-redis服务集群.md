@@ -54,10 +54,6 @@
 - 每个主节点都可读可写，从节点不可写，读时默认重定向到数据所在主节点后再读，若需直接在从节点读，需要每次连接从节点后先执行 `readonly` 命令再读。
 - 客户端访问一个节点时，若数在该节点中直接返回，若不在该节点中则该节点会返回数据在哪个节点中（不会帮你跳转），建议使用智能客户端，即客户端提前获知所有节点的槽范围，访问时直接访问到对应的节点以解决效率问题。
 
-- cluster架构：node + meet + 指派槽 + 主从复制（不使用哨兵）
-    - cluster-enabled:yes：以集群方式启动
-    - node-a meet node b ：搭建ab节点互K通
-
 ## 3.1 原生安装
 
 **流程：**
@@ -93,26 +89,25 @@
 ## 3.2 ruby安装
 
 **流程：**
-- 将redis根目录整体拷贝6份，视为6个redis实例，取名 `redis-7011` 到 `redis-7016`。
-- 分别在6个redis实例中添加配置文件，取名 `7011.conf` 到 `7016.conf`。
-- 分别修改6个redis实例的配置，参考原生安装，节点配置文件尽量保持统一，且需要定期检查一致性，否则有可能发生数据倾斜。
+- 将redis根目录整体拷贝6份，视为6个redis实例，取名 `redis-7011~7016`。
+- 分别在6个redis实例中添加配置文件 `7011~7016.conf`：端口，工作目录，日志文件，RDB文件，集群相关配置等。
+    - 配置文件尽量保持统一，且需要定期检查一致性，否则有可能发生数据倾斜。
 - 将6个redis实例配置为window服务。
 - 安装ruby：勾选后两项添加环境变量以及关联相关文件：
     - `z-res/rubyinstaller-2.2.4-x64.exe`
-- 下载ruby驱动(https://rubygems.org/gems/redis/versions)，选择3.2.1版本，并粘贴到ruby根目录中。
+- 下载 [ruby驱动](https://rubygems.org/gems/redis/versions)，选择3.2.1版本，并粘贴到ruby根目录中。
     - `z-res/redis-3.2.1.gem`
-- 在ruby根目录中安装驱动：cmd: `gem install redis`
+- cmd: `ruby > gem install redis`：在ruby根目录中安装驱动。
 - 下载并安装集群脚本redis-trib.rb，该文件在redis源码的src文件夹中：
     - `z-res/redis-win-3.2.100.zip`  
-- 将 redis-trib.rb分别拷贝到6个redis实例中。
-- 启动6个redis实例：
-    - `redis-server --service-start --service-name redis7011`：启动7011节点
+- 将 redis-trib.rb 分别拷贝到6个redis实例中。
+- 启动6个redis实例。
 - 在任意一个redis实例的根目录中执行：`ruby redis-trib.rb create --replicas 1 127.0.0.1:7011 127.0.0.1:7012 127.0.0.1:7013 127.0.0.1:7014 127.0.0.1:7015 127.0.0.1:7016` 以使用该脚本搭建集群，数字1表示1主1从，0表示没有从节点。
-- 出现 Can I set the above configuration? (type 'yes' to accept): 观察集群和主从信息，输入yes，回车。
+    - 出现 `Can I set the above configuration? (type 'yes' to accept)`: 观察集群和主从信息，输入yes回车。
 - 配置成功。
-- `redis-cli -p 7011 cluster nodes`：展示所有节点，关注master到slave的改变
+- `7011 > cluster nodes`：展示所有节点，关注master到slave的改变。
 - `ruby redis-trib.rb info 127.0.0:7011`：在任意节点访问数据分布，槽分布和主从信息。
-- `ruby redis-trib.rb rebalance 127.0.0:7011`：在任意节点进行数据均衡，慎用。
+- `ruby redis-trib.rb rebalance 127.0.0.1:7011`：在任意节点进行数据均衡，慎用。
 - `redis-cli -c -p 7011`：`-c` 表示以集群方式登录7011节点。
 - `set money 100`，添加成功，观察到该变量被重定向的某节点的槽位中并存储。
 - `redis-cli -c -p 7012`：`-c` 切换7012节点。
