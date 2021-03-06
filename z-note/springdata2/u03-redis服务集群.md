@@ -26,23 +26,30 @@
 - 将3个节点配置为windows服务并启动，以7007为例：
     - `redis-server --service-install slave/7007.conf --service-name redis7007`
     - `redis-server --service-start --service-name redis7007`
-- `7008/7009 > slaveof 127.0.0.1 7007`：分别使7008和7009成为7007的从节点。
-- 开发哨兵配置文件 `27007/27008/27009.conf`：配置端口号，工作目录，日志：
+- 分别使7008和7009成为7007的从节点：
+    - `7008/7009 > slaveof 127.0.0.1 7007`
+- 开发sentinel配置文件 `27007/27008/27009.conf`：配置端口号，工作目录，日志：
     - `protected-mode no`：关闭保护模式，否则Jedis无法访问。
-    - `sentinel monitor my-master 127.0.0.1 7007 2`：监视以7007为master的主从结构，当累计超过2个主观下线标记时执行故障转移，sentinel支持同时监视多套主从结构，所需需要设置名称以区分。
+    - `sentinel monitor my-master 127.0.0.1 7007 2`：监视以7007为master的主从结构：
+        - `my-master`：sentinel支持同时监视多套主从结构，所以需要设置名称以区分。
+        - `2` 表示当累计超过2个主观下线标记时执行故障转移。
     - `sentinel down-after-milliseconds my-master 5000`：5秒内ping不通master或直接报错时标记主观下线。
     - `sentinel parallel-syncs my-master 1`：故障转移时最多1个节点同步新的master数据。
     - `sentinel failover-timeout my-master 15000`：故障转移超时时间为15秒。
-- 将3个哨兵节点部署为window服务并启动，以27007为例：哨兵节点需额外添加 `--sentinel` 参数：
-    - `redis-server --service-install sentinel/27007.conf --sentinel --service-name sentinel27007` 
+- 将3个sentinel部署为window服务并启动，以27007为例：
+    - `redis-server --service-install sentinel/27007.conf --sentinel --service-name sentinel27007`
+        - sentinel需额外添加 `--sentinel` 参数。
     - `redis-server --service-start --service-name sentinel27007`
 - 查看全部sentinel日志：生成哨兵ID，发现了全部slave，哨兵之间互相发现以保证高可用。
-- `27007/27008/27009 > info sentinel`：查看监视信息。
-- 手动下线7007，再查看任一sentinel的监视信息，会发现master发生变更。
+- 分别查看3个sentinel的监视信息：
+    - `27007/27008/27009 > info sentinel`
+- 手动下线7007，再次查看任一sentinel的监视信息：会发现master发生变更：
+    - `27007/27008/27009 > info sentinel`
 - 查看全部sentinel日志：假设27007为队长，27008/27009为队员：
     - `z-res/sentinel日志解析.md`
-- 重新上线7007，再查看任一sentinel的监视信息，会发现三个sentinel都删除了对7007的主观下线，且其中一个sentinel执行了 `+convert-to-slave` 将7007变更为当前master的slave。
-- 开发 `c.j.s.JedisSentinelTest`：
+- 重新上线7007，再次查看任一sentinel的监视信息：发现三个sentinel都删除了对7007的主观下线，且其中一个sentinel执行了 `+convert-to-slave` 将7007变更为当前master的slave：
+    - `27007/27008/27009 > info sentinel`
+- 开发测试方法 `c.j.s.JedisSentinelTest.jedisSentinel()`：测试sentinel模式下的Jedis连接：
     - `new JedisSentinelPool()` 构建哨兵连接池，需要参数主从名，哨兵地址端口的Set集合以及连接池配置实例。
 
 # 3. 分区集群
@@ -78,17 +85,17 @@
 - 在任一节点如7001查看槽信息和主从配置信息：
     - `7001 > cluster slots`
 - 配置主从关系：7004从于7001，7005从于7002，7006从于7003：
-    - `7001 > cluster nodes`：展示所有节点，主要关注第一列的nodeId。
     - `7004 > cluster replicate 7001的nodeId`
     - `7005 > cluster replicate 7002的nodeId`
     - `7006 > cluster replicate 7003的nodeId`
 - 在任一节点如7001查看集群节点信息：重点关注主从关系是否搭建成功：
     - `7001 > cluster nodes`
-- 集群方式连接任一节点如7001并存储数据：`-c` 表示集群方式连接以自动重定向到key对应槽位所在的节点并执行命令：
-    - `redis-cli -c -p 7001`
-    - `7001 > set a 100`
-- 集群方式连接任一其他节点如7002获取在7001中存储的数据：
-    - `7002 > get a` 
+- 集群方式连接任意两个节点并在集群中操作数据：
+    - `redis-cli -c -p 7001`：
+        - `-c` 表示集群方式连接以自动重定向到key对应槽位所在的节点并执行命令。
+    - `7001[-c] > set a 100`
+    - `redis-cli -c -p 7002`
+    - `7002[-c] > get a` 
 
 ## 3.2 ruby安装
 
@@ -103,22 +110,21 @@
 - 下载 [ruby驱动](https://rubygems.org/gems/redis/versions)，选择3.2.1版本，并粘贴到ruby根目录中：
     - `z-res/redis-3.2.1.gem`
 - 在ruby根目录中安装驱动：
-    - `gem install redis`。
+    - `ruby > gem install redis`。
 - 将redis源码的src目录中的集群脚本 `redis-trib.rb` 分别拷贝到6个redis实例目录中：
     - `z-res/redis-win-3.2.100.zip`  
 - 在任一包含 `redis-trib.rb` 脚本的目录中搭建集群，数字1表示1主1从，0表示没有从节点：
     - `7011 > ruby redis-trib.rb create --replicas 1 127.0.0.1:7011 127.0.0.1:7012 127.0.0.1:7013 127.0.0.1:7014 127.0.0.1:7015 127.0.0.1:7016` 
-    - 出现 `Can I set the above configuration? (type 'yes' to accept)` 时输入yes回车。
+    - `Can I set the above configuration? (type 'yes' to accept)`：输入yes回车。
 - 在任一节点如7011查看集群信息，槽信息和主从关系：
     - `7011 > cluster nodes`：
 - 在任一包含 `redis-trib.rb` 脚本的目录如7011中查看任一节点的数据分布，槽分布和主从信息：
-    - `ruby redis-trib.rb info 127.0.0.1:7011`
+    - `7011 > ruby redis-trib.rb info 127.0.0.1:7011`
 - 在任一包含 `redis-trib.rb` 脚本的目录如7011中进行任一节点的数据均衡操作，线上慎用：
-    - `ruby redis-trib.rb rebalance 127.0.0.1:7011`
-- 以集群方式 `-c` 登录任一节点如7011并存储数据：
-    - `7011 > set a 100`
-- 以集群方式 `-c` 登录任一其他节点如7012获取在7011中存储的数据：
-    - `7012 > get a`
+    - `7011> ruby redis-trib.rb rebalance 127.0.0.1:7011`
+- 集群方式连接任意两个节点并在集群中操作数据：
+    - `7011[-c] > set a 100`
+    - `7012[-c] > get a`
 
 ## 3.3 集群扩容
 
