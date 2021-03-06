@@ -24,10 +24,10 @@
 **概念：** sentinel哨兵无法操作数据，仅用于提升主从模型的高可用问题，建议搭建多个sentinel作为一个集群使用：
 - 开发配置文件 `7007/7008/7009.conf`：配置端口号，工作目录，日志，RDB文件。
 - 将3个节点配置为windows服务并启动，以7007为例：
-    - `redis-server --service-install slave/7007.conf --service-name redis7007`
-    - `redis-server --service-start --service-name redis7007`
+    - cmd: `redis-server --service-install slave/7007.conf --service-name redis7007`
+    - cmd: `redis-server --service-start --service-name redis7007`
 - 分别使7008和7009成为7007的从节点：
-    - `7008/7009 > slaveof 127.0.0.1 7007`
+    - cmd: `7008/7009 > slaveof 127.0.0.1 7007`
 - 开发sentinel配置文件 `27007/27008/27009.conf`：配置端口号，工作目录，日志：
     - `protected-mode no`：关闭保护模式，否则Jedis无法访问。
     - `sentinel monitor my-master 127.0.0.1 7007 2`：监视以7007为master的主从结构：
@@ -37,20 +37,19 @@
     - `sentinel parallel-syncs my-master 1`：故障转移时最多1个节点同步新的master数据。
     - `sentinel failover-timeout my-master 15000`：故障转移超时时间为15秒。
 - 将3个sentinel部署为window服务并启动，以27007为例：
-    - `redis-server --service-install sentinel/27007.conf --sentinel --service-name sentinel27007`
+    - cmd: `redis-server --service-install sentinel/27007.conf --sentinel --service-name sentinel27007`
         - sentinel需额外添加 `--sentinel` 参数。
-    - `redis-server --service-start --service-name sentinel27007`
+    - cmd: `redis-server --service-start --service-name sentinel27007`
 - 查看全部sentinel日志：生成哨兵ID，发现了全部slave，哨兵之间互相发现以保证高可用。
 - 分别查看3个sentinel的监视信息：
-    - `27007/27008/27009 > info sentinel`
+    - cmd: `27007/27008/27009 > info sentinel`
 - 手动下线7007，再次查看任一sentinel的监视信息：会发现master发生变更：
-    - `27007/27008/27009 > info sentinel`
+    - cmd: `27007/27008/27009 > info sentinel`
 - 查看全部sentinel日志：假设27007为队长，27008/27009为队员：
-    - `z-res/sentinel日志解析.md`
+    - cmd: `z-res/sentinel日志解析.md`
 - 重新上线7007，再次查看任一sentinel的监视信息：发现三个sentinel都删除了对7007的主观下线，且其中一个sentinel执行了 `+convert-to-slave` 将7007变更为当前master的slave：
-    - `27007/27008/27009 > info sentinel`
-- 开发测试方法 `c.j.s.JedisSentinelTest.jedisSentinel()`：测试sentinel模式下的Jedis连接：
-    - `new JedisSentinelPool()` 构建哨兵连接池，需要参数主从名，哨兵地址端口的Set集合以及连接池配置实例。
+    - cmd: `27007/27008/27009 > info sentinel`
+- tst: `c.j.s.JedisSentinelTest.jedisSentinel()`：构建sentinel连接池，获取连接，操作数据。
 
 # 3. 分区集群
 
@@ -85,9 +84,7 @@
 - 在任一节点如7001查看槽信息和主从配置信息：
     - `7001 > cluster slots`
 - 配置主从关系：7004从于7001，7005从于7002，7006从于7003：
-    - `7004 > cluster replicate 7001的nodeId`
-    - `7005 > cluster replicate 7002的nodeId`
-    - `7006 > cluster replicate 7003的nodeId`
+    - `7004/7005/7006 > cluster replicate 7001/7002/7003的nodeId`
 - 在任一节点如7001查看集群节点信息：重点关注主从关系是否搭建成功：
     - `7001 > cluster nodes`
 - 集群方式连接任意两个节点并在集群中操作数据：
@@ -96,6 +93,7 @@
     - `7001[-c] > set a 100`
     - `redis-cli -c -p 7002`
     - `7002[-c] > get a` 
+- tst: `c.j.s.JedisClusterTest.jedisCluster()`：构建cluster连接池，获取连接，操作数据。
 
 ## 3.2 ruby安装
 
