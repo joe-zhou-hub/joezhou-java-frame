@@ -95,6 +95,11 @@
     - cmd: `redis-cli -c -p 7002`
     - cmd: `7002[-c] > get a` 
 - tst: `c.j.s.JedisClusterTest.jedisCluster()`：构建cluster连接池，获取连接，操作数据。
+- tst: `c.j.s.jedis.JedisClusterTest.operateOnAllNodes()`：若需 `keys *` 类的命令能作用于全部节点：
+    - 获取集群中的全部节点，包括从节点：
+        - `jedisCluster.getClusterNodes()`
+    - 遍历并在每个主节点上进行 `keys *` 操作：    
+        - `jedis.info("replication")`：返回节点 `replication` 信息。’
 
 ## 3.2 ruby安装
 
@@ -152,16 +157,7 @@
     - 查看集群节点信息：7018和7017已被移除集群：
         - cmd: `7011 > cluster nodes`
 
-## 3.4 多节点操作
-
-**概念：** 在分区集群模式下，`keys *` 之类的命令仅能作用于当前节点，若需作用于全部节点，则：
-- tst: `c.j.s.jedis.JedisClusterTest.operateOnAllNodes()`：
-    - 获取集群中的全部节点，包括从节点：
-        - `jedisCluster.getClusterNodes()`
-    - 遍历并在每个主节点上进行 `keys *` 操作：    
-        - `jedis.info("replication")`：返回节点 `replication` 信息。
-
-## 3.5 故障转移
+## 3.4 故障转移
 
 **流程：** cluster集群内部实现了故障转移机制，无需使用sentinel：
 - 含槽主节点node-b通过ping/pong机制发现与node-a通信超时，对其标记主观下线 `pfail`。
