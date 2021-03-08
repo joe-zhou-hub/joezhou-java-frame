@@ -54,9 +54,10 @@
 # 3. 分区集群
 
 **概念：** 分区集群主要为了分担redis服务器压力，集群仅能使用一个库db0：
-- redis默认采取虚拟槽方式进行分区以，主节点之间可以互知槽范围，尽量均匀分配槽以免数据倾斜，从节点不带槽。
+- redis默认采取虚拟槽方式进行分区以，主节点之间可以互知槽范围，从节点不带槽。
     - `z-res/数据分区方式.md`
 - 保持数据不倾斜：
+    - 尽量对集群中的主节点均匀分配槽。
     - 在客户端提前获知所有节点的槽范围，访问时直接访问到对应的节点以解决效率问题。
     - 集群中每个节点的配置内容保持统一且定期检查一致性。
 
@@ -124,34 +125,34 @@
     - cmd: `7011[-c] > set a 100`
     - cmd: `7012[-c] > get a`
 
-## 3.3 集群扩容
+## 3.3 集群伸缩
 
-**流程：** 集群伸缩指得就是槽和数据在节点之间的迁移，数据量越大，整个迁移过程比较慢，但不会影响程序正常运行：
-- 将redis根目录整体拷贝2份 `redis-7017` 和 `redis-7018`，预设1主1从，配置和其他节点一致，并分别粘贴一个 `redis-trib.rb`。
-- 将2个新节点部署成windows服务并启动。
-- `redis-cli -p 7011 cluster meet 127.0.0.1 7017`：将7017节点加入集群。
-- `redis-cli -p 7011 cluster meet 127.0.0.1 7018`：将7018节点加入集群。
-- `redis-cli -p 7018 cluster replicate 7017的nodeId`：将7018配置为7017的从节点。
-- `redis-cli -p 7011 cluster nodes`：查看集群节点，发现7017和7018节点未分配槽，即无法读写数据。
-- `ruby redis-trib.rb reshard 127.0.0.1:7017`：
-    - how many slots do you want to move？给新ID总共分配 16384/4=4096 个槽
-    - what is the receiving node ID：输入7017节点ID，该节点用于接收槽数据。
-    - please enter all the source node IDs：输入all，表示所有节点都为新节点分配槽数据。
-    - do you want to proceed with the porposed reshard plan：输入yes继续任务。
-- `redis-cli -p 7011 cluster nodes`：查看集群节点，发现7017有三段槽，分别来自于其他所有节点。
+**流程：** 集群伸缩指得就是槽和数据在节点之间的迁移，数据量越大迁移过程越较慢，但不会影响程序正常运行：
+- 集群扩容：将redis根目录整体拷贝2份 `redis-7017~7018`，预设1主1从，配置和其他节点一致，并分别粘贴一个 `redis-trib.rb`：
+    - 将2个新节点部署成windows服务并启动，以7017为例：
+        - cmd: `redis-server --service-install 7017.conf --service-name redis7017`
+        - cmd: `redis-server --service-start --service-name redis7017`
+    - 将2个新节点加入到集群中：
+        - cmd: `7011 > cluster meet 127.0.0.1 7017/7018`
+    - 对2个新节点配置主从关系：将7018配置为7017的从节点：
+        - cmd: `7018 > cluster replicate 7017的nodeId`
+    - 对新的主节点入7017进行分配槽：
+        - cmd: `ruby redis-trib.rb reshard 127.0.0.1:7017`
+        - `how many slots do you want to move？`：给新ID总共分配16384/4=4096个槽。
+        - `what is the receiving node ID`：输入7017节点ID，该节点用于接收槽数据。
+        - `please enter all the source node IDs`：输入all，表示所有节点都为新节点分配槽数据，并生成计划。
+        - `do you want to proceed with the porposed reshard plan`：输入yes执行计划。
+    - 查看集群节点信息：7017的三段槽分别来自于其他所有节点：
+        - cmd: `7011 > cluster nodes`
+- 集群收缩：假设要删除7017/7018：
+    - 将7017的全部槽尽量平均迁移到7011/7012/7013，如对应迁移1366, 1365和1365个槽，以迁移到7011为例：
+        - cmd: `ruby redis-trib.rb reshard --from 7017的id --to 7011的id --slots 1366 127.0.0.1:7011`
+    - 从集群中删除7017/7018节点，为了避免触发故障转移，先删除从节点，后删除主节点，以7018为例：
+        - cmd: `ruby redis-trib.rb del-node 127.0.0.1:7018 7018的id`
+    - 查看集群节点信息：7018和7017已被移除集群：
+        - cmd: `7011 > cluster nodes`
 
-## 3.4 集群收缩
-
-**流程：** 删除7017和7018节点，为了避免触发故障转移，先删除从节点，后删除主节点：
-- `ruby redis-trib.rb reshard --from 7017的id --to 7011的id --slots 1366 127.0.0.1:7011` 数据迁移：
-    - 在任意节点如7011上执行，将7017的1366个槽迁到7011。
-    - 在任意节点如7011上执行，将7017的1365个槽迁到7012。
-    - 在任意节点如7011上执行，将7017的1365个槽迁到7013。
-- `ruby redis-trib.rb del-node 127.0.0.1:7018 7018的id`：将7018从节点从集群中删除。
-- `ruby redis-trib.rb del-node 127.0.0.1:7017 7017的id`：将7017主节点从集群中删除。
-- `redis-cli -p 7011 cluster nodes`：查看集群节点，发现7018和7017已被移除集群。
-
-## 3.5 多节点操作
+## 3.4 多节点操作
 
 **流程：** 在分片集群模式下，`keys *` 命令仅能展示当前节点的全部key，若需要展示全部节点的key，则：
 - 开发测试方法 `c.j.s.jedis.JedisClusterTest.operateOnAllNodes()`：
