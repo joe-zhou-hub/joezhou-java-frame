@@ -154,12 +154,14 @@
 
 ## 3.4 多节点操作
 
-**流程：** 在分区集群模式下，`keys *` 命令仅能展示当前节点的全部key，若需要展示全部节点的key，则：
+**概念：** 在分区集群模式下，`keys *` 之类的命令仅能作用于当前节点，若需作用于全部节点，则：
 - tst: `c.j.s.jedis.JedisClusterTest.operateOnAllNodes()`：
-    - `jedisCluster.getClusterNodes()`：获取所有的集群节点，包括从节点。
-    - `jedis.info("replication")`：返回节点 `replication` 信息。
+    - 获取集群中的全部节点，包括从节点：
+        - `jedisCluster.getClusterNodes()`
+    - 遍历并在每个主节点上进行 `keys *` 操作：    
+        - `jedis.info("replication")`：返回节点 `replication` 信息。
 
-## 3.6 故障转移
+## 3.5 故障转移
 
 **流程：** cluster集群内部实现了故障转移机制，无需使用sentinel：
 - 含槽主节点node-b通过ping/pong机制发现与node-a通信超时，对其标记主观下线 `pfail`。
