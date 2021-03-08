@@ -154,7 +154,7 @@
 
 ## 3.4 多节点操作
 
-**流程：** 在分片集群模式下，`keys *` 命令仅能展示当前节点的全部key，若需要展示全部节点的key，则：
+**流程：** 在分区集群模式下，`keys *` 命令仅能展示当前节点的全部key，若需要展示全部节点的key，则：
 - tst: `c.j.s.jedis.JedisClusterTest.operateOnAllNodes()`：
     - `jedisCluster.getClusterNodes()`：获取所有的集群节点，包括从节点。
     - `jedis.info("replication")`：返回节点 `replication` 信息。
