@@ -145,7 +145,7 @@
     - 查看集群节点信息：7017的三段槽分别来自于其他所有节点：
         - cmd: `7011 > cluster nodes`
 - 集群收缩：假设要删除7017/7018：
-    - 将7017的全部槽尽量平均迁移到7011/7012/7013，如对应迁移1366, 1365和1365个槽，以迁移到7011为例：
+    - 将7017的1366+1365+1365个槽尽量平均迁移到7011/7012/7013，以迁移到7011为例：
         - cmd: `ruby redis-trib.rb reshard --from 7017的id --to 7011的id --slots 1366 127.0.0.1:7011`
     - 从集群中删除7017/7018节点，为了避免触发故障转移，先删除从节点，后删除主节点，以7018为例：
         - cmd: `ruby redis-trib.rb del-node 127.0.0.1:7018 7018的id`
@@ -155,7 +155,7 @@
 ## 3.4 多节点操作
 
 **流程：** 在分片集群模式下，`keys *` 命令仅能展示当前节点的全部key，若需要展示全部节点的key，则：
-- 开发测试方法 `c.j.s.jedis.JedisClusterTest.operateOnAllNodes()`：
+- tst: `c.j.s.jedis.JedisClusterTest.operateOnAllNodes()`：
     - `jedisCluster.getClusterNodes()`：获取所有的集群节点，包括从节点。
     - `jedis.info("replication")`：返回节点 `replication` 信息。
 
