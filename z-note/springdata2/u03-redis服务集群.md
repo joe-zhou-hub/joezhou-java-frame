@@ -160,16 +160,16 @@
 ## 3.4 故障转移
 
 **流程：** cluster集群内部实现了故障转移机制，无需使用sentinel：
-- 含槽主节点node-b通过ping/pong机制发现与node-a通信超时，对其标记主观下线 `pfail`。
-- 含槽主节点node-c通过ping/pong机制发现与node-a通信超时，对其标记主观下线 `pfail`。
-- 当半数以上含槽主节点都对node-a标记了 `pfail` 时，主观下线升级为客观下线，并向集群广播。
-- 所有node-a的从节点准备选举，但与node-a很久不联系的从节点没有选举资格：
-    - 与主节点最后一次通信时间超过 `cluster-node-timeout * cluster-slave-validity-factor` 时丧失资格。
-- 所有其他主节点对node-a的所有从节点投票，与node-a最后通信时间越靠前的优先级越高。
-- 从节点选举成功，执行 `slave no one` 抛弃从节点身份。
-- 执行 `clusterDelSlots` 命令将node-a的槽清空。
-- 执行 `clusterAddSlots` 命令将node-a的槽重新分配给新的主节点，并向集群广播。
-- 开发测试方法 `c.j.s.jedis.JedisClusterTest.failover()`：
-    - 连入集群并利用循环每隔1秒钟向集群发送指令。
-    - 下线主节点如 `redis7011`，查看节点选举和故障转移情况。
-    - 恢复主节点如 `redis7011`，查看节点选举和故障转移情况。
+- 带槽主节点master-b通过ping/pong机制发现与master-a通信超时或直接返回失败，对其标记主观下线 `pfail`。
+- 带槽主节点master-c通过ping/pong机制发现与master-a通信超时或直接返回失败，对其标记主观下线 `pfail`。
+- 当半数以上带槽主节点都对master-a标记了 `pfail` 时，主观下线升级为客观下线，并向集群广播。
+- 所有master-a的slave准备选举，但与master-a很久不联系的slave没有选举资格：
+    - 与master最后一次通信时间超过 `cluster-node-timeout * cluster-slave-validity-factor` 时丧失资格。
+- 所有其他主节点对master-a的所有slave投票，与master-a最后通信时间越靠前的优先级越高。
+- slave选举成功，执行 `slave no one` 抛弃slave身份。
+- 执行 `clusterDelSlots` 命令将master-a的槽清空。
+- 执行 `clusterAddSlots` 命令将master-a的槽重新分配给新的主节点，并向集群广播。
+- tst: `c.j.s.jedis.JedisClusterTest.failover()`：
+    - 连入集群并利用循环每隔1秒钟向集群发送setex命令。
+    - 下线集群中的某master，如7011，查看节点选举和故障转移情况。
+    - 恢复集群中的某master，如7011，查看节点选举和故障转移情况。
