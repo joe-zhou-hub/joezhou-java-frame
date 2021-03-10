@@ -54,7 +54,6 @@ class JedisClusterTest {
         }
     }
 
-
     @Test
     void failover() {
         init();
