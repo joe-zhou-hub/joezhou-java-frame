@@ -2,6 +2,7 @@ package com.joezhou.springdata2redis.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.JedisCluster;
@@ -13,26 +14,26 @@ import java.util.Set;
 /**
  * @author JoeZhou
  */
-/*@Configuration*/
-@PropertySource({"classpath:jedis-pool.properties", "classpath:jedis-cluster.properties"})
+@Configuration
+@PropertySource("classpath:jedis.properties")
 public class JedisClusterConfig {
 
-    @Value("${spring.redis.cluster.nodes}")
+    @Value("${cluster.nodes}")
     private String clusterNodes;
 
     @Value("${spring.redis.timeout}")
     private int timeout;
 
-    @Value("${spring.redis.jedis.pool.max-idle}")
+    @Value("${pool.max-idle}")
     private int maxIdle;
 
-    @Value("${spring.redis.jedis.pool.min-idle}")
+    @Value("${pool.min-idle}")
     private int minIdle;
 
-    @Value("${spring.redis.jedis.pool.max-active}")
+    @Value("${pool.max-active}")
     private int maxActive;
 
-    @Value("${spring.redis.jedis.pool.max-wait}")
+    @Value("${pool.max-wait}")
     private long maxWait;
 
     @Bean

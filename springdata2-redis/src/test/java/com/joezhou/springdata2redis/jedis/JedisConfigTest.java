@@ -34,20 +34,20 @@ class JedisConfigTest {
     }
 
     @Test
-    void jedisCluster() {
-        try {
-            jedisCluster.setex("name", 5, "100");
-            System.out.println(jedisCluster.get("name"));
+    void jedisSentinelPool() {
+        try (Jedis jedis = jedisSentinelPool.getResource()) {
+            jedis.setex("name", 5, "100");
+            System.out.println(jedis.get("name"));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Test
-    void jedisSentinelPool() {
-        try (Jedis jedis = jedisSentinelPool.getResource()) {
-            jedis.setex("name", 5, "100");
-            System.out.println(jedis.get("name"));
+    void jedisCluster() {
+        try {
+            jedisCluster.setex("name", 5, "100");
+            System.out.println(jedisCluster.get("name"));
         } catch (Exception e) {
             e.printStackTrace();
         }
