@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisSentinelPool;
 
 /**
  * @author JoeZhou
@@ -19,6 +20,8 @@ class JedisConfigTest {
     @Autowired
     private JedisCluster jedisCluster;
 
+    @Autowired
+    private JedisSentinelPool jedisSentinelPool;
 
     @Test
     void jedisPool() {
@@ -35,6 +38,16 @@ class JedisConfigTest {
         try {
             jedisCluster.setex("name", 5, "100");
             System.out.println(jedisCluster.get("name"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void jedisSentinelPool() {
+        try (Jedis jedis = jedisSentinelPool.getResource()) {
+            jedis.setex("name", 5, "100");
+            System.out.println(jedis.get("name"));
         } catch (Exception e) {
             e.printStackTrace();
         }

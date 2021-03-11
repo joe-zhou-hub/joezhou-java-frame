@@ -14,8 +14,19 @@
     - `max-wait=10000`：连接池最大阻塞等待时间，单位毫秒，负值表示无限制。
 - 开发 `classpath:jedis-cluster.properties`：配置集群列表，以 `spring.redis` 为前缀：
     - `cluster.nodes=127.0.0.1:7011,127.0.0.1:7012...`
-- 开发 `classpath:jedis-sentinel.properties`：配置哨兵列表，以 `spring.redis` 为前缀：
-    - `sentinel.nodes=127.0.0.1:27011,127.0.0.1:27012...`
+- 开发 `c.j.s.config.JedisClusterConfig`：
+    - 标记 `@Configuration` 使其成为配置类。
+    - 使用 `@PropertySource()` 引入集群列表及Jedis连接池属性文件。
+    - 使用 `@Value` 将属性文件中的值注入类属性变量。
+    - 配置 `r.c.j.JedisCluster` 对应的bean。
+- 开发 `classpath:jedis-sentinel.properties`：配置哨兵列表即监控的主从结构名，以 `spring.redis` 为前缀：
+    - `sentinel.nodes=127.0.0.1:27001,127.0.0.1:27002...`
+    - `sentinel.master=my-master`
+- 开发 `c.j.s.config.JedisSentinelConfig`：
+    - 标记 `@Configuration` 使其成为配置类。
+    - 使用 `@PropertySource()` 引入哨兵列表及Jedis连接池属性文件。
+    - 使用 `@Value` 将属性文件中的值注入类属性变量。
+    - 配置 `r.c.j.JedisSentinelPool` 对应的bean。
 - tst: `c.j.s.jedis.JedisConfigTest`：
     - `jedisPool()`：注入 `r.c.j.JedisPool` 以获取Jedis连接并操作数据。
     - `jedisCluster()`：注入 `r.c.j.JedisCluster` 以操作集群数据。
