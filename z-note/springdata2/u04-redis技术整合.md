@@ -55,26 +55,21 @@
 
 **概念：** `StringRedisTemplate` 是Jedis的高度封装，相比Jedis而言，可以更方便地更换redis的java客户端，且多了自动管理连接池的特性，但是它的效率要低于Jedis：
 - 引入 `spring-boot-starter-data-redis` 依赖。
-- 开发 `classpath:lettuce-pool.properties`：配置lettuce连接池，均以 `redis.lettuce.pool` 为前缀：
-    - `max-active=1024`：连接池最大连接数，负值表示无限制。
-    - `max-idle=200`：连接池中的最大空闲连接数，默认值是8，负值表示无限制。
-    - `min-idle=0`：连接池中的最小空闲连接数，默认值是0，负值表示无限制。
-    - `max-wait=10000`：连接池最大阻塞等待时间，单位毫秒，负值表示永不超时。
-- 在主配中配置redis：均以 `redis` 为前缀：
+- 在主配中配置redis：均以 `spring.redis` 为前缀：
     - `database=0`：使用redis中的数据库索引，默认使用0号。
-	- `host=127.0.0.1`：单机redis-server的主机地址，默认127.0.0.1，对外开放使用0.0.0.0。
-	- `port=6380`：单机redis-server的端口，默认6379
-	- `timeout=3000`：连接超时时间，单位毫秒。
-	- `password=1234`：redis-server的认证密码，默认为空。
-
-RedisController.java测试
-
-
-
-stringRedisTemplate.opsForValue();//操作字符串
-stringRedisTemplate.opsForHash();//操作hash
-stringRedisTemplate.opsForList();//操作list
-stringRedisTemplate.opsForSet();//操作set
-stringRedisTemplate.opsForZSet();//操作有序set
+    - `host=127.0.0.1`：单机redis-server的主机地址，默认127.0.0.1，对外开放使用0.0.0.0。
+    - `port=6379`：单机redis-server的端口，默认6379
+    - `timeout=3000`：连接超时时间，单位毫秒。
+    - `lettuce.pool.max-active=1024`：连接池最大连接数，负值表示无限制。
+    - `lettuce.pool.max-idle=200`：连接池中的最大空闲连接数，默认值是8，负值表示无限制。
+    - `lettuce.pool.min-idle=0`：连接池中的最小空闲连接数，默认值是0，负值表示无限制。
+    - `lettuce.pool.max-wait=10000`：连接池最大阻塞等待时间，单位毫秒，负值表示永不超时。
+- tst: `c.j.s.template.StringRedisTemplateTest`：
+    - 注入 `o.s.d.r.c.StringRedisTemplate`，直接操作集群数据。 
+    - `stringRedisTemplate.opsForValue()` 对象用于操作字符串。
+    - `stringRedisTemplate.opsForHash()` 对象用于操作hash。
+    - `stringRedisTemplate.opsForList()` 对象用于操作list。
+    - `stringRedisTemplate.opsForSet()` 对象用于操作set。
+    - `stringRedisTemplate.opsForZSet()` 对象用于操作sorted set。
 
 
