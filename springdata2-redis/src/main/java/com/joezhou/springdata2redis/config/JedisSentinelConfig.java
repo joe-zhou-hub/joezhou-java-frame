@@ -23,6 +23,9 @@ public class JedisSentinelConfig {
     @Value("${spring.redis.sentinel.master}")
     private String master;
 
+    @Value("${spring.redis.timeout}")
+    private String timeout;
+
     @Value("${spring.redis.jedis.pool.max-idle}")
     private int maxIdle;
 
@@ -46,6 +49,6 @@ public class JedisSentinelConfig {
 
         String[] servers = sentinelNodes.split(",");
         Set<String> sentinels = new HashSet<>(Arrays.asList(servers));
-        return new JedisSentinelPool(master, sentinels, jedisPoolConfig);
+        return new JedisSentinelPool(master, sentinels, jedisPoolConfig, timeout);
     }
 }
