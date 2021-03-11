@@ -2,7 +2,6 @@ package com.joezhou.springdata2redis.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.JedisCluster;
@@ -14,7 +13,7 @@ import java.util.Set;
 /**
  * @author JoeZhou
  */
-@Configuration
+/*@Configuration*/
 @PropertySource({"classpath:jedis-pool.properties", "classpath:jedis-cluster.properties"})
 public class JedisClusterConfig {
 

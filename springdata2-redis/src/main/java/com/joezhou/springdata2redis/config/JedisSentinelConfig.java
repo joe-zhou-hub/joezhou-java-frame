@@ -2,9 +2,9 @@ package com.joezhou.springdata2redis.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import redis.clients.jedis.*;
+import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.JedisSentinelPool;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * @author JoeZhou
  */
-@Configuration
+/*@Configuration*/
 @PropertySource({"classpath:jedis-pool.properties", "classpath:jedis-sentinel.properties"})
 public class JedisSentinelConfig {
 
