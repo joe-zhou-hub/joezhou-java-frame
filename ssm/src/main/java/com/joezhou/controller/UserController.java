@@ -28,7 +28,6 @@ public class UserController {
     public JsonData paging(Integer pageNum, Integer pageSize) {
         PageInfo<User> users = userService.paging(pageNum, pageSize);
         return new JsonData(users);
-
     }
 
     @ResponseBody

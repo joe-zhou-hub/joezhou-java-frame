@@ -1,4 +1,4 @@
-package com.joezhou.springboot2jwt.jwt;
+package com.joezhou.springboot2jwt.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@interface TokenAuth {
+public @interface TokenAuth {
 }

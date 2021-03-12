@@ -1,5 +1,7 @@
-package com.joezhou.springboot2jwt.jwt;
+package com.joezhou.springboot2jwt.service.impl;
 
+import com.joezhou.springboot2jwt.entity.User;
+import com.joezhou.springboot2jwt.service.UserService;
 import org.springframework.stereotype.Service;
 
 /**

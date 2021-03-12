@@ -1,7 +1,9 @@
-package com.joezhou.springboot2jwt.jwt;
+package com.joezhou.springboot2jwt.controller;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
+import com.joezhou.springboot2jwt.annotation.TokenAuth;
+import com.joezhou.springboot2jwt.entity.User;
+import com.joezhou.springboot2jwt.service.UserService;
+import com.joezhou.springboot2jwt.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author JoeZhou
  */
 @RestController
-@RequestMapping("/api/jwt")
+@RequestMapping("/api/user")
 public class UserController {
 
     private UserService userService;
@@ -24,13 +26,7 @@ public class UserController {
     public String login(User user) {
         User userFromDb = userService.login(user);
         if (userFromDb != null) {
-            String secretKey = userFromDb.getPassword();
-            return JWT.create()
-                    .withClaim("username", userFromDb.getUsername())
-                    .withClaim("password", secretKey)
-                    .withClaim("avatar", userFromDb.getAvatar())
-                    .withIssuer("JoeZhou")
-                    .sign(Algorithm.HMAC256(secretKey));
+            return TokenUtil.build(userFromDb);
         }
         return "login fail...";
     }

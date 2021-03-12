@@ -1,4 +1,6 @@
-package com.joezhou.springboot2jwt.jwt;
+package com.joezhou.springboot2jwt.service;
+
+import com.joezhou.springboot2jwt.entity.User;
 
 /**
  * @author JoeZhou

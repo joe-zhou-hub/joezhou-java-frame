@@ -1,6 +1,6 @@
-package com.joezhou.springboot2jwt.jwt;
+package com.joezhou.springboot2jwt.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.joezhou.springboot2jwt.interceptor.AuthInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -11,16 +11,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class AuthInterceptorConfig implements WebMvcConfigurer {
 
-    private UserService userService;
-
-    @Autowired
-    public AuthInterceptorConfig(UserService userService) {
-        this.userService = userService;
-    }
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new AuthInterceptor(userService))
-                .addPathPatterns("/**");
+        registry.addInterceptor(new AuthInterceptor())
+                .addPathPatterns("/api/**")
+                .excludePathPatterns("/api/user/login");
     }
 }

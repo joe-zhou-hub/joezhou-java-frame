@@ -1,4 +1,4 @@
-package com.joezhou.springboot2jwt.jwt;
+package com.joezhou.springboot2jwt.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
