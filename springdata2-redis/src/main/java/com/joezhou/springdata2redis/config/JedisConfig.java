@@ -11,31 +11,31 @@ import redis.clients.jedis.JedisPoolConfig;
  * @author JoeZhou
  */
 @Configuration
-@PropertySource("classpath:jedis-pool.properties")
+@PropertySource("classpath:jedis.properties")
 public class JedisConfig {
 
-    @Value("${spring.redis.host}")
+    @Value("${redis.host}")
     private String host;
 
-    @Value("${spring.redis.port}")
+    @Value("${redis.port}")
     private int port;
 
-    @Value("${spring.redis.timeout}")
+    @Value("${redis.timeout}")
     private int timeout;
 
-    @Value("${spring.redis.password}")
+    @Value("${redis.password}")
     private String password;
 
-    @Value("${spring.redis.jedis.pool.max-idle}")
+    @Value("${pool.max-idle}")
     private int maxIdle;
 
-    @Value("${spring.redis.jedis.pool.min-idle}")
+    @Value("${pool.min-idle}")
     private int minIdle;
 
-    @Value("${spring.redis.jedis.pool.max-active}")
+    @Value("${pool.max-active}")
     private int maxActive;
 
-    @Value("${spring.redis.jedis.pool.max-wait}")
+    @Value("${pool.max-wait}")
     private long maxWait;
 
     @Bean

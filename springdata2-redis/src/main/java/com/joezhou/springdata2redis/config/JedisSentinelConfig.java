@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import redis.clients.jedis.HostAndPort;
-import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.JedisSentinelPool;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,10 +16,13 @@ import java.util.Set;
  */
 @Configuration
 @PropertySource("classpath:jedis.properties")
-public class JedisClusterConfig {
+public class JedisSentinelConfig {
 
-    @Value("${cluster.nodes}")
-    private String clusterNodes;
+    @Value("${sentinel.nodes}")
+    private String sentinelNodes;
+
+    @Value("${sentinel.master}")
+    private String master;
 
     @Value("${spring.redis.timeout}")
     private int timeout;
@@ -37,7 +40,7 @@ public class JedisClusterConfig {
     private long maxWait;
 
     @Bean
-    public JedisCluster jedisCluster() {
+    public JedisSentinelPool jedisSentinelPool() {
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
         jedisPoolConfig.setMaxIdle(maxIdle);
         jedisPoolConfig.setMinIdle(minIdle);
@@ -45,13 +48,8 @@ public class JedisClusterConfig {
         jedisPoolConfig.setMaxWaitMillis(maxWait);
         jedisPoolConfig.setJmxEnabled(true);
 
-        Set<HostAndPort> nodes = new HashSet<>();
-        // [[0.0.0.0, 7011], 0.0.0.0:7012, 0.0.0.0:7013, 0.0.0.0:7014, 0.0.0.0:7015, 0.0.0.0:7016]
-        String[] servers = clusterNodes.split(",");
-        for (String server : servers) {
-            String[] kv = server.split(":");
-            nodes.add(new HostAndPort(kv[0].trim(), Integer.parseInt(kv[1])));
-        }
-        return new JedisCluster(nodes, timeout, jedisPoolConfig);
+        String[] servers = sentinelNodes.split(",");
+        Set<String> sentinels = new HashSet<>(Arrays.asList(servers));
+        return new JedisSentinelPool(master, sentinels, jedisPoolConfig, timeout);
     }
 }
