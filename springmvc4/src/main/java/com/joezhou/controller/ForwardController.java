@@ -1,7 +1,7 @@
 package com.joezhou.controller;
 
 import com.joezhou.pojo.Student;
-import com.joezhou.util.JsonData;
+import com.joezhou.util.JsonUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -62,7 +62,7 @@ public class ForwardController {
 
     @ResponseBody
     @RequestMapping("response-body-json")
-    public JsonData responseBodyJson() {
+    public String responseBodyJson() {
         System.out.println("responseBodyJson()...");
         List<Student> students = new ArrayList<>();
 
@@ -77,7 +77,7 @@ public class ForwardController {
 
         students.add(zhaosi);
         students.add(liuneng);
-        return new JsonData(students);
+        return JsonUtil.build(students);
     }
 
     @ResponseBody
