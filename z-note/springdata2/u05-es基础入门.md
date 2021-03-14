@@ -90,7 +90,7 @@
 - `put > localhost:9200/index_a/user/1`：
     - `{"id": 1, "name": "zhao si", "gender": "male", "age": 58, "about": "亚洲四小龙 亚洲舞王"}`
 - `put > localhost:9200/index_a/user/2`：
-    - `{"id": 2, "name": "liu neng", "gender": "male", "age": 59, "about": "亚洲四小龙 村副主任"}`
+    - `{"id": 2, "name": "liu neng", "gender": "male", "age": 58, "about": "亚洲四小龙 村副主任"}`
 - `put > localhost:9200/index_a/user/3`：
     - `{"id": 3, "name": "xie da jiao", "gender": "female", "age": 18, "about": "大脚超市市长 大众情人"}`
 - `put > localhost:9200/index_a/user/4`：
@@ -111,50 +111,29 @@
     - `hits/total`：整体命中情况：
     - `hits/total/value`：整体命中了多少个文档。
     - `hits/total/relation`：命中关系，`eq` 表示相等。
-    - `hits/max_score`：命中匹配度最高分。
+    - `hits/max_score`：命中匹配度最高分，值越大表示匹配度越高。
     - `hits/hits`：具体命中的文档数组。
 
-## 3.1 文档条件查询
+## 3.2 条件查询
 
-> 需求：查询索引 `index_a` 中所有 `name` 值按空格拆分后包含 `xie da` 的文档数据。
+**概念：** 带空格的查询条件会进行拆分检索，如使用 `a b` 为条件时，包含 `a` 或 `b` 的值都会被检索出来：
+- 使用查询串：ES查询串格式为 `?q=属性名:属性值`，方式简单但局限性大：
+    - `get > localhost:9200/index_c/user/_search?q=name:xie da`
+- 使用领域特定语言DSL，即在请求体中添加额外检索条件限定：
+    - `"query": {"match": {"name": "xie da"}}`：检索name属性中包含 `xie` 或 `da` 的所有文档：
+        - `"match_all": {}` 表示全查。
+    - `"sort":[{"age": "desc"}, {"name.keyword": "desc"}]`：对结果集按年龄降序，再按姓名降序：
+        - 尽量只使用数字进行排序，如果非要对字符串排序，用 `name.keyword` 替换 `name`。
+    - `"from": 0`：从第0条文档开始检索。
+    - `"size": 3`：总计检索3条文档。
 
-**概念：** 查询条件的值如果带空格，则会被按照空格拆分成N个部分，然后用每个部分进行检索，所以 `xie da` 的查询结果中，名字中包含 `xie` 和 `da` 的都会被检索出来，且条件查询的结果会包含一个 `_score` 属性，表示匹配得分，得分越高匹配度越高：
-- 使用查询串：ES查询串格式为 `?q=属性名:属性值`，方式简单但是局限性太大。
-    - `get > localhost:9200/my-index/_doc/_search?q=name:xie da`
-- 使用DSL语言：DSL语言被称为领域特定语言，就是在请求体中做出的额外检索条件限定：
-    - `match`：负责进行数据匹配。
-    - `sort`：负责对结果集进行排序，注意，尽量只使用数字进行排序，如果非要对字符串排序，用 `name.keyword` 替换 `name`。
-    - `from`：从第0条文档开始检索。
-    - `size`：总计检索11条文档。
-
-**测试：** `GET localhost:9200/my-index/_doc/_search`
-```json
-{
-    "query" : {"match" : {"name" : "xie da"}},
-    "sort": [{"age": "desc"}],
-    "from": 0,
-    "size": 11
-}
-```
-
-> `match_all` 表示全查。
-
-# 3.  文档短语查询
+## 3.3  短语查询
 
 **概念：** 条件查询中 `xie da` 的查询结果包括 `xie da jiao` 和 `xie guang kun` 两个，如果不想按空格拆分，而是 `xie da` 当成一个不可拆分的短语，则可以将 `match` 替换为 `match_phrase`，此时你将只能命中 `xie da jiao`，而无法命中 `xie guang kun`。
+- psm: `GET localhost:9200/my-index/_doc/_search`
+    - `"query": {"match_phrase": {"name": "xie da"}}`
 
-**测试：** `GET localhost:9200/my-index/_doc/_search`
-```json
-{
-    "query" : {
-        "match_phrase" : {
-            "name" : "xie da"
-        }
-    }
-}
-```
-
-# 4.  文档高亮查询
+## 3.4  文档高亮查询
 
 **概念：** 在ES中检索出高亮片段很容易，只需要添加一个 `highlight` 值并且指定高亮内容即可，高亮的效果可以使用 `pre_tags` 和 `post_tags` 自定义，如果不指定这两个属性，则内容最以 `<em></em>` 进行修饰。
 
