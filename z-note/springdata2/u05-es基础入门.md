@@ -83,100 +83,47 @@
 - 删除文档：删除索引 `index_a` 中id为1和2的文档数据：
     - cmd: `curl -XDELETE localhost:9200/index_a/user/1?pretty`
     - psm: `delete > localhost:9200/index_a/user/2`
+- 全文检索：查询索引 `index_a` 中的所有文档数据，一次查询默认返回10条文档数据：
+    - cmd: `curl -XGET localhost:9200/index_a/user/_search?pretty`
+    - psm: `get > localhost:9200/index_a/user/_search` 可以
+    - `took`：本次检索耗时，单位毫秒。
+    - `timed_out`：本次检索是否超时。
+    - `_shards`：本次检索的分片情况： 
+    - `_shards/total`：一共检索了多少个分片。
+    - `_shards/successful`：成功了多少个分片。
+    - `_shards/skipped`：跳过了多少个分片。
+    - `_shards/failed`：失败了多少个分片。
+    - `hits`：本次检索命中情况：
+    - `hits/total`：整体命中情况：
+    - `hits/total/value`：整体命中了多少个文档。
+    - `hits/total/relation`：命中关系，`eq` 表示相等。
+    - `hits/max_score`：命中匹配度最高分。
+    - `hits/hits`：具体命中的文档数组。
 
-# 3. 全文检索
+# 3. REST高级查询
 
-**概念：** 使用 `GET localhost:9200/my-index/_doc/_search` 可以查询索引 `my-index` 中的所有文档，一次查询默认返回10条数据：
-- `took`：本次检索耗时，单位毫秒。
-- `timed_out`：本次检索是否超时。
-- `_shards`：本次检索的分片情况： 
-    - `total`：一共检索了多少个分片。
-    - `successful`：成功了多少个分片。
-    - `skipped`：跳过了多少个分片。
-    - `failed`：失败了多少个分片。
-- `hits`：本次检索命中情况：
-    - `total`：整体命中情况：
-        - `value`：整体命中了多少个文档。
-        - `relation`：命中关系，`eq` 表示相等。
-- `max_score`：命中匹配度最高分。
-- `timed_out`：本次检索是否超时。
+**概念：** 利用postman向 `index_a` 中添加如下数据，以便测试高级查询： 
+- `put > localhost:9200/index_a/user/1`：
+    - `{"id": 1, "name": "zhao si", "gender": "male", "age": 58, "about": "亚洲四小龙 亚洲舞王"}`
+- `put > localhost:9200/index_a/user/2`：
+    - `{"id": 2, "name": "liu neng", "gender": "male", "age": 59, "about": "亚洲四小龙 村副主任"}`
+- `put > localhost:9200/index_a/user/3`：
+    - `{"id": 3, "name": "xie da jiao", "gender": "female", "age": 18, "about": "大脚超市市长 大众情人"}`
+- `put > localhost:9200/index_a/user/4`：
+    - `{"id": 4, "name": "xie guang kun", "gender": "male", "age": 60, "about": "亚洲四小龙 最强老公公"}`
 
-**结果集：** 
-```
-{
-    "took": 53,
-    "timed_out": false,
-    "_shards": {
-        "total": 1,
-        "successful": 1,
-        "skipped": 0,
-        "failed": 0
-    },
-    "hits": {
-        "total": {
-            "value": 1,
-            "relation": "eq"
-        },
-        "max_score": 1.0,
-        "hits": [
-            {
-                "_index": "mytest",
-                "_type": "_doc",
-                "_id": "1",
-                "_score": 1.0,
-                "_source": {
-                    "name": "joe zhou",
-                    "gender": "male",
-                    "about": "I like drinking"
-                }
-            }
-        ]
-    }
-}
-```
+## 3.1 文档条件查询
 
-# 1. 文档数据准备
+> 需求：查询索引 `index_a` 中所有 `name` 值按空格拆分后包含 `xie da` 的文档数据。
 
-**概念：** 利用PUT向 `my-index` 中添加如下数据，以便测试复杂查询：
-
-**数据：** 
-```
-PUT localhost:9200/my-index/_doc/1
-{"id": 1, "name": "zhao si", "gender": "male", "age": 58, "about": "亚洲四小龙 亚洲舞王"}
-
-PUT localhost:9200/my-index/_doc/2
-{"id": 2, "name": "liu neng", "gender": "male", "age": 59, "about": "亚洲四小龙 村副主任"}
-
-PUT localhost:9200/my-index/_doc/3
-{"id": 3, "name": "xie da jiao", "gender": "female", "age": 18, "about": "大脚超市市长 大众情人"}
-
-PUT localhost:9200/my-index/_doc/4
-{"id": 4, "name": "xie guang kun", "gender": "male", "age": 60, "about": "亚洲四小龙 最强老公公"}
-```
-
-# 2. 文档条件查询
-
-**概念：** 
-- **需求：** 查询索引 `my-index` 中所有 `name` 值按空格拆分后包含 `xie da` 的所有文档。
-- 查询条件的值如果带空格，则会被按照空格拆分成N个部分，然后用每个部分进行检索，所以 `xie da` 的查询结果中，名字中包含 `xie` 和 `da` 的都会被检索出来。
-- 条件查询的结果会包含一个 `_score` 属性，表示匹配得分，得分越高匹配度越高。
-
-## 2.1 使用查询串
-
-**概念：** ES查询串格式为 `?q=属性名:属性值`，方式简单但是局限性太大。
-
-**测试：** 
-```
-GET localhost:9200/my-index/_doc/_search?q=name:xie da
-```
-
-## 2.2 使用DSL语言
-
-**概念：** DSL语言被称为领域特定语言，就是在请求体中做出的额外检索条件限定：
-- `match`：负责进行数据匹配。
-- `sort`：负责对结果集进行排序，注意，尽量只使用数字进行排序，如果非要对字符串排序，用 `name.keyword` 替换 `name`。
-- `from`：从第0条文档开始检索。
-- `size`：总计检索11条文档。
+**概念：** 查询条件的值如果带空格，则会被按照空格拆分成N个部分，然后用每个部分进行检索，所以 `xie da` 的查询结果中，名字中包含 `xie` 和 `da` 的都会被检索出来，且条件查询的结果会包含一个 `_score` 属性，表示匹配得分，得分越高匹配度越高：
+- 使用查询串：ES查询串格式为 `?q=属性名:属性值`，方式简单但是局限性太大。
+    - `get > localhost:9200/my-index/_doc/_search?q=name:xie da`
+- 使用DSL语言：DSL语言被称为领域特定语言，就是在请求体中做出的额外检索条件限定：
+    - `match`：负责进行数据匹配。
+    - `sort`：负责对结果集进行排序，注意，尽量只使用数字进行排序，如果非要对字符串排序，用 `name.keyword` 替换 `name`。
+    - `from`：从第0条文档开始检索。
+    - `size`：总计检索11条文档。
 
 **测试：** `GET localhost:9200/my-index/_doc/_search`
 ```json
