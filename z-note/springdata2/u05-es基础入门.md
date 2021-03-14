@@ -83,9 +83,23 @@
 - 删除文档：删除索引 `index_a` 中id为1和2的文档数据：
     - cmd: `curl -XDELETE localhost:9200/index_a/user/1?pretty`
     - psm: `delete > localhost:9200/index_a/user/2`
-- 全文检索：查询索引 `index_a` 中的所有文档数据，一次查询默认返回10条文档数据：
-    - cmd: `curl -XGET localhost:9200/index_a/user/_search?pretty`
-    - psm: `get > localhost:9200/index_a/user/_search` 可以
+
+# 3. REST高级查询
+
+**概念：** 利用postman向 `index_a` 中添加如下数据，以便测试高级查询： 
+- `put > localhost:9200/index_a/user/1`：
+    - `{"id": 1, "name": "zhao si", "gender": "male", "age": 58, "about": "亚洲四小龙 亚洲舞王"}`
+- `put > localhost:9200/index_a/user/2`：
+    - `{"id": 2, "name": "liu neng", "gender": "male", "age": 59, "about": "亚洲四小龙 村副主任"}`
+- `put > localhost:9200/index_a/user/3`：
+    - `{"id": 3, "name": "xie da jiao", "gender": "female", "age": 18, "about": "大脚超市市长 大众情人"}`
+- `put > localhost:9200/index_a/user/4`：
+    - `{"id": 4, "name": "xie guang kun", "gender": "male", "age": 60, "about": "亚洲四小龙 最强老公公"}`
+
+## 3.1 全文检索
+
+**概念：** 全文检索会查询索引中所有文档数据，一次查询默认返回10条文档数据：
+- psm: `get > localhost:9200/index_a/user/_search`：
     - `took`：本次检索耗时，单位毫秒。
     - `timed_out`：本次检索是否超时。
     - `_shards`：本次检索的分片情况： 
@@ -99,18 +113,6 @@
     - `hits/total/relation`：命中关系，`eq` 表示相等。
     - `hits/max_score`：命中匹配度最高分。
     - `hits/hits`：具体命中的文档数组。
-
-# 3. REST高级查询
-
-**概念：** 利用postman向 `index_a` 中添加如下数据，以便测试高级查询： 
-- `put > localhost:9200/index_a/user/1`：
-    - `{"id": 1, "name": "zhao si", "gender": "male", "age": 58, "about": "亚洲四小龙 亚洲舞王"}`
-- `put > localhost:9200/index_a/user/2`：
-    - `{"id": 2, "name": "liu neng", "gender": "male", "age": 59, "about": "亚洲四小龙 村副主任"}`
-- `put > localhost:9200/index_a/user/3`：
-    - `{"id": 3, "name": "xie da jiao", "gender": "female", "age": 18, "about": "大脚超市市长 大众情人"}`
-- `put > localhost:9200/index_a/user/4`：
-    - `{"id": 4, "name": "xie guang kun", "gender": "male", "age": 60, "about": "亚洲四小龙 最强老公公"}`
 
 ## 3.1 文档条件查询
 
