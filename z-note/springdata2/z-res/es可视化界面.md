@@ -1,8 +1,8 @@
 # ES可视化界面
 
 **概念：** ES不同于Solr自带图形化界面，但可以在谷歌浏览器上安装ES的head插件，完成图形化界面的效果，完成索引数据的查看，但安装ES的head插件之前，需要先安装node.js和grunt。
-    - node-v8.9.4-x64.msi
-    - elasticsearch-head-master.zip
+    - `z-res/node-v14.16.0-x64.msi`
+    - `z-res/elasticsearch-head-master.zip`
 
 **流程：** 
 - 安装node，下一步式安装直到安装完毕。
