@@ -26,6 +26,8 @@
 - 将ES安装包解压缩到硬盘后双击 `config/elasticsearch.bat` 以启动服务器，`started` 表示服务器启动成功。
 - 访问日志中 `publish_address` 展示的默认地址端口：
     - psm: `localhost:9200`：JSON格式返回当前ES服务的基本信息。
+- 可视化界面：可以在谷歌浏览器上安装ES的head插件，完成图形化界面的效果：
+    - `z-res/es可视化界面.md`
 
 # 3. ES集群搭建
 
@@ -50,44 +52,7 @@
     - psm: `localhost:9201/_cat/health?v`：查看ES服务的健康状态。
     - psm: `localhost:9201/_cat/nodes?v`：查看ES服务的节点列表。
 
-# 5. ES图形化界面插件安装
 
-**概念：** 
-- ES不同于Solr自带图形化界面，但可以在谷歌浏览器上安装ES的head插件，完成图形化界面的效果，完成索引数据的查看。
-- 安装ES的head插件之前，需要先安装node.js和grunt。
-    - [node-v8.9.4-x64.msi](http://note.youdao.com/noteshare?id=5163e1f8877e8f3e630af4d2afed268a&sub=B5BABFA6C4764649BD472446326A188D)
-    - [elasticsearch-head-master.zip](http://note.youdao.com/noteshare?id=03c8704be351bf9f084f2baaa0b63768&sub=FC42C665121C42519D191839FCEB0E90)
-
-**安装步骤：** 
-1. 安装node，下一步式安装直到安装完毕。
-2. CMD中使用 `node -v` 命令查看node是否安装成功。
-3. 安装grunt：CMD中执行 `npm install -g grunt-cli`。
-    - 成功：`added 100 packages in 40.123s` 
-4. 使用 `grunt -version` 命令查看grunt是否安装成功。
-    - 成功：`grunt-cli v1.2.0`
-5. 安装 `elasticsearch-head-master` 免安装版。
-6. 修改 `elasticsearch-head-master` 根目录下的 `Gruntfile.js`，添加 `hostname` 如下：
-
-**配置：** Gruntfile.js
-```js
-connect: {
-	server: {
-		options: {
-		    hostname: '*',
-			port: 9100,
-			base: '.',
-			keepalive: true
-		}
-	}
-}
-```
-
-7. CMD进入到 `elasticsearch-head-master` 根目录下。
-8. 执行 `npm install` 开始安装。
-    - 成功：`added 516 packages in 1100.17s`
-9. 执行 `grunt server` 或 `npm run start` 运行插件（每次启动都要执行）。
-    - 成功：`Started connect web server on http://localhost:9100`
-10. 测试接口：`localhost:9100`。
 
 
 

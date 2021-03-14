@@ -46,7 +46,7 @@
 - 手动下线7007，再次查看任一sentinel的监视信息：会发现master发生变更：
     - cmd: `27007/27008/27009 > info sentinel`
 - 查看全部sentinel日志：假设27007为队长，27008/27009为队员：
-    - cmd: `z-res/sentinel日志解析.md`
+    - cmd: `z-res/redis-sentinel日志解析.md`
 - 重新上线7007，再次查看任一sentinel的监视信息：发现三个sentinel都删除了对7007的主观下线，且其中一个sentinel执行了 `+convert-to-slave` 将7007变更为当前master的slave：
     - cmd: `27007/27008/27009 > info sentinel`
 - tst: `c.j.s.JedisSentinelTest.jedisSentinel()`：构建sentinel连接池，获取连接，操作数据。
@@ -55,7 +55,7 @@
 
 **概念：** 分区集群主要为了分担redis服务器压力，集群仅能使用一个库db0：
 - redis默认采取虚拟槽方式进行分区以，主节点之间可以互知槽范围，从节点不带槽。
-    - `z-res/数据分区方式.md`
+    - `z-res/redis数据分区方式.md`
 - 保持数据不倾斜：
     - 尽量对集群中的主节点均匀分配槽。
     - 在客户端提前获知所有节点的槽范围，访问时直接访问到对应的节点以解决效率问题。
