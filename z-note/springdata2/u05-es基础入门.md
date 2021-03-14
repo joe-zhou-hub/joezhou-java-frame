@@ -71,18 +71,18 @@
     - cmd: `curl -XDELETE localhost:9200/index_a?pretty`
     - psm: `delete > localhost:9200/index_b` 
 - 创建文档：类型和文档需要一起创建，重复创建视为修改操作：
-    - cmd: `curl -XPUT localhost:9200/index_c/user/1?pretty`：
+    - cmd: `curl -XPUT localhost:9200/index_a/user/1?pretty`：
         - 增加 `-H "content-type: application/json"` 设定请求数据的MIME类型，必须使用双引号。
-        - 增加 `-d "{\"age\": 100}"` 设定请求数据内容，json数据内外皆必须使用双引号。
-        - 索引 `index_c` 和类型 `user` 均可以自动创建，`1` 表示当前文档ID。
-    - psm: `put > localhost:9200/index_c/user/1`
+        - 增加 `-d "{\"age\": 18}"` 设定请求数据内容，json数据内外皆必须使用双引号。
+        - 索引 `index_a` 和类型 `user` 均可以自动创建，`1` 表示当前文档ID。
+    - psm: `put > localhost:9200/index_a/user/2`
         - 在请求体中选择 `raw` 并添加json数据，key值必须使用双引号，MIME类型选择json。
-- 查看文档：查询索引 `index_c` 中id为1的文档数据：
-    - cmd: `curl -XGET localhost:9200/index_c/user/1?pretty`
-    - psm: `get > localhost:9200/index_c/user/1`
-- 删除文档：删除索引 `index_c` 中id为1的文档数据：
-    - cmd: `curl -XDELETE localhost:9200/index_c/user/1?pretty`
-    - psm: `delete > localhost:9200/index_c/user/1`
+- 查看文档：分别查询索引 `index_a` 中id为1和2的文档数据：
+    - cmd: `curl -XGET localhost:9200/index_a/user/1?pretty`
+    - psm: `get > localhost:9200/index_a/user/2`
+- 删除文档：删除索引 `index_a` 中id为1和2的文档数据：
+    - cmd: `curl -XDELETE localhost:9200/index_a/user/1?pretty`
+    - psm: `delete > localhost:9200/index_a/user/2`
 
 # 3. 全文检索
 
