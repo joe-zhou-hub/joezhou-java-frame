@@ -86,18 +86,13 @@
 
 # 3. REST高级查询
 
-**概念：** 利用postman向 `index_a` 中添加如下数据，以便测试高级查询： 
-- `put > localhost:9200/index_a/user/1`：
+**概念：** 向 `index_a` 中添加如下数据，以便测试高级查询： 
+- psm: `put > localhost:9200/index_a/user/1~5`：
     - `{"id": 1, "name": "zhao si", "gender": "male", "age": 58, "info": "亚洲四小龙 亚洲舞王"}`
-- `put > localhost:9200/index_a/user/2`：
     - `{"id": 2, "name": "liu neng", "gender": "male", "age": 58, "info": "亚洲四小龙 村副主任"}`
-- `put > localhost:9200/index_a/user/3`：
     - `{"id": 3, "name": "xie da jiao", "gender": "female", "age": 18, "info": "大脚超市市长 大众情人"}`
-- `put > localhost:9200/index_a/user/4`：
     - `{"id": 4, "name": "xie guang kun", "gender": "male", "age": 60, "info": "亚洲四小龙 最强老公公"}`
-- `put > localhost:9200/index_a/user/5`：
     - `{"id": 5, "name": "xie lan", "gender": "female", "age": 60, "info": "皮常山老婆"}`
-
 
 ## 3.1 全文检索
 
@@ -119,24 +114,22 @@
 
 ## 3.2 条件查询
 
-**概念：** 带空格的查询条件会进行拆分检索，如使用 `a b` 为条件时，包含 `a` 或 `b` 的值都会被检索出来：
-- 使用查询串：ES查询串格式为 `?q=属性名:属性值`，方式简单但局限性大：
+**概念：** 条件查询默认对条件字符串按空格拆分，并依次用拆分后的每一部分进行包含检索：
+- 使用查询串：在url后附加 `?q=属性名:属性值` 格式的条件，简单但局限性大：
     - `get > localhost:9200/index_a/user/_search?q=name:xie da`
-- 使用领域特定语言DSL，即在请求体中添加额外检索条件限定：
-    - `"query": {"match": {"name": "xie da"}}`：检索name属性中包含 `xie` 或 `da` 的所有文档：
-        - `"match_all": {}` 表示全查。
-    - `"sort":[{"age": "desc"}, {"name.keyword": "desc"}]`：对结果集按年龄降序，再按姓名降序：
-        - 尽量只使用数字进行排序，如果非要对字符串排序，用 `name.keyword` 替换 `name`。
+- 使用DSL（领域特定语言）条件：在请求体JSON数据中使用 `query` 属性设置条件：
+    - `"query": {"match": {"name": "xie da"}}`：检索name属性中包含 `xie` 或 `da` 的所有文档。
+    - `"query": {"match_phrase": {"name": "xie da"}}`：检索name属性中包含 `xie da` 短语的所有文档。
+    - `"query": {"match_all": {}}`：检索所有文档。
+- 使用DSL排序：在请求体JSON数据中使用 `sort` 属性对结果集进行排序：
+    - `"sort": [{"_score": "desc"}, {"age": "asc"}]`：对结果集按匹配分数降序，分数相同再按年龄升序：
+    - ES默认使用分数降序，使用其他字段排序则score为null，若想同时生效则需对score显示设置排序。
+    - 尽量只使用数字进行排序，如果非要对字符串排序，用 `name.keyword` 替换 `name`。
+- 使用DSL分页：在请求体JSON数据中使用 `from/size` 属性对结果集进行分页：
     - `"from": 0`：从第0条文档开始检索。
     - `"size": 3`：总计检索3条文档。
 
-## 3.3  短语查询
-
-**概念：** 条件查询中 `xie da` 的查询结果包括 `xie da jiao` 和 `xie guang kun` 两个，如果不想按空格拆分，而是 `xie da` 当成一个不可拆分的短语，则可以将 `match` 替换为 `match_phrase`，此时你将只能命中 `xie da jiao`，而无法命中 `xie guang kun`。
-- psm: `GET localhost:9200/my-index/_doc/_search`
-    - `"query": {"match_phrase": {"name": "xie da"}}`
-
-## 3.4  文档高亮查询
+## 3.3  文档高亮查询
 
 **概念：** 在ES中检索出高亮片段很容易，只需要添加一个 `highlight` 值并且指定高亮内容即可，高亮的效果可以使用 `pre_tags` 和 `post_tags` 自定义，如果不指定这两个属性，则内容最以 `<em></em>` 进行修饰。
 
