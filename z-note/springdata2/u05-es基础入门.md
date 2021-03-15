@@ -113,7 +113,7 @@
     - `hits/hits`：具体命中的文档数组。
 
 ## 3.2 DSL查询
-
+ 
 **概念：** DSL是一种领域特定语言，可以在GET请求体中设置JSON格式的查询条件：
 - URL：`get > localhost:9200/index_a/user/_search`
 - DSL条件：使用 `query` 属性设置条件：
