@@ -112,73 +112,34 @@
     - `hits/max_score`：命中匹配度最高分，值越大表示匹配度越高。
     - `hits/hits`：具体命中的文档数组。
 
-## 3.2 条件查询
+## 3.2 DSL查询
 
-**概念：** 条件查询默认对条件字符串按空格拆分，并依次用拆分后的每一部分进行包含检索：
-- 使用查询串：在url后附加 `?q=属性名:属性值` 格式的条件，简单但局限性大：
-    - `get > localhost:9200/index_a/user/_search?q=name:xie da`
-- 使用DSL（领域特定语言）条件：在请求体JSON数据中使用 `query` 属性设置条件：
+**概念：** DSL是一种领域特定语言，可以在GET请求体中设置JSON格式的查询条件：
+- URL：`get > localhost:9200/index_a/user/_search`
+- DSL条件：使用 `query` 属性设置条件：
     - `"query": {"match": {"name": "xie da"}}`：检索name属性中包含 `xie` 或 `da` 的所有文档。
+        - 等效于 `get > localhost:9200/index_a/user/_search?q=name:xie da`
     - `"query": {"match_phrase": {"name": "xie da"}}`：检索name属性中包含 `xie da` 短语的所有文档。
     - `"query": {"match_all": {}}`：检索所有文档。
-- 使用DSL排序：在请求体JSON数据中使用 `sort` 属性对结果集进行排序：
+- DSL排序：使用 `sort` 属性对结果集排序：
     - `"sort": [{"_score": "desc"}, {"age": "asc"}]`：对结果集按匹配分数降序，分数相同再按年龄升序：
-    - ES默认使用分数降序，使用其他字段排序则score为null，若想同时生效则需对score显示设置排序。
+    - ES默认使用分数降序，使用其他字段排序则score为null，若想同时生效则需对 `_score` 显示设置排序。
     - 尽量只使用数字进行排序，如果非要对字符串排序，用 `name.keyword` 替换 `name`。
-- 使用DSL分页：在请求体JSON数据中使用 `from/size` 属性对结果集进行分页：
+- DSL分页：使用 `from/size` 属性对结果集进行分页：
     - `"from": 0`：从第0条文档开始检索。
     - `"size": 3`：总计检索3条文档。
+- DSL高亮：使用 `highlight` 属性对匹配的内容进行高亮显示：
+    - `"highlight": {"pre_tags": "<mark>"}`：在匹配的内容前添加 `<mark>`，默认 `<em>`。
+    - `"highlight": {"post_tags": "</mark>"}`：在匹配的内容后添加 `</mark>`，默认 `</em>`。
+    - `"highlight": {fields" : {"name" : {}}}`：高亮作用于name属性。
 
-## 3.3  文档高亮查询
+## 3.3  bool组合条件查询
 
-**概念：** 在ES中检索出高亮片段很容易，只需要添加一个 `highlight` 值并且指定高亮内容即可，高亮的效果可以使用 `pre_tags` 和 `post_tags` 自定义，如果不指定这两个属性，则内容最以 `<em></em>` 进行修饰。
-
-**数据：** `GET localhost:9200/my-index/_doc/_search`
-```json 
-{
-    "query" : {
-        "match_phrase" : {
-            "name" : "xie da"
-        }
-    },
-    "highlight": {
-        "pre_tags": "<mark>",
-        "post_tags": "</mark>", 
-        "fields" : {
-            "name" : {}
-        }
-    }
-}
-```
-
-# 5.  bool组合条件查询
-
-**概念：** 更复杂的条件可以使用 `bool`（布尔组合）进行组合。
-
-**需求：** 寻找名字中的带zhao，年龄在18-60岁之间，但id不是1也不是2的文档。
-
-**数据：** `GET localhost:9200/my-index/_doc/_search`
-```json
-{
-    "query": {
-        "bool": {
-            "must": {"match": {"name": "zhao"}},
-            "must_not": [
-                {"match": { "id": 1}},
-                {"match": { "id": 2}}
-            ],
-            "filter": {
-                "range": {
-                    "age": {
-                        "gte": 18,
-                        "lte": 60
-                    }
-                }
-            }
-        }
-    }
-}
-```
+**概念：** 更复杂的条件可以使用 `bool`（布尔组合）进行组合，比如寻找名字中的包含 `"zhao"`，年龄在18-60岁之间，但id不是1也不是2的文档：
+- psm: `get > localhost:9200/index_a/user/_search`
+    - `"query": {"bool": {"must": {"match": {"name": "zhao"}}}}`：必须名字中包含 `"zhao"` 字符串。
+    - `"query": {"bool": {"must_not": {"match": {"id": 1}}}}`：必须id不能为1。
+    - `"query": {"bool": {"filter": {"range": {"age": {"gte": 18, "lte": 60}}}}}`：年龄在18-60之间。
 
 # 6. 聚合
 
