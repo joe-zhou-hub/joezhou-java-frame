@@ -132,46 +132,15 @@
     - `"highlight": {"pre_tags": "<mark>"}`：在匹配的内容前添加 `<mark>`，默认 `<em>`。
     - `"highlight": {"post_tags": "</mark>"}`：在匹配的内容后添加 `</mark>`，默认 `</em>`。
     - `"highlight": {fields" : {"name" : {}}}`：高亮作用于name属性。
-
-## 3.3  bool组合条件查询
-
-**概念：** 更复杂的条件可以使用 `bool`（布尔组合）进行组合，比如寻找名字中的包含 `"zhao"`，年龄在18-60岁之间，但id不是1也不是2的文档：
-- psm: `get > localhost:9200/index_a/user/_search`
-    - `"query": {"bool": {"must": {"match": {"name": "zhao"}}}}`：必须名字中包含 `"zhao"` 字符串。
-    - `"query": {"bool": {"must_not": {"match": {"id": 1}}}}`：必须id不能为1。
+- DSL布尔组合条件：使用 `bool` 属性设置更复杂的条件：
+    - `"query": {"bool": {"must": {"match": {"name": "xie"}}}}`：名字中包含 `"xie"` 字符串。
+    - `"query": {"bool": {"must_not": {"match": {"id": 1}}}}`：文档id不能为1。
     - `"query": {"bool": {"filter": {"range": {"age": {"gte": 18, "lte": 60}}}}}`：年龄在18-60之间。
+- DSL聚合查询：使用 `aggs` 属性 `group_by_xxx` 设置聚合，`xxx` 指的是参与聚合的属性：
+    - `"size": 0`：可选，隐藏聚合查询的结果集中包括的全部数据信息。
+    - `"aggs": {"group_by_gender": {"terms": {"field": "gender.keyword"}}}`：按性别分组。
+    - `"aggs": {"average_age": {"avg": {"field": "age"}}}`：按性别分组后，查询年龄的平均值。
 
-# 6. 聚合
-
-**概念：** 
-- 聚合查询可以使用属性 `aggs` 配合 `group_by_xxx`，`xxx` 需要改成即将参与聚合的属性。
-- `group_by_xxx` 中使用 `terms` 进行分组，其中的 `field` 需要指定具体聚合属性名。
-    - 如果参与聚合的属性为数字类型，直接使用。
-    - 如果参与聚合的属性是字符串类型，需要添加.keyword后缀，如将 `name` 改为 `name.keyword`。
-- 聚合分组后除了聚合信息后，还会展示参与聚合的所有文档的信息，如果你不想看到他们，可以使用 `"size": 0` 将其过滤掉。
-
-**需求：** 按照姓名分组后，查询每个姓名的平均年龄。
-
-**数据：** `GET localhost:9200/my-index/_doc/_search`
-```json
-{
-  "size": 0,
-  "aggs": {
-    "group_by_gender": {
-      "terms": {
-        "field": "gender.keyword"
-      },
-      "aggs": {
-        "average_age": {
-          "avg": {
-            "field": "age"
-          }
-        }
-      }
-    }
-  }
-}
-```
 
 
 
