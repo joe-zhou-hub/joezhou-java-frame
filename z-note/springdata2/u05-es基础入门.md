@@ -88,13 +88,16 @@
 
 **概念：** 利用postman向 `index_a` 中添加如下数据，以便测试高级查询： 
 - `put > localhost:9200/index_a/user/1`：
-    - `{"id": 1, "name": "zhao si", "gender": "male", "age": 58, "about": "亚洲四小龙 亚洲舞王"}`
+    - `{"id": 1, "name": "zhao si", "gender": "male", "age": 58, "info": "亚洲四小龙 亚洲舞王"}`
 - `put > localhost:9200/index_a/user/2`：
-    - `{"id": 2, "name": "liu neng", "gender": "male", "age": 58, "about": "亚洲四小龙 村副主任"}`
+    - `{"id": 2, "name": "liu neng", "gender": "male", "age": 58, "info": "亚洲四小龙 村副主任"}`
 - `put > localhost:9200/index_a/user/3`：
-    - `{"id": 3, "name": "xie da jiao", "gender": "female", "age": 18, "about": "大脚超市市长 大众情人"}`
+    - `{"id": 3, "name": "xie da jiao", "gender": "female", "age": 18, "info": "大脚超市市长 大众情人"}`
 - `put > localhost:9200/index_a/user/4`：
-    - `{"id": 4, "name": "xie guang kun", "gender": "male", "age": 60, "about": "亚洲四小龙 最强老公公"}`
+    - `{"id": 4, "name": "xie guang kun", "gender": "male", "age": 60, "info": "亚洲四小龙 最强老公公"}`
+- `put > localhost:9200/index_a/user/5`：
+    - `{"id": 5, "name": "xie lan", "gender": "female", "age": 60, "info": "皮常山老婆"}`
+
 
 ## 3.1 全文检索
 
@@ -118,7 +121,7 @@
 
 **概念：** 带空格的查询条件会进行拆分检索，如使用 `a b` 为条件时，包含 `a` 或 `b` 的值都会被检索出来：
 - 使用查询串：ES查询串格式为 `?q=属性名:属性值`，方式简单但局限性大：
-    - `get > localhost:9200/index_c/user/_search?q=name:xie da`
+    - `get > localhost:9200/index_a/user/_search?q=name:xie da`
 - 使用领域特定语言DSL，即在请求体中添加额外检索条件限定：
     - `"query": {"match": {"name": "xie da"}}`：检索name属性中包含 `xie` 或 `da` 的所有文档：
         - `"match_all": {}` 表示全查。
