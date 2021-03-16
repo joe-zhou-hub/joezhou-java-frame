@@ -16,7 +16,7 @@ import java.util.*;
  * @author JoeZhou
  */
 @SpringBootTest
-class EsApi {
+class ElasticsearchRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
