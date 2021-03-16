@@ -22,7 +22,7 @@
 
 ## 1.1 ES服务端安装
 
-**概念：** [ES](https://www.elastic.co/downloads/elasticsearch[Download]) 的安装需要正确的JDK环境：
+**概念：** [ES](https://www.elastic.co/cn/downloads/elasticsearch) 的安装需要正确的JDK环境：
 - 将ES安装包解压缩到硬盘后双击 `config/elasticsearch.bat` 以启动服务器，`started` 表示服务器启动成功。
 - 访问日志中 `publish_address` 展示的默认地址端口：
     - psm: `localhost:9200`：JSON格式返回当前ES服务的基本信息。
@@ -32,7 +32,7 @@
 ## 1.2 ES集群搭建
 
 **流程：** 创建 `D:\\es-cluster` 集群目录：
-- 拷贝两个 `elasticsearch-7.6.0` 根目录到集群目录内，视为两个ES节点，分别命名 `es-node-a/es-node-b`。
+- 拷贝两个elasticsearch根目录到集群目录内，视为两个ES节点，分别命名 `es-node-a/es-node-b`。
 - 将两个ES节点中的 `data` 目录全部删除以保证节点数据一致性。
 - 修改两个ES节点的配置 `config/elasticsearch.yml`：不要在yml中添加注释：
     - `cluster.name`：两个ES节点的集群名必须一致，默认 `elasticsearch`。

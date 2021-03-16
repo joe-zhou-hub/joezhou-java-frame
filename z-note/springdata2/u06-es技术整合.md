@@ -1,93 +1,18 @@
 # 1. springboot整合es
 
-**概念：** 新建springboot项目：my-springboot-es，添加 `lombok` 和 `spring-boot-starter-data-elasticsearch` 依赖。
-- springboot使用2.3.1.RELEASE。
-- elasticsearch使用7.6.0版本。
+**概念：** 新建springboot项目 `springdata2-es`：
+- 添加依赖：`lombok/spring-boot-starter-data-elasticsearch`
+- 在主配中指定ES服务器或集群：
+    - `spring.elasticsearch.rest.uris: http://localhost:9200`
+- 开发实体类 `entity.User`： 
+    - `@Document`：一个实体类就是一个文档，使用 `indexName` 属性来指定索引名，如果ES中没有这个索引，会自动创建。
+    - `@Id`：用来标识一个主键字段，非必须。
+    - `@Field`：用来标识一个普通字段，非必须。
+- 开发空接口 `service.UserRepository`
+    - 接口上标记 `@Repository` 使其被spring容器管理。
+    - 继承 `ElasticsearchRepository<文档类型, 主键类型>`，以便使用ES提供的的API。
+- 测试：
 
-**配置：** pom.xml 中添加
-```xml
-<!--spring-boot-starter-data-elasticsearch-->
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
-</dependency>
-```
-
-## 2. 配置
-
-**概念：** 指定ES服务器位置，如果是集群，用逗号分隔地址。
-
-**配置：** application.properties中添加
-```txt
-spring.elasticsearch.rest.uris: http://localhost:9200
-```
-
-## 3. 实体类
-
-**概念：** 
-- `@Document`：一个实体类就是一个文档，使用 `indexName` 属性来指定索引名，如果ES中没有这个索引，会自动创建。
-- `@Id`：用来标识一个主键字段，非必须。
-- `@Field`：用来标识一个普通字段，非必须。
-
-```java
-/**
- * @author JoeZhou
- */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Document(indexName = "test-index")
-public class User implements Serializable {
-
-    @Id
-    private Integer id;
-
-    @Field(type = FieldType.Text)
-    private String name;
-
-    @Field(type = FieldType.Text)
-    private String about;
-}
-```
-
-## 4. 数据层开发
-
-**概念：** 新建一个空接口，继承 `ElasticsearchRepository`，以便使用ES提供的的API。
-- `@Repository` 使其被spring容器管理。
-- `ElasticsearchRepository` 的两个泛型分别为文档类型和主键类型。
-
-**源码：** UserRepository.java
-```java
-/**
- * @author JoeZhou
- */
-@Repository
-public interface UserRepository extends ElasticsearchRepository<User, Integer> {
-
-}
-```
-
-## 5. 测试
-
-**源码：** ElastciSearchTest.java
-```java
-/**
- * @author JoeZhou
- */
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = MySpringdataEsApplication.class)
-class ElastciSearchTest {
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Test
-    void save() {
-        User user = new User(1, "测试姓名", "描述信息");
-        userRepository.save(user);
-    }
-}
-```
 
 > 测试接口：GET localhost:9200/test-index/_doc/1
 
