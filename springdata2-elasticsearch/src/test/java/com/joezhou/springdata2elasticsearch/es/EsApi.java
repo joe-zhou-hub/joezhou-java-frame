@@ -89,6 +89,7 @@ class EsApi {
         Set<User> users = new HashSet<>();
         User user11 = new User(11, null, null);
         User user12 = new User(12, null, null);
+
         users.add(user11);
         users.add(user12);
 
