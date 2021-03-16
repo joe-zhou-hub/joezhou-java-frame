@@ -71,23 +71,23 @@
     - cmd: `curl -XDELETE localhost:9200/index_a?pretty`
     - psm: `delete > localhost:9200/index_b` 
 - 创建文档：类型和文档需要一起创建，重复创建视为修改操作：
-    - cmd: `curl -XPUT localhost:9200/index_a/user/1?pretty`：
+    - cmd: `curl -XPUT localhost:9200/index_a/_doc/1?pretty`：
         - 增加 `-H "content-type: application/json"` 设定请求数据的MIME类型，必须使用双引号。
         - 增加 `-d "{\"age\": 18}"` 设定请求数据内容，json数据内外皆必须使用双引号。
         - 索引 `index_a` 和类型 `user` 均可以自动创建，`1` 表示当前文档ID。
-    - psm: `put > localhost:9200/index_a/user/2`
+    - psm: `put > localhost:9200/index_a/_doc/2`
         - 在请求体中选择 `raw` 并添加json数据，key值必须使用双引号，MIME类型选择json。
 - 查看文档：分别查询索引 `index_a` 中id为1和2的文档数据：
-    - cmd: `curl -XGET localhost:9200/index_a/user/1?pretty`
-    - psm: `get > localhost:9200/index_a/user/2`
+    - cmd: `curl -XGET localhost:9200/index_a/_doc/1?pretty`
+    - psm: `get > localhost:9200/index_a/_doc/2`
 - 删除文档：删除索引 `index_a` 中id为1和2的文档数据：
-    - cmd: `curl -XDELETE localhost:9200/index_a/user/1?pretty`
-    - psm: `delete > localhost:9200/index_a/user/2`
+    - cmd: `curl -XDELETE localhost:9200/index_a/_doc/1?pretty`
+    - psm: `delete > localhost:9200/index_a/_doc/2`
 
 # 3. REST高级查询
 
 **概念：** 向 `index_a` 中添加如下数据，以便测试高级查询： 
-- psm: `put > localhost:9200/index_a/user/1~5`：
+- psm: `put > localhost:9200/index_a/_doc/1~5`：
     - `{"id": 1, "name": "zhao si", "gender": "male", "age": 58, "info": "亚洲四小龙 亚洲舞王"}`
     - `{"id": 2, "name": "liu neng", "gender": "male", "age": 58, "info": "亚洲四小龙 村副主任"}`
     - `{"id": 3, "name": "xie da jiao", "gender": "female", "age": 18, "info": "大脚超市市长 大众情人"}`
@@ -97,7 +97,7 @@
 ## 3.1 全文检索
 
 **概念：** 全文检索会查询索引中所有文档数据，一次查询默认返回10条文档数据：
-- psm: `get > localhost:9200/index_a/user/_search`：
+- psm: `get > localhost:9200/index_a/_doc/_search`：
     - `took`：本次检索耗时，单位毫秒。
     - `timed_out`：本次检索是否超时。
     - `_shards`：本次检索的分片情况： 
@@ -115,10 +115,10 @@
 ## 3.2 DSL查询
  
 **概念：** DSL是一种领域特定语言，可以在GET请求体中设置JSON格式的查询条件：
-- URL：`get > localhost:9200/index_a/user/_search`
+- URL：`get > localhost:9200/index_a/_doc/_search`
 - DSL条件：使用 `query` 属性设置条件：
     - `"query": {"match": {"name": "xie da"}}`：检索name属性中包含 `xie` 或 `da` 的所有文档。
-        - 等效于 `get > localhost:9200/index_a/user/_search?q=name:xie da`
+        - 等效于 `get > localhost:9200/index_a/_doc/_search?q=name:xie da`
     - `"query": {"match_phrase": {"name": "xie da"}}`：检索name属性中包含 `xie da` 短语的所有文档。
     - `"query": {"match_all": {}}`：检索所有文档。
 - DSL排序：使用 `sort` 属性对结果集排序：

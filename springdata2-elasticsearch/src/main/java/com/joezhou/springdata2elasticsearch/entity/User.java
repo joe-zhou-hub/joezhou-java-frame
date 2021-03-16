@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(indexName = "user-index")
+@Document(indexName = "user")
 public class User implements Serializable {
 
     @Id

@@ -1,4 +1,4 @@
-package com.joezhou.springdata2elasticsearch.es;
+package com.joezhou.springdata2elasticsearch.elasticsearch;
 
 import com.joezhou.springdata2elasticsearch.entity.User;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
